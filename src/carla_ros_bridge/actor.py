@@ -49,7 +49,7 @@ class Actor(Child):
             else:
                 topic_prefix += '/' + \
                     str(Actor.global_id_registry.get_ID(carla_actor.id))
-        super(Actor, self).__init__(carla_id=carla_actor.id, carla_world=carla_actor.get_world(),
+        super(Actor, self).__init__(carla_ID=carla_actor.id, carla_world=carla_actor.get_world(),
                                     parent=parent, topic_prefix=topic_prefix)
         self.carla_actor = carla_actor
         rospy.logdebug("Created Actor-{}(id={}, parent_id={},"
