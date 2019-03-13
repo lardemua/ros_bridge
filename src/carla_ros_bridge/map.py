@@ -19,6 +19,7 @@ from geometry_msgs.msg import Transform
 from std_msgs.msg import String
 from carla_ros_bridge.child import Child
 
+
 class Map(Child):
     """
     Child Implementation Details for the Map
