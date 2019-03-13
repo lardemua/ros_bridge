@@ -19,6 +19,7 @@ from abc import abstractmethod
 from geometry_msgs.msg import TransformStamped
 from carla_ros_bridge.parent import Parent
 
+
 class Child(Parent):
     """
     Genereic Base Class for all Child Entities
