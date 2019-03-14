@@ -18,6 +18,7 @@ import rospy
 from abc import abstractmethod
 from std_msgs.msg import Header
 
+
 class Parent(object):
     """
     Factory(Parent) class to create actors(children) and manage lifecycle of the children objects
