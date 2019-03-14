@@ -24,6 +24,7 @@ class Child(Parent):
     """
     Generic Base Class for all Child Entities
     """
+
     def __init__(self, carla_ID, carla_world, parent, topic_prefix=''):
         """
         Constructor for Child Class
@@ -46,7 +47,7 @@ class Child(Parent):
 
         # Each child node defines its own frame
         super(Child, self).__init__(
-            carla_ID = carla_ID, carla_world = carla_world, frame_ID = self.topic_prefix
+            carla_ID=carla_ID, carla_world=carla_world, frame_ID=self.topic_prefix
         )
         self.parent = parent
         rospy.logdebug("Created {}-Child(id={}, parent_id={}, topic_name={})".format(
@@ -117,7 +118,7 @@ class Child(Parent):
         """
         return self.parent.get_ID()
 
-    def get_msg_header(self, use_parent_frame=True): # pylint disable=arguments-differ
+    def get_msg_header(self, use_parent_frame=True):  # pylint disable=arguments-differ
         """
         Helper Function used to create a ROS message header
         :param use_parent_frame:  per default the header.frame_ID is set to the frame of the child's parent.

@@ -41,7 +41,8 @@ class Lidar(Sensor):
         """
         if topic_prefix is None:
             topic_prefix = 'lidar'
-        super(Lidar, self).__init__(carla_actor=carla_actor, parent=parent, topic_prefix=topic_prefix, append_role_name_topic_postfix=append_role_name_topic_postfix)
+        super(Lidar, self).__init__(carla_actor=carla_actor, parent=parent,
+                                    topic_prefix=topic_prefix, append_role_name_topic_postfix=append_role_name_topic_postfix)
 
     def get_tf_msg(self):
         """
@@ -79,4 +80,3 @@ class Lidar(Sensor):
         lidar_data = lidar_data[..., [1, 0, 2]]
         point_cloud_msg = create_cloud_xyz32(header, lidar_data)
         self.publish_ros_message(self.topic_name() + "/point_cloud", point_cloud_msg)
-

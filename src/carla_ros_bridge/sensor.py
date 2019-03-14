@@ -61,7 +61,8 @@ class Sensor(Actor):
         """
         if topic_prefix is None:
             topic_prefix = 'sensor'
-            super(Sensor, self).__init__(carla_actor=carla_actor, parent=parent, topic_prefix=topic_prefix, append_role_name_topic_postfix=append_role_name_topic_postfix)
+            super(Sensor, self).__init__(carla_actor=carla_actor, parent=parent,
+                                         topic_prefix=topic_prefix, append_role_name_topic_postfix=append_role_name_topic_postfix)
             self.current_sensor_data = None
             self.update_lock = threading.Lock()
             if self.__class__.__name__ == "Sensor":

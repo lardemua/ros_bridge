@@ -73,7 +73,8 @@ def get_vehicle_driving_direction_sign(carla_vehicle):
     :type carla_vehicle: carla.Vehicle
     :return: Sign of the Driving Direction of a Carla Vehicle {-1.0; 1.0}
     """
-    vector_looking_forward = trans.carla_rotation_to_directional_numpy_vector(carla_vehicle.get_transform().rotation)
+    vector_looking_forward = trans.carla_rotation_to_directional_numpy_vector(
+        carla_vehicle.get_transform().rotation)
     velocity_vector = trans.carla-velocity_to_numpy_vector(carla_vehicle.get_velocity())
     dot_product = numpy.dot(vector_looking_forward, velocity_vector)
     if dot_product < 0:
@@ -207,7 +208,8 @@ def get_rolling_resistance_force(carla_vehicle):
     # usually somewhere between 0.007 to 0.014 for car tyres
     # and between 0.0025 to 0.005 for bycicle tyres
     # see also https://en.wikipedia.org/wiki/Rolling_resistance
-    rolling_resistance_coefficient = carla_vehicle.attributes.get('rolling_resistance_coefficient', 0.01)
+    rolling_resistance_coefficient = carla_vehicle.attributes.get(
+        'rolling_resistance_coefficient', 0.01)
     normal_force = get_weight_force(carla_vehicle)
     rolling_resistance_force = rolling_resistance_coefficient * normal_force
     return rolling_resistance_force
@@ -237,8 +239,10 @@ def get_slope_force(carla_vehicle):
     :return: Slope Force [N, >0 uphill, <0 downhill]
     :rtype: float64
     """
-    dummy_roll, pitch, dummy_yaw = trans.carla_rotation_to_RPY(carla_vehicle.get_transform().rotation)
-    slope_force = get_acceleration_of_gravity(carla_vehicle) * get_vehicle_mass(carla_vehicle) * math.sin(-pitch)
+    dummy_roll, pitch, dummy_yaw = trans.carla_rotation_to_RPY(
+        carla_vehicle.get_transform().rotation)
+    slope_force = get_acceleration_of_gravity(
+        carla_vehicle) * get_vehicle_mass(carla_vehicle) * math.sin(-pitch)
     return slope_force
 
 
@@ -281,6 +285,6 @@ def get_vehicle_driving_impedance_acceleration(carla_vehicle, reverse):
     slope_force = get_slope_force(carla_vehicle)
     if reverse:
         slope_force = -slope_force
-    deceleration = -(rolling_resistance_force + aerodynamic_drag_force + slope_force) / get_vehicle_mass(carla_vehicle)
+    deceleration = -(rolling_resistance_force + aerodynamic_drag_force +
+                     slope_force) / get_vehicle_mass(carla_vehicle)
     return deceleration
-

@@ -54,16 +54,16 @@ class Actor(Child):
                                     parent=parent, topic_prefix=topic_prefix)
         self.carla_actor = carla_actor
         rospy.logdebug("Created Actor-{}(id={}, parent_id={},"
-                      " type={}, topic_name={}, attributes={}".format(
-                        self.__class__.__name__, self.get_ID(),
-                        self.get_parent_ID(), self.carla_actor.type_id,
-                        self.topic_name(), self.carla_actor.attributes))
+                       " type={}, topic_name={}, attributes={}".format(
+                           self.__class__.__name__, self.get_ID(),
+                           self.get_parent_ID(), self.carla_actor.type_id,
+                           self.topic_name(), self.carla_actor.attributes))
 
         if self.__class__.__name__ == "Actor":
             rospy.logwarn("Created Unsupported Actor(id={}, parent_id={},"
                           " type={}, attributes={}".format(
-                            self.get_ID(), self.get_parent_ID(),
-                            self.carla_actor.type_id, self.carla_actor.attributes))
+                              self.get_ID(), self.get_parent_ID(),
+                              self.carla_actor.type_id, self.carla_actor.attributes))
 
     def destroy(self):
         """
@@ -76,7 +76,7 @@ class Actor(Child):
         self.carla_actor = None
         super(Actor, self).destroy()
 
-    def get_marker_color(self): # pylint: disable=no-self-use
+    def get_marker_color(self):  # pylint: disable=no-self-use
         """
         Virtual (non-abstract) function to get the ROS std_msgs.msg.ColorRGBA used for rviz objects of this Actor
         Reimplement this in the derived actor class if ROS visualization messages
@@ -111,8 +111,7 @@ class Actor(Child):
         :return: the ROS transfrom of this Actor
         :rtype: geometry-msgs.msg.Transform
         """
-        return trans,carla_transform_to_ros_transform(self.carla_actor.get_transform())
-
+        return trans, carla_transform_to_ros_transform(self.carla_actor.get_transform())
 
     def get_current_ros_pose(self):
         """
@@ -148,4 +147,3 @@ class Actor(Child):
         :rtype: uint32
         """
         return Actor.global_id_registry.get_ID(self.carla_actor.id)
-

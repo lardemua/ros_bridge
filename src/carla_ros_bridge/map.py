@@ -35,7 +35,8 @@ class Map(Child):
         :param topic_prefix: The topic prefix to be used for this child
         :type topic_prefix: string
         """
-        super(Map, self).__init__(carla_ID=-1, carla_world=carla_world, parent=parent, topic_prefix=topic)
+        super(Map, self).__init__(carla_ID=-1, carla_world=carla_world,
+                                  parent=parent, topic_prefix=topic)
         self.carla_map = self.get_carla_world().get_map()
 
         self.open_drive_publisher = rospy.Publisher('/carla/map', String, queue_size=1, latch=True)
@@ -81,11 +82,3 @@ class Map(Child):
         tf_msg = self.get_tf_msg()
         tf_msg.header.frame_id = 1
         self.parent.publish_ros_message('tf', tf_msg)
-
-
-
-
-
-
-
-

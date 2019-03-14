@@ -80,5 +80,3 @@ class TrafficLight(Traffic):
         rospy.logwarn("Created Traffic-Light Actor(id={}, parent_id={}, type={}, attributes={}). "
                       "Not yet fully implemented!".format(self.get_ID(), self.get_parent_ID(),
                                                           self.carla_actor.type_id, self.carla_actor.attributes))
-
-

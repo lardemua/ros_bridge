@@ -251,6 +251,3 @@ def carla_location_to_pose(carla_location):
     ros_pose = Pose()
     ros_pose.position = carla_location_to_ros_point(carla_location)
     return ros_pose
-
-
-

@@ -73,7 +73,8 @@ class EgoVehicle(Vehicle):
         # control info
         self.info = EgoVehicleControlInfo()
         # maximum values
-        self.info.restrictions.max_steering_angle = phys.get_vehicle_max_steering_angle(self.carla_actor)
+        self.info.restrictions.max_steering_angle = phys.get_vehicle_max_steering_angle(
+            self.carla_actor)
         self.info.restrictions.max_speed = phys.get_vehicle_max_speed(self.carla_actor)
         self.info.restrictions.max_accel = phys.get_vehicle_max_acceleration(self.carla_actor)
         self.info.restrictions.max_decel = phys.get_vehicle_max_deceleration(self.carla_actor)
@@ -260,7 +261,8 @@ class AckermannControlVehicle(EgoVehicle):
 
         # Clipping the pedal in both directions to the same range using the usual lower
         # Border: the max_accel to ensure the the pedal target is in symmetry to zero
-        self.info.restrictions.max_pedal = min(self.info.restrictions.max_accel, self.info.restrictions.max_decel)
+        self.info.restrictions.max_pedal = min(
+            self.info.restrictions.max_accel, self.info.restrictions.max_decel)
 
         # PID controller
         # the controller has to run with the simulation time, not with real-time
@@ -297,7 +299,8 @@ class AckermannControlVehicle(EgoVehicle):
         # the lastMsgReceived is updated within the callback
         # (it's used to stop updating the carla client control if no new messages were received)
         self.lastMsgReceived = datetime.datetime(datetime.MINYEAR, 1, 1)
-        self.control_subscriber = rospy.Subscriber(self.topic_name() + "/ackermann_cmd", AckermannDrive, self.ackermann_command_updated)
+        self.control_subscriber = rospy.Subscriber(
+            self.topic_name() + "/ackermann_cmd", AckermannDrive, self.ackermann_command_updated)
 
     def destroy(self):
         """
@@ -405,7 +408,8 @@ class AckermannControlVehicle(EgoVehicle):
         if self.info.target.speed_abs < epsilon:
             self.info.target.accel = -self.info.restrictions.max_decel
         else:
-            self.info.target.accel = numpy.clip(target_accel, -self.info.restrictions.max_decel, self.info.restrictions.max_accel)
+            self.info.target.accel = numpy.clip(
+                target_accel, -self.info.restrictions.max_decel, self.info.restrictions.max_accel)
 
     def set_target_jerk(self, target_jerk):
         """
@@ -515,7 +519,8 @@ class AckermannControlVehicle(EgoVehicle):
 
         if self.speed_controller.auto_mode:
             self.speed_controller.setpoint = self.info.target.speed_abs
-            self.info.state.speed_control_accel_delta = self.speed_controller(self.info.current.speed_abs)
+            self.info.state.speed_control_accel_delta = self.speed_controller(
+                self.info.current.speed_abs)
             # clipping borders
             clipping_lower_border = -target_accel_abs
             clipping_upper_border = target_accel_abs
@@ -545,7 +550,7 @@ class AckermannControlVehicle(EgoVehicle):
         # Interpretation: The engine already prforms braking on its own;
         #  therefore pushing the brake is not required for small decelerations
         self.info.state.brake_upper_border = self.info.state.throttle_lower_border + \
-                                             phys.get_vehicle_lay_off_engine_acceleration(self.carla_actor)
+            phys.get_vehicle_lay_off_engine_acceleration(self.carla_actor)
 
         if self.info.state.accel_control_pedal_target > self.info.state.throttle_lower_border:
             self.info.state.status = "accelerating"
@@ -556,9 +561,9 @@ class AckermannControlVehicle(EgoVehicle):
             # the global maximum acceleration can practically not be reached anymore because of
             # driving impedance
             self.info.output.throttle = (
-                    (self.info.state.accel_control_pedal_target -
-                     self.info.state.throttle_lower_border) /
-                    abs(self.info.restrictions.max_pedal))
+                (self.info.state.accel_control_pedal_target -
+                 self.info.state.throttle_lower_border) /
+                abs(self.info.restrictions.max_pedal))
         elif self.info.state.accel_control_pedal_target > self.info.state.brake_upper_border:
             self.info.state.status = "coasting"
             # no control required
@@ -568,9 +573,9 @@ class AckermannControlVehicle(EgoVehicle):
             self.info.state.status = "braking"
             # braking required
             self.info.output.brake = (
-                    (self.info.state.brake_upper_border -
-                     self.info.state.accel_control_pedal_target) /
-                    abs(self.info.restrictions.max_pedal))
+                (self.info.state.brake_upper_border -
+                 self.info.state.accel_control_pedal_target) /
+                abs(self.info.restrictions.max_pedal))
             self.info.output.throttle = 0.0
 
         # finally clip the final control output (should actually never happen)

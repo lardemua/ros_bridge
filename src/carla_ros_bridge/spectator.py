@@ -40,5 +40,4 @@ class Spectator(Actor):
         super(Spectator, self).__init__(carla_actor=carla_actor,
                                         parent=parent,
                                         topic_prefix=topic_prefix,
-                                        append_role_name_topic_postfix=append_role_name_topic_postfix) # pylint: disable=line-too-long
-
+                                        append_role_name_topic_postfix=append_role_name_topic_postfix)  # pylint: disable=line-too-long

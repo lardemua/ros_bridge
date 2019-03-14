@@ -65,7 +65,8 @@ class Camera(Sensor):
         """
         if topic_prefix is None:
             topic_prefix = 'camera'
-            super(Camera, self).__init__(carla_actor=carla_actor, parent=parent, topic_prefix=topic_prefix)
+            super(Camera, self).__init__(carla_actor=carla_actor,
+                                         parent=parent, topic_prefix=topic_prefix)
         if self.__class__.__name__ == "Camera":
             rospy.logwarn("Created Unsupported Camera Actor"
                           "(id={}, parent_id={}, type={}, attributes={})".format(self.get_ID(), self.get_parent_ID(),
@@ -87,7 +88,8 @@ class Camera(Sensor):
         camera_info.distortion_model = 'plumb_bob'
         cx = camera_info.width / 2.0
         cy = camera_info.height / 2.0
-        fx = camera_info.width / (2.0 * math.tan(float(self.carla_actor.attributes['fov']) * math.pi / 360.0))
+        fx = camera_info.width / \
+            (2.0 * math.tan(float(self.carla_actor.attributes['fov']) * math.pi / 360.0))
         fy = fx
         camera_info.K = [fx, 0, cx, 0, fy, cy, 0, 0, 1]
         camera_info.D = [0, 0, 0, 0, 0]
@@ -127,7 +129,8 @@ class Camera(Sensor):
         tf_msg = super(Camera, self).get_tf_msg()
         rotation = tf_msg.transform.rotation
         quaternion = [rotation.x, rotation.y, rotation.z, rotation.w]
-        quaternion_swap = tf.transformations.quaternion_from_matrix([[0, 0, 1, 0], [-1, 0, 0, 0], [0, -1, 0, 0], [0, 0, 0, 1]])
+        quaternion_swap = tf.transformations.quaternion_from_matrix(
+            [[0, 0, 1, 0], [-1, 0, 0, 0], [0, -1, 0, 0], [0, 0, 0, 1]])
         quaternion = tf.transformations.quaternion_multiply(quaternion, quaternion_swap)
 
         tf_msg.transform.rotation = trans.numpy_quaternion_to_ros_quaternion(quaternion)
@@ -172,7 +175,8 @@ class RGB_Camera(Camera):
         """
         if topic_prefix is None:
             topic_prefix = 'camera/rgb'
-        super(RGB_Camera, self).__init__(carla_actor=carla_actor, parent=parent, topic_prefix=topic_prefix)
+        super(RGB_Camera, self).__init__(carla_actor=carla_actor,
+                                         parent=parent, topic_prefix=topic_prefix)
 
     def get_carla_image_data_array(self, carla_image):
         """
@@ -215,7 +219,8 @@ class Depth_Camera(Camera):
         """
         if topic_prefix is None:
             topic_prefix = 'camera/depth'
-        super(Depth_Camera, self).__init__(carla_actor=carla_actor, parent=parent, topic_prefix=topic_prefix)
+        super(Depth_Camera, self).__init__(carla_actor=carla_actor,
+                                           parent=parent, topic_prefix=topic_prefix)
 
     def get_carla_image_data_array(self, carla_image):
         """
@@ -280,7 +285,8 @@ class Semantic_Segmentation_Camera(Camera):
         """
         if topic_prefix is None:
             topic_prefix = 'camera/semantic_segmentation'
-        super(Semantic_Segmentation_Camera, self).__init__(carla_actor=carla_actor, parent=parent, topic_prefix=topic_prefix)
+        super(Semantic_Segmentation_Camera, self).__init__(
+            carla_actor=carla_actor, parent=parent, topic_prefix=topic_prefix)
 
     def get_carla_image_data_array(self, carla_image):
         """
@@ -305,6 +311,3 @@ class Semantic_Segmentation_Camera(Camera):
         :rtype: string
         """
         return "image_segmentation"
-
-
-

@@ -47,7 +47,8 @@ class CarlaRosBridge(Parent):
         self.publishers = {}
         self.publishers['clock'] = rospy.Publisher('clock', Clock, queue_size=10)
         self.publishers['tf'] = rospy.Publisher('tf', TFMessage, queue_size=100)
-        self.publishers['/carla/objects'] = rospy.Publisher('/carla/objects', ObjectArray, queue_size=10)
+        self.publishers['/carla/objects'] = rospy.Publisher(
+            '/carla/objects', ObjectArray, queue_size=10)
         self.object_array = ObjectArray()
         self.map = Map(carla_world=self.carla_world, parent=self, topic='/map')
 
@@ -167,7 +168,7 @@ class CarlaRosBridge(Parent):
                 publisher.publish(msg)
             except rospy.ROSSerializationException as error:
                 rospy.logwarn("Failed to serialize message on publishing: {}".format(error))
-            except: # pylint: disable=bare-except
+            except:  # pylint: disable=bare-except
                 rospy.logwarn("Failed to publish ROS message")
         self.msgs_to_publish = []
 
@@ -188,5 +189,3 @@ class CarlaRosBridge(Parent):
         """
         rospy.loginfo("Shutdown requested")
         self.destroy()
-
-
