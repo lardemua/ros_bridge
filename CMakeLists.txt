@@ -195,12 +195,17 @@ install(PROGRAMS
 #   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 # )
 
-install(FILES
-        launch/client.launch
-        launch/client_with_rviz.launch
+ install(FILES
+        client.launch
+        client_with_rviz.launch
         test/ros_bridge_client.test
         DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
-)
+ )
+
+# install(DIRECTORY
+#        launch
+#         DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
+# )
 
 install(DIRECTORY
         config
