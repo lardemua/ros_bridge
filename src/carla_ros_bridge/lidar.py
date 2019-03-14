@@ -79,3 +79,4 @@ class Lidar(Sensor):
         lidar_data = lidar_data[..., [1, 0, 2]]
         point_cloud_msg = create_cloud_xyz32(header, lidar_data)
         self.publish_ros_message(self.topic_name() + "/point_cloud", point_cloud_msg)
+
