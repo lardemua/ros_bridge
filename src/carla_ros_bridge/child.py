@@ -22,7 +22,7 @@ from carla_ros_bridge.parent import Parent
 
 class Child(Parent):
     """
-    Genereic Base Class for all Child Entities
+    Generic Base Class for all Child Entities
     """
     def __init__(self, carla_ID, carla_world, parent, topic_prefix=''):
         """

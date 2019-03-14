@@ -19,6 +19,7 @@ import rospy
 import rosbag
 from carla_ros_bridge.bridge import CarlaRosBridge
 
+
 class CarlaRosBridgeWithBag(CarlaRosBridge):
     """
     Carla ROS bridge class with ROS bag writing functionality

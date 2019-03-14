@@ -477,7 +477,7 @@ class AckermannControlVehicle(EgoVehicle):
                 self.info.output.brake = 1.0
                 self.info.output.throttle = 0.0
         elif numpy.sign(self.info.current.speed) * numpy.sign(self.info.target.speed) == -1:
-            # requrest for change of driving direction
+            # request for change of driving direction
             # first we have to come to full stop before changing driving
             # direction
             rospy.loginfo("VehicleControl: Request change of driving direction."
@@ -486,12 +486,11 @@ class AckermannControlVehicle(EgoVehicle):
                                                            self.info.target.speed))
             self.set_target_speed(0.)
 
-
     def run_speed_control_loop(self):
         """
         Function used to run the PID control loop for the speed.
         The speed control is only activated if desired acceleration is moderate
-        otherwhise we try to follow the desired acceleration values
+        otherwise we try to follow the desired acceleration values
         Reasoning behind:
         An autonomous vehicle calculates a trajectory including position and velocities.
         The ackermann drive is derived directly from that trajectory.

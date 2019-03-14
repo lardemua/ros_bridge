@@ -219,6 +219,8 @@ class Parent(object):
             "If this error becomes visible the class hierarchy is somehow broken")
 
 # These import have to be added at the end of the file to resolve cyclic dependency
+
+
 from carla_ros_bridge.actor import Actor                     # noqa, pylint: disable=wrong-import-position
 from carla_ros_bridge.spectator import Spectator             # noqa, pylint: disable=wrong-import-position
 from carla_ros_bridge.sensor import Sensor                   # noqa, pylint: disable=wrong-import-position

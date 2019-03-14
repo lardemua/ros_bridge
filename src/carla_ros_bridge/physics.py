@@ -212,6 +212,7 @@ def get_rolling_resistance_force(carla_vehicle):
     rolling_resistance_force = rolling_resistance_coefficient * normal_force
     return rolling_resistance_force
 
+
 def get_engine_brake_force(dummy_carla_vehicle):
     """
     Function used to calculate the engine brake force of a Carla Vehicle if the gas pedal

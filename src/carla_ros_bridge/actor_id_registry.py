@@ -11,6 +11,7 @@
 Actor registry class for carla-id mapping
 """
 
+
 class ActorIDRegistry(object):
 
     """

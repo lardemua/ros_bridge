@@ -150,7 +150,6 @@ class Vehicle(Actor):
              self.carla_actor.bounding_box.extent.y * 2.0,
              self.carla_actor.bounding_box.extent.z * 2.0]
         )
-
         # Classification if available in attributes
         if self.classification != Object.CLASSIFICATION_UNKNOWN:
             vehicle_object.object_classified = True

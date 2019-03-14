@@ -22,6 +22,7 @@ from carla_ros_bridge.child import Child
 from carla_ros_bridge.actor_id_registry import ActorIDRegistry
 import carla_ros_bridge.transforms as trans
 
+
 class Actor(Child):
     """
     Generic Base Class for all Carla Actors
