@@ -137,11 +137,29 @@ class CarlaRosBridge(Parent):
         """
         if not rospy.is_shutdown():
             if self.update_lock.acquire(False):
-                self.update_clock(carla_timestamp)
-                self.update()
-                self._prepare_msgs()
-                self.send_msgs()
+                if self.timestamp_last_run < carla_timestamp.elapsed_seconds:
+                    self.timestamp_last_run = carla_timestamp.elapsed_seconds
+                    self._update_clock(carla_timestamp)
+                    self.update()
+                    self._prepare_msgs()
+                    self.send_msgs()
                 self.update_lock.release()
+
+    def _carla_update_child_actors(self, _):
+        """
+        Private callback function required at carla.World.on_tick() to trigger cyclic updates of the actors
+        After successful locking the mutex (only perform trylock to respect bridge processing time) the existing actors are updated.
+        :param _:
+        :return:
+        """
+        if not rospy.is_shutdown():
+            if self.update_child_actors_lock.acquire(False):
+                # cache actor_list once during this update-loop
+                self.actor_list = self.carla_world.get_actors()
+                self.update_child_actors()
+                # actors are only created/deleted around once per second
+                time.sleep(1)
+                self.update_child_actors_lock.release()
 
     def _update_clock(self, carla_timestamp):
         """
@@ -176,8 +194,8 @@ class CarlaRosBridge(Parent):
                 publisher.publish(msg)
             except rospy.ROSSerializationException as error:
                 rospy.logwarn("Failed to serialize message on publishing: {}".format(error))
-            except:  # pylint: disable=bare-except
-                rospy.logwarn("Failed to publish ROS message")
+            except Exception as error:  # pylint: disable=broad-except
+                rospy.logwarn("Failed to publish ROS message: {}".format(error))
         self.msgs_to_publish = []
 
     def run(self):
@@ -197,3 +215,11 @@ class CarlaRosBridge(Parent):
         """
         rospy.loginfo("Shutdown requested")
         self.destroy()
+
+    def get_actor_list(self):
+        """
+        Override Function used to provide actor list
+        :return: Actor List
+        :rtype: List
+        """
+        return self.actor_list
