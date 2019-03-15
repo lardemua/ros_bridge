@@ -39,8 +39,7 @@ def main():
         carla_world = carla_client.get_world()
         rospy.loginfo("Connected")
 
-        bridge_cls = CarlaRosBridgeWithBag if rospy.get_param(
-            'rosbag_fname', '') else CarlaRosBridge
+        bridge_cls = CarlaRosBridgeWithBag if rospy.get_param('rosbag_fname', '') else CarlaRosBridge
         carla_ros_bridge = bridge_cls(carla_world=carla_client.get_world(), params=params)
         carla_ros_bridge.run()
         carla_ros_bridge = None
