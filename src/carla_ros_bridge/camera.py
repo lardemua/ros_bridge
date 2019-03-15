@@ -69,8 +69,10 @@ class Camera(Sensor):
                                          parent=parent, topic_prefix=topic_prefix)
         if self.__class__.__name__ == "Camera":
             rospy.logwarn("Created Unsupported Camera Actor"
-                          "(id={}, parent_id={}, type={}, attributes={})".format(self.get_ID(), self.get_parent_ID(),
-                                                                                 self.carla_actor.type_id, self.carla_actor.attributes))
+                          "(id={}, parent_id={}, type={}, attributes={})".format(self.get_ID(),
+                                                                                 self.get_parent_ID(),
+                                                                                 self.carla_actor.type_id,
+                                                                                 self.carla_actor.attributes))
         else:
             self._build_camera_info()
 
