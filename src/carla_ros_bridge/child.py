@@ -29,9 +29,9 @@ class Child(Parent):
         """
         Constructor for Child Class
         :param carla_ID: unique carla_id of this child object
-            carla_ID > 0: carla actor ids (see also carla.Actor)
-            carla_ID == 0: resevered for the (root) bridge object; not allowed in here
-            carla_ID == -1: used by the map object
+               carla_ID > 0: carla actor ids (see also carla.Actor)
+               carla_ID == 0: resevered for the (root) bridge object; not allowed in here
+               carla_ID == -1: used by the map object
         :type carla_ID: int64
         :param carla_world: carla world object
         :type carla_world: carla.World
@@ -44,7 +44,6 @@ class Child(Parent):
             raise ValueError("A child node can never have an carla_id of zero"
                              "Zero is reserved for the parent root(the bridge object)")
         self.topic_prefix = topic_prefix.replace(".", "/").replace("-", "_")
-
         # Each child node defines its own frame
         super(Child, self).__init__(
             carla_ID=carla_ID, carla_world=carla_world, frame_ID=self.topic_prefix
@@ -161,3 +160,12 @@ class Child(Parent):
         :rtype: geometry_msgs.msg.Transform
         """
         raise NotImplementedError("This function has to be implemented by the derived classes")
+
+    def get_actor_list(self):
+        """
+        Function used to get list of actors from the parent
+        :return: List of Actors
+        :rtype: List
+        """
+        return self.parent.get_actor_list()
+
