@@ -61,8 +61,10 @@ class Sensor(Actor):
         """
         if topic_prefix is None:
             topic_prefix = 'sensor'
-            super(Sensor, self).__init__(carla_actor=carla_actor, parent=parent,
-                                         topic_prefix=topic_prefix, append_role_name_topic_postfix=append_role_name_topic_postfix)
+            super(Sensor, self).__init__(carla_actor=carla_actor,
+                                         parent=parent,
+                                         topic_prefix=topic_prefix,
+                                         append_role_name_topic_postfix=append_role_name_topic_postfix)
             self.current_sensor_data = None
             self.update_lock = threading.Lock()
             if self.__class__.__name__ == "Sensor":
@@ -93,6 +95,17 @@ class Sensor(Actor):
         :rtype: string
         """
         return self.parent.get_frame_ID() + "/" + super(Sensor, self).get_frame_ID()
+
+    def get_msg_header(self, use_parent_frame=True):
+        """
+        Override Function used to get ROS message header with sensor timestamp
+        :param use_parent_frame:
+        :return: prefilled Header Object
+        """
+        header = super(Sensor, self).get_msg_header(use_parent_frame)
+        # use timestamp of current sensor data
+        header.stamp = rospy.Time.from_sec(self.current_sensor_data.timestamp)
+        return header
 
     def _callback_sensor_data(self, carla_sensor_data):
         """
