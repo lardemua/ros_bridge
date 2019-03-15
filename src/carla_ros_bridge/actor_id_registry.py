@@ -21,7 +21,7 @@ class ActorIDRegistry(object):
 
     def __init__(self):
         """
-        Constructor of ActorIDRegistry
+        Constructor of ActorIDRegistry Class
         """
         self.id_lookup_table = {}
 

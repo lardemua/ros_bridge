@@ -16,6 +16,7 @@ Class that handle communication between CARLA and ROS
 #   IMPORTS
 # ------------------------
 import threading
+import time
 import rospy
 from rosgraph_msgs.msg import Clock
 from tf2_msgs.msg import TFMessage
@@ -39,16 +40,21 @@ class CarlaRosBridge(Parent):
         """
         self.params = params
         super(CarlaRosBridge, self).__init__(carla_ID=0, carla_world=carla_world, frame_id='/map')
+        self.timestamp_last_run = 0.0
         self.ros_timestamp = rospy.Time()
         self.tf_to_publish = []
         self.msgs_to_publish = []
+        self.actor_list = []
+        # register callback to create/delete actors
+        self.carla_world.on_tick(self._carla_update_child_actors)
+        self.update_child_actors_lock = threading.Lock()
+        # register callback to update actors
         self.carla_world.on_tick(self._carla_time_tick)
         self.update_lock = threading.Lock()
         self.publishers = {}
         self.publishers['clock'] = rospy.Publisher('clock', Clock, queue_size=10)
         self.publishers['tf'] = rospy.Publisher('tf', TFMessage, queue_size=100)
-        self.publishers['/carla/objects'] = rospy.Publisher(
-            '/carla/objects', ObjectArray, queue_size=10)
+        self.publishers['/carla/objects'] = rospy.Publisher('/carla/objects', ObjectArray, queue_size=10)
         self.object_array = ObjectArray()
         self.map = Map(carla_world=self.carla_world, parent=self, topic='/map')
 
@@ -60,10 +66,12 @@ class CarlaRosBridge(Parent):
         Finally forwards call to the super class
         :return:
         """
-        if self.update_lock.acquire():
-            rospy.loginfo("Exiting ROS Bridge")
-            self.publishers.clear()
-            super(CarlaRosBridge, self).destroy()
+        self.update_child_actors_lock.acquire()
+        self.update_lock.acquire()
+        self.actor_list = []
+        rospy.loginfo("Exiting Bridge")
+        self.publishers.clear()
+        super(CarlaRosBridge, self).destroy()
 
     def get_current_ros_time(self):
         """
