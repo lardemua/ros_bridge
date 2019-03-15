@@ -73,8 +73,7 @@ class EgoVehicle(Vehicle):
         # control info
         self.info = EgoVehicleControlInfo()
         # maximum values
-        self.info.restrictions.max_steering_angle = phys.get_vehicle_max_steering_angle(
-            self.carla_actor)
+        self.info.restrictions.max_steering_angle = phys.get_vehicle_max_steering_angle(self.carla_actor)
         self.info.restrictions.max_speed = phys.get_vehicle_max_speed(self.carla_actor)
         self.info.restrictions.max_accel = phys.get_vehicle_max_acceleration(self.carla_actor)
         self.info.restrictions.max_decel = phys.get_vehicle_max_deceleration(self.carla_actor)
