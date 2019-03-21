@@ -12,6 +12,7 @@ find_package(catkin REQUIRED COMPONENTS
   rospy
   std_msgs
   sensor_msgs
+  geometry_msgs
   tf
   dynamic_reconfigure
 )
@@ -51,11 +52,11 @@ catkin_python_setup()
 
 ## Generate messages in the 'msg' folder
 add_message_files(
-    FILES
-    CarlaVehicleControl.msg
-    CarlaVehicleInfo.msg
-    CarlaVehicleInfoWheel.msg
-    CarlaVehicleStatus.msg
+  FILES
+  CarlaEgoVehicleControl.msg
+  CarlaEgoVehicleStatus.msg
+  CarlaEgoVehicleInfoWheel.msg
+  CarlaEgoVehicleInfo.msg
 )
 
 ## Generate services in the 'srv' folder
@@ -76,6 +77,7 @@ add_message_files(
 generate_messages(
    DEPENDENCIES
    std_msgs
+   geometry_msgs
 )
 
 ################################################
