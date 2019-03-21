@@ -53,11 +53,9 @@ catkin_python_setup()
 add_message_files(
     FILES
     CarlaVehicleControl.msg
-    EgoVehicleControlCurrent.msg
-    EgoVehicleControlInfo.msg
-    EgoVehicleControlMaxima.msg
-    EgoVehicleControlState.msg
-    EgoVehicleControlTarget.msg
+    CarlaVehicleInfo.msg
+    CarlaVehicleInfoWheel.msg
+    CarlaVehicleStatus.msg
 )
 
 ## Generate services in the 'srv' folder
