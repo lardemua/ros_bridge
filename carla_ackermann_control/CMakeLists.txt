@@ -24,7 +24,7 @@ find_package(catkin REQUIRED COMPONENTS
 ## Uncomment this if the package has a setup.py. This macro ensures
 ## modules and global scripts declared therein get installed
 ## See http://ros.org/doc/api/catkin/html/user_guide/setup_dot_py.html
-# catkin_python_setup()
+catkin_python_setup()
 
 ################################################
 ## Declare ROS messages, services and actions ##
@@ -52,12 +52,12 @@ find_package(catkin REQUIRED COMPONENTS
 
 ## Generate messages in the 'msg' folder
 add_message_files(
-   FILES
-   EgoVehicleControlCurrent.msg
-   EgoVehicleControlInfo.msg
-   EgoVehicleControlMaxima.msg
-   EgoVehicleControlState.msg
-   EgoVehicleControlTarget.msg
+  FILES
+  EgoVehicleControlCurrent.msg
+  EgoVehicleControlInfo.msg
+  EgoVehicleControlMaxima.msg
+  EgoVehicleControlStatus.msg
+  EgoVehicleControlTarget.msg
 )
 
 ## Generate services in the 'srv' folder
@@ -172,6 +172,12 @@ include_directories(
 #   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 # )
 
+install(PROGRAMS
+  src/carla_ackermann_control/carla_ackermann_control_node.py
+  src/carla_ackermann_control/carla_control_physics.py
+  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
+
 ## Mark executables and/or libraries for installation
 # install(TARGETS ${PROJECT_NAME} ${PROJECT_NAME}_node
 #   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
@@ -192,6 +198,15 @@ include_directories(
 #   # myfile2
 #   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 # )
+
+install(DIRECTORY launch/
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/launch
+)
+
+install(DIRECTORY config/
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/config
+)
+
 
 #############
 ## Testing ##
