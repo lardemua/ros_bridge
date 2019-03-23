@@ -169,3 +169,13 @@ class Child(Parent):
         """
         return self.parent.get_actor_list()
 
+    def get_filtered_objectarray(self, filtered_ID):
+        """
+        Function used to get ObjectArray of the other available actors, except the one with the filtered ID.
+        :param filtered_ID: Filtered Actor ID
+        :return: ObjectArray of Actors
+        :rtype: derived_object_msgs.ObjectArray
+        """
+        return self.parent.get_filtered_objectarray(filtered_ID)
+
+
