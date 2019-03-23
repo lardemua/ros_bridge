@@ -67,6 +67,8 @@ def get_vehicle_driving_impedance_acceleration(vehicle_info, vehicle_status, rev
                                         - Slope Force
     :param vehicle_info: the vehicle info
     :type vehicle_info: carla_ros_bridge.CarlaEgoVehicleInfo
+    :param vehicle_status: the vehicle status
+    :type vehicle_status: carla_ros_bridge.CarlaEgoVehicleStatus
     :param reverse: `True' if the vehicle is driving in reverse direction
     :type reverse: boolean
     :return: acceleration the vehicle [m/s^2 <= 0 on flat surface]
@@ -87,8 +89,7 @@ def get_vehicle_driving_impedance_acceleration(vehicle_info, vehicle_status, rev
         slope_force = -slope_force
     deceleration = -(rolling_resistance_force +
                      aerodynamic_drag_force +
-                     slope_force) /  \
-        get_vehicle_mass(vehicle_info)
+                     slope_force) / get_vehicle_mass(vehicle_info)
     return deceleration
 
 
@@ -118,8 +119,7 @@ def get_weight_force(vehicle_info):
     :return: weight of the vehicle [N]
     :rtype: float64
     """
-    weight = get_vehicle_mass(vehicle_info) * \
-        get_acceleration_of_gravity(vehicle_info)
+    weight = get_vehicle_mass(vehicle_info) * get_acceleration_of_gravity(vehicle_info)
     return weight
 
 
@@ -167,9 +167,9 @@ def get_slope_force(vehicle_info, vehicle_status):
     """
     dummy_roll, pitch, dummy_yaw = euler_from_quaternion(
         [vehicle_status.orientation.x, vehicle_status.orientation.y,
-         vehicle_status.orientation.z, vehicle_status.orientation.w])
-    slope_force = get_acceleration_of_gravity(
-        vehicle_info) * get_vehicle_mass(vehicle_info) * math.sin(-pitch)
+         vehicle_status.orientation.z, vehicle_status.orientation.w]
+    )
+    slope_force = get_acceleration_of_gravity(vehicle_info) * get_vehicle_mass(vehicle_info) * math.sin(-pitch)
     return slope_force
 
 

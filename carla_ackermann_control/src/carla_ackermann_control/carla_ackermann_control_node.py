@@ -42,6 +42,7 @@ class CarlaAckermannControl(object):
         self.lastAckermannMsgReceived = datetime.datetime(datetime.MINYEAR, 1, 1)
         self.vehicle_status = CarlaEgoVehicleStatus()
         self.vehicle_info = CarlaEgoVehicleInfo()
+        self.role_name = rospy.get_param('/carla/ackermann_control/role_name')
         # control info
         self.info = EgoVehicleControlInfo()
         # set initial maximum values
@@ -79,7 +80,8 @@ class CarlaAckermannControl(object):
         # To prevent "float division by zero" within PID controller initialize it with
         # a previous point in time (the error happens because the time doesn't
         # change between initialization and first call, therefore dt is 0)
-        sys.modules['simple_pid.PID']._current_time = (lambda: rospy.get_rostime().to_sec() - 0.1)  # pylint: disable=protected-access
+        sys.modules['simple_pid.PID']._current_time = \
+            (lambda: rospy.get_rostime().to_sec() - 0.1)  # pylint: disable=protected-access
 
         # we might want to use a PID controller to reach the final target speed
         self.speed_controller = PID(Kp=0.0, Ki=0.0, Kd=0.0,
@@ -90,9 +92,11 @@ class CarlaAckermannControl(object):
                                     output_limits=(-1, 1))
 
         # use the correct time for further calculations
-        sys.modules['simple_pid.PID']._current_time = (lambda: rospy.get_rostime().to_sec()) # pylint: disable=protected-access
+        sys.modules['simple_pid.PID']._current_time = \
+            (lambda: rospy.get_rostime().to_sec())        # pylint: disable=protected-access
 
-        self.reconfigure_server = Server(EgoVehicleControlParameterConfig, namespace="/carla/ackermann_control",
+        self.reconfigure_server = Server(EgoVehicleControlParameterConfig,
+                                         namespace="/carla/ackermann_control",
                                          callback=(lambda config, level: CarlaAckermannControl.reconfigure_pid_parameters(self, config, level)))
         # ackermann drive commands
         self.control_subscriber = rospy.Subscriber("/carla/ego_vehicle/ackermann_cmd",
