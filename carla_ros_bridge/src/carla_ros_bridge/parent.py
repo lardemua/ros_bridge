@@ -165,10 +165,9 @@ class Parent(object):
         -> Update the existing children
         :return:
         """
-        self._create_new_children()
-        self._destroy_dead_children()
-        for dummy_actor_id, actor in self.child_actors.iteritems():
-            actor.update()
+        with self.update_child_actor_list_lock:
+            for dummy_actor_id, actor in self.child_actors.iteritems():
+                actor.update()
 
     def get_msg_header(self):
         """
