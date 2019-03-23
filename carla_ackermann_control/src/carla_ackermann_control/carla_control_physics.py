@@ -102,7 +102,7 @@ def get_rolling_resistance_force(vehicle_info):
     :rtype: float64
     """
     # usually somewhere between 0.007 to 0.014 for car tyres
-    # and between 0.0025 to 0.005 for bycicle tyres
+    # and between 0.0025 to 0.005 for bicycle tyres
     # see also https://en.wikipedia.org/wiki/Rolling_resistance
     # @todo: currently not within vehicle_info
     rolling_resistance_coefficient = 0.01
