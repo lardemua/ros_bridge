@@ -23,6 +23,7 @@ from tf2_msgs.msg import TFMessage
 from derived_object_msgs.msg import ObjectArray
 from carla_ros_bridge.parent import Parent
 from carla_ros_bridge.map import Map
+import carla_ros_bridge.object_sensor as obj_sensor
 
 
 class CarlaRosBridge(Parent):
@@ -223,3 +224,15 @@ class CarlaRosBridge(Parent):
         :rtype: List
         """
         return self.actor_list
+
+    def get_filtered_objectarray(self, filtered_ID):
+        """
+        Function used to get ObjectArray of other available actors, except the one with the filtered ID
+        :param filtered_ID: Filter Actor ID
+        :return: ObjectArray of remaining actors
+        :rtype: derived_object_msgs.ObjectArray
+        """
+        return obj_sensor.get_filtered_objectarray(self, filtered_ID)
+
+
+
