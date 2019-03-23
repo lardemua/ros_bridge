@@ -68,8 +68,8 @@ class Sensor(Actor):
             self.current_sensor_data = None
             self.update_lock = threading.Lock()
             if self.__class__.__name__ == "Sensor":
-                rospy.logwarn("Created Unsupported Sensor(id={}, parent_id={}"
-                              ", type={}, attributes={}".format(self.get_ID(), self.get_parent_ID(), self.carla_actor.type_id, self.carla_actor.attributes))
+                rospy.logwarn("Created Unsupported Sensor(id={}, parent_id={}" ", type={}, attributes={}".format(
+                    self.get_ID(), self.get_parent_ID(), self.carla_actor.type_id, self.carla_actor.attributes))
             else:
                 self.carla_actor.listen(self._callback_sensor_data)
 

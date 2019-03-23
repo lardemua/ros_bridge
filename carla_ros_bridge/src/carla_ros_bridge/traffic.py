@@ -58,7 +58,8 @@ class Traffic(Actor):
         if self.__class__.__name__ == "Traffic":
             rospy.logwarn("Created Unsupported Traffic Actor"
                           "(id={}, parent_id={}, type={}, attributes={})".format(self.get_ID(), self.get_parent_ID(),
-                                                                                 self.carla_actor.type_id, self.carla_actor.attributes))
+                                                                                 self.carla_actor.type_id,
+                                                                                 self.carla_actor.attributes))
 
 
 class TrafficLight(Traffic):
