@@ -99,6 +99,8 @@ generate_dynamic_reconfigure_options(
     config/EgoVehicleControlParameter.cfg
 )
 
+catkin_package()
+
 ###################################
 ## catkin specific configuration ##
 ###################################
@@ -108,12 +110,12 @@ generate_dynamic_reconfigure_options(
 ## LIBRARIES: libraries you create in this project that dependent projects also need
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
-catkin_package(
+# catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES ros_bridge
 #  CATKIN_DEPENDS roscpp rospy std_msgs
 #  DEPENDS system_lib
-)
+# )
 
 ###########
 ## Build ##
@@ -196,9 +198,6 @@ install(PROGRAMS
 # )
 
 install(FILES
-        launch/client.launch
-        launch/client_with_rviz.launch
-        launch/client_with_rqt.launch
         test/ros_bridge_client.test
         DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 )
