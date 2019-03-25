@@ -20,9 +20,9 @@ class Image_Converter:
     Class used for converting ROS images to OpenCV images
     """
     def __init__(self):
-        self.image_pub = rospy.Publisher("image_topic_2", Image)
+        self.image_pub = rospy.Publisher("/carla/ego_vehicle/camera/rgb/front/image_color_2", Image)
         self.bridge = CvBridge()
-        self.image_sub = rospy.Subscriber("image_topic", Image, self.callback)
+        self.image_sub = rospy.Subscriber("/carla/ego_vehicle/camera/rgb/front/image_color", Image, self.callback)
 
     def callback(self, data):
         cv_img = None
