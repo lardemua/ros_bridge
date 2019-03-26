@@ -12,7 +12,7 @@ from std_msgs.msg import String
 from sensor_msgs.msg import Image
 from cv_bridge import CvBridge, CvBridgeError
 import roslib
-roslib.load_manifest('my_package')
+roslib.load_manifest('carla_ros_image_converter')
 
 
 class Image_Converter:
