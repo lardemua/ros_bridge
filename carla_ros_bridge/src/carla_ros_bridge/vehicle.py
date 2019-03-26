@@ -58,7 +58,7 @@ class Vehicle(Actor):
         :type append_role_name_topic_postfix: boolean
         """
         if topic_prefix is None:
-            topic_prefix = "vehicle/{:03}".format(Actor.global_id_registry.get_id(carla_actor.id))
+            topic_prefix = "vehicle/{:03}".format(Actor.global_id_registry.get_ID(carla_actor.id))
 
         super(Vehicle, self).__init__(carla_actor=carla_actor,
                                       parent=parent,
@@ -136,7 +136,7 @@ class Vehicle(Actor):
         """
         vehicle_object = Object(header=self.get_msg_header())
         # ID
-        vehicle_object.id = self.get_global_id()
+        vehicle_object.id = self.get_global_ID()
         # Pose
         vehicle_object.pose = self.get_current_ros_pose()
         # Twist

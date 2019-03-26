@@ -101,7 +101,7 @@ class Actor(Child):
         marker = Marker(header=self.get_msg_header(use_parent_frame=use_parent_frame))
         marker.color = self.get_marker_color()
         marker.color.a = 0.3
-        marker.id = self.get_global_id()
+        marker.id = self.get_global_ID()
         marker.text = "id = {}".format(marker.id)
         return marker
 
@@ -111,7 +111,7 @@ class Actor(Child):
         :return: the ROS transfrom of this Actor
         :rtype: geometry-msgs.msg.Transform
         """
-        return trans, carla_transform_to_ros_transform(self.carla_actor.get_transform())
+        return trans.carla_transform_to_ros_transform(self.carla_actor.get_transform())
 
     def get_current_ros_pose(self):
         """

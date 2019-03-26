@@ -40,7 +40,7 @@ class CarlaRosBridge(Parent):
         :type params: dict
         """
         self.params = params
-        super(CarlaRosBridge, self).__init__(carla_ID=0, carla_world=carla_world, frame_id='/map')
+        super(CarlaRosBridge, self).__init__(carla_ID=0, carla_world=carla_world, frame_ID='/map')
         self.timestamp_last_run = 0.0
         self.ros_timestamp = rospy.Time()
         self.tf_to_publish = []

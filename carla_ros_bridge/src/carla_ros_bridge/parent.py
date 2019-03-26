@@ -93,8 +93,8 @@ class Parent(object):
         :return:
         """
         for actor in self.get_actor_list():
-            if ((actor.parent and actor.parent.id == self.carla_id)
-                    or (actor.parent is None and self.carla_id == 0)):
+            if ((actor.parent and actor.parent.id == self.carla_ID)
+                    or (actor.parent is None and self.carla_ID == 0)):
                 if actor.id not in self.child_actors:
                     if actor.type_id.startswith('traffic'):
                         self.new_child_actors[actor.id] = Traffic.create_actor(
