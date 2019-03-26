@@ -40,6 +40,7 @@ class Gnss(Sensor):
             topic_prefix = 'gnss'
         super(Gnss, self).__init__(carla_actor=carla_actor, parent=parent,
                                    topic_prefix=topic_prefix, append_role_name_topic_postfix=append_role_name_topic_postfix)
+        self.parent = parent
 
     def sensor_data_updated(self, carla_gnss_event):
         """
