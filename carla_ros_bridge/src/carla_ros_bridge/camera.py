@@ -71,6 +71,7 @@ class Camera(Sensor):
                                      parent=parent,
                                      topic_prefix=topic_prefix)
 
+        self.carla_actor = carla_actor
         if self.__class__.__name__ == "Camera":
             rospy.logwarn("Created Unsupported Camera Actor"
                           "(id={}, parent_id={}, type={}, attributes={})".format(
@@ -78,6 +79,7 @@ class Camera(Sensor):
                               self.carla_actor.type_id, self.carla_actor.attributes))
         else:
             self._build_camera_info()
+
 
     def _build_camera_info(self):
         """
@@ -193,6 +195,7 @@ class RgbCamera(Camera):
         super(RgbCamera, self).__init__(carla_actor=carla_actor,
                                         parent=parent,
                                         topic_prefix=topic_prefix)
+        self.carla_actor = carla_actor
 
     def get_carla_image_data_array(self, carla_image):
         """
@@ -241,6 +244,7 @@ class DepthCamera(Camera):
         super(DepthCamera, self).__init__(carla_actor=carla_actor,
                                           parent=parent,
                                           topic_prefix=topic_prefix)
+        self.carla_actor = carla_actor
 
     def get_carla_image_data_array(self, carla_image):
         """
@@ -312,6 +316,7 @@ class SemanticSegmentationCamera(Camera):
             SemanticSegmentationCamera, self).__init__(carla_actor=carla_actor,
                                                        parent=parent,
                                                        topic_prefix=topic_prefix)
+        self.carla_actor = carla_actor
 
     def get_carla_image_data_array(self, carla_image):
         """
