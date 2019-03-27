@@ -106,7 +106,7 @@ class Sensor(Actor):
         """
         header = super(Sensor, self).get_msg_header(use_parent_frame)
         # use timestamp of current sensor data
-        header.stamp = rospy.Time.from_sec(self.current_sensor_data.timestamp)
+        # header.stamp = rospy.Time.from_sec(self.current_sensor_data.timestamp)
         return header
 
     def _callback_sensor_data(self, carla_sensor_data):
@@ -120,7 +120,7 @@ class Sensor(Actor):
             if self.update_lock.acquire(False):
                 self.current_sensor_data = carla_sensor_data
                 self.send_tf_msg()
-                self.sensor_data_update(carla_sensor_data)
+                self.sensor_data_updated(carla_sensor_data)
                 self.update_lock.release()
 
     def get_tf_msg(self):
