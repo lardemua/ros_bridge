@@ -42,14 +42,12 @@ class Actor(Child):
         :param append_role_name_topic_postfix: If this flag is set True, then the role_name of the actor is used as topic postfix
         :type apped_role_name_topic_postfix: boolean
         """
-
         # each actor defines its own frame
         if append_role_name_topic_postfix:
             if carla_actor.attributes.has_key('role_name'):
                 topic_prefix += '/' + carla_actor.attributes['role_name']
             else:
-                topic_prefix += '/' + \
-                    str(Actor.global_id_registry.get_ID(carla_actor.id))
+                topic_prefix += '/' + str(Actor.global_id_registry.get_ID(carla_actor.id))
         super(Actor, self).__init__(carla_ID=carla_actor.id, carla_world=carla_actor.get_world(),
                                     parent=parent, topic_prefix=topic_prefix)
         self.carla_actor = carla_actor
