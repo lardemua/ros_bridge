@@ -65,7 +65,7 @@ class Parent(object):
 
     def get_frame_ID(self):
         """
-        Getter function for the frame ID of current object
+        Getter Function for the frame ID of current object
         :return: ROS tf frame ID of the object
         :rtype: string
         """
@@ -73,7 +73,7 @@ class Parent(object):
 
     def get_ID(self):
         """
-        Getter function for the carla_ID of parent object
+        Getter Function for the carla_ID of parent object
         :return: Unique carla_ID of the parent object
         :rtype: int64
         """
@@ -81,7 +81,7 @@ class Parent(object):
 
     def get_carla_world(self):
         """
-        Getter function for the carla world object ID of the current object
+        Getter Function for the carla world object ID of the current object
         :return: The carla world
         :rtype: carla.World
         """
@@ -89,32 +89,37 @@ class Parent(object):
 
     def get_new_child_actors(self):
         """
-        Private function used to get children actors of the parent node
+        Private Function used to get children actors of the parent node
         :return:
         """
         for actor in self.get_actor_list():
-            if ((actor.parent and actor.parent.id == self.carla_ID)
-                    or (actor.parent is None and self.carla_ID == 0)):
+            if (actor.parent and actor.parent.id == self.carla_ID) or (actor.parent is None and self.carla_ID == 0):
                 if actor.id not in self.child_actors:
-                    if actor.type_id.startswith('traffic'):
-                        self.new_child_actors[actor.id] = Traffic.create_actor(
-                            carla_actor=actor, parent=self)
-                    elif actor.type_id.startswith("vehicle"):
-                        self.new_child_actors[actor.id] = Vehicle.create_actor(
-                            carla_actor=actor, parent=self)
-                    elif actor.type_id.startswith("sensor"):
-                        self.new_child_actors[actor.id] = Sensor.create_actor(
-                            carla_actor=actor, parent=self)
-                    elif actor.type_id.startswith("spectator"):
-                        self.new_child_actors[actor.id] = Spectator(
-                            carla_actor=actor, parent=self)
+                    if self.get_param("challenge_mode"):
+                        # In challenge mode only the Ego Vehicle and its sensors are created
+                        if actor.type_id.startswith("vehicle") and (actor.attributes.get('role_name') == self.get_param('ego_vehicle').get('role_name')):
+                            self.new_child_actors[actor.id] = EgoVehicle.create_actor(carla_actor=actor, parent=self)
+                        elif actor.type_id.startswith("sensor"):
+                            self.new_child_actors[actor.id] = Sensor.create_actor(carla_actor=actor, parent=self)
                     else:
-                        self.new_child_actors[actor.id] = Actor(
-                            carla_actor=actor, parent=self)
+                        if actor.type_id.startswith("traffic"):
+                            self.new_child_actors[actor.id] = Traffic.create_actor(carla_actor=actor, parent=self)
+                        elif actor.type_id.startswith("vehicle"):
+                            if actor.attributes.get('role_name') in self.get_param('ego_vehicle').get('role_name'):
+                                self.new_child_actors[actor.id] = EgoVehicle.create_actor(carla_actor=actor, parent=self)
+                            else:
+                                self.new_child_actors[actor.id] = Vehicle.create_actor(carla_actor=actor, parent=self)
+                        elif actor.type_id.startswith("sensor"):
+                            self.new_child_actors[actor.id] = Sensor.create_actor(carla_actor=actor, parent=self)
+                        elif actor.type_id.startswith("spectator"):
+                            self.new_child_actors[actor.id] = Spectator.create_actor(carla_actor=actor, parent=self)
+                        else:
+                            self.new_child_actors[actor.id] = Actor(carla_actor=actor, parent=self)
+
 
     def get_dead_child_actors(self):
         """
-        Private function used to detect non existing children actors
+        Private Function used to detect non existing children actors
         :return:
         """
         for child_actor_id, child_actor in self.child_actors.iteritems():
@@ -144,7 +149,8 @@ class Parent(object):
         self.get_dead_child_actors()
         if len(self.dead_child_actors) > 0 or len(self.new_child_actors) > 0:
             with self.update_child_actor_list_lock:
-                for actor_id in self.dead_child_actors:
+                for actor in self.dead_child_actors:
+                    actor_id = actor.carla_actor.id
                     self.child_actors[actor_id].destroy()
                     del self.child_actors[actor_id]
                 self.dead_child_actors = []
