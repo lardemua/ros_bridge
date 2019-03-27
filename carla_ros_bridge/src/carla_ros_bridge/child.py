@@ -128,7 +128,7 @@ class Child(Parent):
         """
         header = super(Child, self).get_msg_header()
         if use_parent_frame:
-            header.frame_id = self.parent.get_frame_ID()
+            header.frame_ID = self.parent.get_frame_ID()
         return header
 
     def send_tf_msg(self):
@@ -148,7 +148,7 @@ class Child(Parent):
         """
         tf_msg = TransformStamped()
         tf_msg.header = self.get_msg_header()
-        tf_msg.child_frame_id = self.get_frame_ID()
+        tf_msg.child_frame_ID = self.get_frame_ID()
         tf_msg.transform = self.get_current_ros_transform()
         return tf_msg
 
