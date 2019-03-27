@@ -61,17 +61,17 @@ class Sensor(Actor):
         """
         if topic_prefix is None:
             topic_prefix = 'sensor'
-            super(Sensor, self).__init__(carla_actor=carla_actor,
-                                         parent=parent,
-                                         topic_prefix=topic_prefix,
-                                         append_role_name_topic_postfix=append_role_name_topic_postfix)
-            self.current_sensor_data = None
-            self.update_lock = threading.Lock()
-            if self.__class__.__name__ == "Sensor":
-                rospy.logwarn("Created Unsupported Sensor(id={}, parent_id={}" ", type={}, attributes={}".format(
-                    self.get_ID(), self.get_parent_ID(), self.carla_actor.type_id, self.carla_actor.attributes))
-            else:
-                self.carla_actor.listen(self._callback_sensor_data)
+        super(Sensor, self).__init__(carla_actor=carla_actor,
+                                     parent=parent,
+                                     topic_prefix=topic_prefix,
+                                     append_role_name_topic_postfix=append_role_name_topic_postfix)
+        self.current_sensor_data = None
+        self.update_lock = threading.Lock()
+        if self.__class__.__name__ == "Sensor":
+            rospy.logwarn("Created Unsupported Sensor(id={}, parent_id={}" ", type={}, attributes={}".format(
+                self.get_ID(), self.get_parent_ID(), self.carla_actor.type_id, self.carla_actor.attributes))
+        else:
+            self.carla_actor.listen(self._callback_sensor_data)
 
     def destroy(self):
         """
