@@ -22,6 +22,19 @@ class Spectator(Actor):
     Actor Implementation Details for Spectators
     """
 
+    @staticmethod
+    def create_actor(carla_actor, parent):
+        """
+        Static Factory Method to create vehicle actors
+        :param carla_actor: Carla Sensor Actor Object
+        :type carla_actor: carla.Sensor
+        :param parent: Parent of the new traffic actor,
+        :type parent: carla_ros_bridge.Parent
+        :return: Created sensor Actor
+        :rtype: carla_ros_bridge.Sensor or derived type.
+        """
+        return Spectator(carla_actor=carla_actor, parent=parent)
+
     def __init__(self, carla_actor, parent, topic_prefix=None, append_role_name_topic_postfix=True):
         """
         Constructor for Spectator Class

@@ -128,7 +128,7 @@ class Child(Parent):
         """
         header = super(Child, self).get_msg_header()
         if use_parent_frame:
-            header.frame_ID = self.parent.get_frame_ID()
+            header.frame_id = self.parent.get_frame_ID()
         return header
 
     def send_tf_msg(self):

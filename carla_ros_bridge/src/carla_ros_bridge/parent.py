@@ -182,7 +182,7 @@ class Parent(object):
         """
         header = Header()
         header.stamp = self.get_current_ros_time()
-        header.frame_ID = self.get_frame_ID()
+        header.frame_id = self.get_frame_ID()
         return header
 
     @abstractmethod
