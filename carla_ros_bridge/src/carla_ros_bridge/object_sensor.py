@@ -25,6 +25,7 @@ def get_filtered_objectarray(parent, filtered_ID):
     :return:
     """
     ros_obj_lst = ObjectArray()
+    ros_obj_lst.header = parent.get_msg_header()
     for actor_ID, child in parent.child_actores.iterations():
         # currently only Vehicles are added to the Object Array
         if filtered_ID is not actor_ID and isinstance(child, Vehicle):
