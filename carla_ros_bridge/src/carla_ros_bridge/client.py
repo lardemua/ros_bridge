@@ -24,7 +24,7 @@ def main():
     """
         Main Function for Carla Simulator ROS Bridge.
         Maintains communication between client and the CarlaRosBridge objects
-    :return:
+        :return:
     """
     rospy.init_node("carla_client", anonymous=True)
 
