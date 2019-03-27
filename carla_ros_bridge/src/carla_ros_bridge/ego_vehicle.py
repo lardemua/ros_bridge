@@ -54,7 +54,7 @@ class EgoVehicle(Vehicle):
         """
         super(EgoVehicle, self).__init__(carla_actor=carla_actor,
                                          parent=parent,
-                                         topic_prefix="ego_vehicle",
+                                         topic_prefix=carla_actor.attributes.get('role_name'),
                                          append_role_name_topic_postfix=False)
         self.vehicle_info_published = False
         self.control_subscriber = rospy.Subscriber(self.topic_name() + "/vehicle_control_cmd",
@@ -208,6 +208,7 @@ class EgoVehicle(Vehicle):
         :return:
         """
         rospy.logdebug("Destroy Vehicle(id={})".format(self.get_id()))
+        self.control_subscriber.unregister()
         self.control_subscriber = None
         super(EgoVehicle, self).destroy()
 
