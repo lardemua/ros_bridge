@@ -273,3 +273,4 @@ from carla_ros_bridge.spectator import Spectator             # noqa, pylint: dis
 from carla_ros_bridge.sensor import Sensor                   # noqa, pylint: disable=wrong-import-position
 from carla_ros_bridge.traffic import Traffic                 # noqa, pylint: disable=wrong-import-position
 from carla_ros_bridge.vehicle import Vehicle                 # noqa, pylint: disable=wrong-import-position
+from carla_ros_bridge.ego_vehicle import EgoVehicle          # noqa, pylint: disable=wrong-import-position
