@@ -116,7 +116,6 @@ class Parent(object):
                         else:
                             self.new_child_actors[actor.id] = Actor(carla_actor=actor, parent=self)
 
-
     def get_dead_child_actors(self):
         """
         Private Function used to detect non existing children actors
