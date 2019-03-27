@@ -11,8 +11,10 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   rospy
   std_msgs
+  message_generation
   sensor_msgs
   geometry_msgs
+  derived_object_msgs
   tf
   dynamic_reconfigure
 )
@@ -57,6 +59,7 @@ add_message_files(
   CarlaEgoVehicleStatus.msg
   CarlaEgoVehicleInfoWheel.msg
   CarlaEgoVehicleInfo.msg
+  CarlaCollisionEvent.msg
 )
 
 ## Generate services in the 'srv' folder
