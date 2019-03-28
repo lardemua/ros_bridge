@@ -8,11 +8,13 @@ from __future__ import print_function
 import sys
 import rospy
 import cv2
+import carla
 from std_msgs.msg import String
 from sensor_msgs.msg import Image
 from cv_bridge import CvBridge, CvBridgeError
 import roslib
 roslib.load_manifest('carla_ros_image_converter')
+
 
 
 class Image_Converter:
@@ -35,6 +37,13 @@ class Image_Converter:
         if cols > 60 and rows > 60:
             cv2.circle(cv_img, (50,50), 10, 255)
         # cv2.circle(cv_img, (50,50), 10, 255)
+
+        client = carla.Client('127.0.0.1', 2000)
+        world = client.get_world()
+        blueprints = world.get_blueprint_library().filter('vehicle.*')
+
+        # print blueprints
+        print(blueprints)
 
         cv2.imshow("Image Window", cv_img)
         cv2.waitKey(3)
