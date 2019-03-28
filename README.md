@@ -8,6 +8,30 @@ __Important Note:__
 
 This documentation is for CARLA versions *newer* than 0.9.4.
 
+![rviz setup](./docs/images/rviz_carla_session1.png "rviz")
+
+# Features
+
+
+
+- [x] Cameras (depth, segmentation, rgb) support
+
+- [x] Transform publications
+
+- [x] Manual control using ackermann msg
+
+- [x] Handle ROS dependencies
+
+- [x] Marker/bounding box messages for cars/pedestrian
+
+- [x] Lidar sensor support
+
+- [ ] Rosbag in the bridge (in order to avoid rosbag record -a small time errors)
+
+- [ ] Add traffic light support
+
+- [ ] ROS/OpenCV image convertion and Object Tracking using Template Matching.
+
 # Setup
 
 
@@ -145,5 +169,223 @@ If the rolename is within the list specified by ROS parameter `/carla/ego_vehicl
 
 
 To simulate traffic, you can spawn automatically moving vehicles by using spawn_npc.py from CARLA Python API.
+
+# Available ROS Topics
+
+
+
+## Ego Vehicle
+
+
+
+### Odometry
+
+
+
+|Topic                          | Type |
+
+|-------------------------------|------|
+
+| `/carla/<ROLE NAME>/odometry` | [nav_msgs.Odometry](http://docs.ros.org/api/nav_msgs/html/msg/Odometry.html) |
+
+
+
+### Sensors
+
+
+
+The ego vehicle sensors are provided via topics with prefix /carla/ego_vehicle/<sensor_topic>
+
+
+
+Currently the following sensors are supported:
+
+
+
+#### Camera
+
+
+
+|Topic                                 | Type |
+
+|--------------------------------------|------|
+
+| `/carla/<ROLE NAME>/camera/rgb/<SENSOR ROLE NAME>/image_color` | [sensor_msgs.Image](http://docs.ros.org/api/sensor_msgs/html/msg/Image.html) |
+
+| `/carla/<ROLE NAME>/camera/rgb/<SENSOR ROLE NAME>/camera_info` | [sensor_msgs.CameraInfo](http://docs.ros.org/api/sensor_msgs/html/msg/CameraInfo.html) |
+
+
+
+#### Lidar
+
+
+
+|Topic                                 | Type |
+
+|--------------------------------------|------|
+
+| `/carla/<ROLE NAME>/lidar/<SENSOR ROLE NAME>/point_cloud` | [sensor_msgs.PointCloud2](http://docs.ros.org/api/sensor_msgs/html/msg/PointCloud2.html) |
+
+
+
+#### GNSS
+
+
+
+|Topic                                 | Type |
+
+|--------------------------------------|------|
+
+| `/carla/<ROLE NAME>/gnss/front/gnss` | [sensor_msgs.NavSatFix](http://docs.ros.org/api/sensor_msgs/html/msg/NavSatFix.html) |
+
+
+
+#### Collision Sensor
+
+
+
+|Topic                          | Type |
+
+|-------------------------------|------|
+
+| `/carla/<ROLE NAME>/collision` | [carla_ros_bridge.CarlaCollisionEvent](carla_ros_bridge/msg/CarlaCollisionEvent.msg) |
+
+
+
+### Control
+
+
+
+|Topic                                 | Type |
+
+|--------------------------------------|------|
+
+| `/carla/<ROLE NAME>/vehicle_control_cmd` (subscriber) | [carla_ros_bridge.CarlaEgoVehicleControl](carla_ros_bridge/msg/CarlaEgoVehicleControl.msg) |
+
+| `/carla/<ROLE NAME>/vehicle_status` | [carla_ros_bridge.CarlaEgoVehicleStatus](carla_ros_bridge/msg/CarlaEgoVehicleStatus.msg) |
+
+| `/carla/<ROLE NAME>/vehicle_info` | [carla_ros_bridge.CarlaEgoVehicleInfo](carla_ros_bridge/msg/CarlaEgoVehicleInfo.msg) |
+
+
+
+You can stear the ego vehicle from the commandline by publishing to the topic `/carla/<ROLE NAME>/vehicle_control_cmd`.
+
+
+
+Examples for a ego vehicle with role_name 'ego_vehicle':
+
+
+
+Max forward throttle:
+
+
+
+     rostopic pub /carla/ego_vehicle/vehicle_control_cmd carla_ros_bridge/CarlaEgoVehicleControl "{throttle: 1.0, steer: 0.0}" -r 10
+
+
+
+
+
+Max forward throttle with max steering to the right:
+
+
+
+     rostopic pub /carla/ego_vehicle/vehicle_control_cmd carla_ros_bridge/CarlaEgoVehicleControl "{throttle: 1.0, steer: 1.0}" -r 10
+
+
+
+
+
+The current status of the vehicle can be received via topic `/carla/<ROLE NAME>/vehicle_status`.
+
+Static information about the vehicle can be received via `/carla/<ROLE NAME>/vehicle_info`
+
+
+
+#### Carla Ackermann Control
+
+
+
+In certain cases, the [Carla Control Command](carla_ros_bridge/msg/CarlaEgoVehicleControl.msg) is not ideal to connect to an AD stack.
+
+Therefore a ROS-based node ```carla_ackermann_control``` is provided which reads [AckermannDrive](http://docs.ros.org/api/ackermann_msgs/html/msg/AckermannDrive.html) messages.
+
+You can find further documentation [here](carla_ackermann_control/README.md).
+
+
+
+
+
+## Other Topics
+
+
+
+### Object information of other vehicles
+
+
+
+|Topic         | Type |
+
+|--------------|------|
+
+| `/carla/objects` | [derived_object_msgs.String](http://docs.ros.org/api/derived_object_msgs/html/msg/ObjectArray.html) |
+
+
+
+Object information of all vehicles, except the ego-vehicle(s) is published.
+
+
+
+## Map
+
+
+
+|Topic         | Type |
+
+|--------------|------|
+
+| `/carla/map` | [std_msgs.String](http://docs.ros.org/api/std_msgs/html/msg/String.html) |
+
+
+
+The OPEN Drive map description is published.
+
+
+
+
+
+# ROSBAG recording (not yet tested)
+
+
+
+The carla_ros_bridge could also be used to record all published topics into a rosbag:
+
+
+
+    roslaunch carla_ros_bridge client_with_rviz.launch rosbag_fname:=/tmp/save_session.bag
+
+
+
+This command will create a rosbag /tmp/save_session.bag
+
+
+
+You can of course also use rosbag record to do the same, but using the ros_bridge to do the recording you have the guarentee that all the message are saved without small desynchronization that could occurs when using *rosbag record* in an other process.
+
+
+# ROS-OpenCV Image Convertion
+
+
+
+The carla_ros_image_converter package is used to convert images from a ROS Topic to an OpenCV image by running the following command:
+
+
+
+    roslaunch carla_ros_image_converter image_converter.launch
+
+
+
+In the future we will be using the OpenCV Template Matching algorithm in order to track objects in the CARLA world.
+
 
 
