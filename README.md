@@ -1,6 +1,6 @@
 # ros_bridge -> ROS bridge for Carla Simulator
 ROS Bridge Driver for Carla Simulator package : https://github.com/carla-simulator/carla <br /> 
-Based on the code provided by the ros-bridge repository of CARLA: https://github.com/carla-simulator/ros-bridge <br />
+Based on the code provided by the "ros-bridge" repository of CARLA: https://github.com/carla-simulator/ros-bridge <br />
 The goal of this ROS package is to provide a simple ROS bridge for CARLA simulator in order to be used for the ATLASCAR project of Aveiro University.
 
 __Important Note:__
@@ -103,9 +103,9 @@ Then start the ros bridge:
 
 
 
-    source ~/ros/catkin_ws_for_carla/devel/setup.bash
+    source ~/ros/catkin_ws/devel/setup.bash
 
-    roslaunch carla_ros_bridge carla_ros_bridge.launch
+    roslaunch carla_ros_bridge client.launch
 
 
 
@@ -113,9 +113,9 @@ To start the ros bridge with rviz use:
 
 
 
-    source ~/ros/catkin_ws_for_carla/devel/setup.bash
+    source ~/ros/catkin_ws/devel/setup.bash
 
-    roslaunch carla_ros_bridge carla_ros_bridge_with_rviz.launch
+    roslaunch carla_ros_bridge client_with_rviz.launch
 
 
 
