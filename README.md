@@ -8,7 +8,7 @@ __Important Note:__
 
 This documentation is for CARLA versions *newer* than 0.9.4.
 
-![rviz setup](./docs/images/rviz_carla_session1.png "rviz")
+![rviz setup](./assets/images/rviz_carla_session1.png "rviz")
 
 # Features
 
