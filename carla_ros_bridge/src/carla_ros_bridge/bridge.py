@@ -83,7 +83,7 @@ class CarlaRosBridge(Parent):
         """
         return self.ros_timestamp
 
-    def publish_ros_message(self, topic, msg):
+    def publish_ros_message(self, topic, msg, is_latched=False):
         """
         Override Function used to publish ROS messages
         Store the message in a list (waiting for their publication) with their associated publisher.
@@ -94,6 +94,8 @@ class CarlaRosBridge(Parent):
         :type topic: string
         :param msg: ROS message to be published
         :type msg: a valid ROS message type
+        :param is_latched: Check if ROS message is latched with something
+        :type is_latched: boolean
         :return:
         """
         if topic == 'tf':
@@ -105,7 +107,7 @@ class CarlaRosBridge(Parent):
         #     self.object_array.objects.append(msg)
         else:
             if topic not in self.publishers:
-                self.publishers[topic] = rospy.Publisher(topic, type(msg), queue_size=10)
+                self.publishers[topic] = rospy.Publisher(topic, type(msg), queue_size=10, latch=is_latched)
             self.msgs_to_publish.append((self.publishers[topic], msg))
 
     def get_param(self, key, default=None):

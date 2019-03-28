@@ -150,7 +150,7 @@ class Child(Parent):
         """
         tf_msg = TransformStamped()
         tf_msg.header = self.get_msg_header()
-        tf_msg.child_frame_ID = self.get_frame_ID()
+        tf_msg.child_frame_id = self.get_frame_ID()
         tf_msg.transform = self.get_current_ros_transform()
         return tf_msg
 
