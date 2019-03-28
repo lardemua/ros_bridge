@@ -34,6 +34,7 @@ class Image_Converter:
         (rows, cols, channels) = cv_img.shape
         if cols > 60 and rows > 60:
             cv2.circle(cv_img, (50,50), 10, 255)
+        # cv2.circle(cv_img, (50,50), 10, 255)
 
         cv2.imshow("Image Window", cv_img)
         cv2.waitKey(3)
