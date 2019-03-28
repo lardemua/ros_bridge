@@ -200,7 +200,7 @@ class Parent(object):
             "If this error becomes visible the class hierarchy is somehow broken")
 
     @abstractmethod
-    def publish_ros_message(self, topic, msg):
+    def publish_ros_message(self, topic, msg, is_latched=False):
         """
         Pure Virtual Function used to publish ROS messages via the carla_ros_bridge.CarlaRosBridge parent root.
         This method is intended to be implemented by the directly derived classes:
@@ -210,6 +210,8 @@ class Parent(object):
         :type topic: string
         :param msg: ROS message to be published
         :type msg: a valid ROS message type.
+        :param is_latched: Check if ROS message is latched with something.
+        :type is_latched: boolean
         :return:
         """
         raise NotImplementedError(

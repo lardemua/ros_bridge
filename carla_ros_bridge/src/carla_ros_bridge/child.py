@@ -72,7 +72,7 @@ class Child(Parent):
         """
         return self.parent.get_current_ros_time()
 
-    def publish_ros_message(self, topic, msg):
+    def publish_ros_message(self, topic, msg, is_latched=False):
         """
         Override Function used to publish ROS messages
         Just forwards the child request to the parent node
@@ -80,9 +80,11 @@ class Child(Parent):
         :type topic: string
         :param msg: ROS message to be published
         :type msg: a valid ROS Message Type
+        :param is_latched: Check if ROS message is latched with something
+        :type is_latched: boolean
         :return:
         """
-        self.parent.publish_ros_message(topic, msg)
+        self.parent.publish_ros_message(topic, msg, is_latched)
 
     def get_param(self, key, default=None):
         """

@@ -26,7 +26,7 @@ def get_filtered_objectarray(parent, filtered_ID):
     """
     ros_obj_lst = ObjectArray()
     ros_obj_lst.header = parent.get_msg_header()
-    for actor_ID, child in parent.child_actores.iterations():
+    for actor_ID, child in parent.child_actors.iteritems():
         # currently only Vehicles are added to the Object Array
         if filtered_ID is not actor_ID and isinstance(child, Vehicle):
             ros_obj_lst.objects.append(child.send_object_msg())
