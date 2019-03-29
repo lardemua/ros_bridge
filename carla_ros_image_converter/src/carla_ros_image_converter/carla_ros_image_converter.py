@@ -16,7 +16,6 @@ import roslib
 roslib.load_manifest('carla_ros_image_converter')
 
 
-
 class Image_Converter:
     """
     Class used for converting ROS images to OpenCV images
