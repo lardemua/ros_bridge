@@ -58,7 +58,7 @@ First, clone or download the carla_ros_bridge, for example into
 
     ln -s ~/carla_ros_bridge .
 
-    source /opt/ros/kinetic/setup.bash
+    source /opt/ros/melodic/setup.bash
 
     catkin_make
 
