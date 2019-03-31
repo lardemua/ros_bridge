@@ -170,6 +170,14 @@ If the rolename is within the list specified by ROS parameter `/carla/ego_vehicl
 
 To simulate traffic, you can spawn automatically moving vehicles by using spawn_npc.py from CARLA Python API.
 
+```
+
+cd <path/to/carla/>
+
+python spawn_npc.py
+
+```
+
 # Available ROS Topics
 
 
