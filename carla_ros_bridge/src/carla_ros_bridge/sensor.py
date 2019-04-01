@@ -44,7 +44,7 @@ class Sensor(Actor):
             return Lidar(carla_actor=carla_actor, parent=parent)
         if carla_actor.type_id.startswith("sensor.other.gnss"):
             return Gnss(carla_actor=carla_actor, parent=parent)
-        if carla_actor.type_id.startswith("sensor.other.custom"):
+        if carla_actor.type_id.startswith("sensor.other.lidar"):
             return CustomSensor(carla_actor=carla_actor, parent=parent)
         if carla_actor.type_id.startswith("sensor.other.collision"):
             return CollisionSensor(carla_actor=carla_actor, parent=parent)
