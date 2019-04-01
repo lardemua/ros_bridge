@@ -143,7 +143,7 @@ class Sensor(Actor):
         """
         Override Function used to provide the current ROS transform.
         In general sensors are also actors, therefore they contain a transform that is updated within each tick.
-        But the TF beeing published should exactly match the transform received by SensorData.
+        But the TF being published should exactly match the transform received by SensorData.
         :return: the ROS transform of this actor
         :rtype: geometry_msgs.msg.Transform
         """
