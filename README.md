@@ -10,6 +10,8 @@ This documentation is for CARLA versions *newer* than 0.9.4.
 
 ![rviz setup](./assets/images/rviz_carla_session1.png "rviz")
 ![rviz setup](./assets/images/rviz_carla_session2.png "rviz")
+![rviz setup](./assets/images/rviz_carla_session3.png "rviz")
+
 
 
 # Features
@@ -218,6 +220,17 @@ Currently the following sensors are supported:
 |--------------------------------------|------|
 | `/carla/<ROLE NAME>/camera/rgb/<SENSOR ROLE NAME>/image_color` | [sensor_msgs.Image](http://docs.ros.org/api/sensor_msgs/html/msg/Image.html) |
 | `/carla/<ROLE NAME>/camera/rgb/<SENSOR ROLE NAME>/camera_info` | [sensor_msgs.CameraInfo](http://docs.ros.org/api/sensor_msgs/html/msg/CameraInfo.html) |
+
+![Camera_RGB](./assets/images/rgb_camera.png "Camera_RGB")
+![Camera_Depth_Raw](./assets/images/rgb_depth.png "Camera_Depth_Raw")
+![Camera_Depth_GrayScale](./assets/images/gray_scale_camera.png "Camera_Depth_GrayScale")
+![Camera_Depth_LogGrayScale](./assets/images/log_gray_scale.png "Camera_Depth_LogGrayScale")
+![Camera_SemanticSegmentation_Raw](./assets/images/raw_camera_data.png "Camera_SemanticSegmentation_Raw")
+![Camera_SemanticSegmentation_CityScapes](./assets/images/camera_segmentation.png "Camera_SemanticSegmentation_CityScapes")
+
+
+
+
 
 
 
