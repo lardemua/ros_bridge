@@ -48,6 +48,8 @@ class Sensor(Actor):
             return CustomSensor(carla_actor=carla_actor, parent=parent)
         if carla_actor.type_id.startswith("sensor.other.collision"):
             return CollisionSensor(carla_actor=carla_actor, parent=parent)
+        if carla_actor.type_id.startswith("sensor.other.lane_invasion"):
+            return LaneInvasionSensor(carla_actor=carla_actor, parent=parent)
         else:
             return Sensor(carla_actor=carla_actor, parent=parent)
 
@@ -163,8 +165,9 @@ class Sensor(Actor):
 # These imports have to be at the end to resolve cyclic dependency
 
 
-from carla_ros_bridge.camera import Camera                      # noqa, pylint: disable=wrong-import-position
-from carla_ros_bridge.lidar import Lidar                        # noqa, pylint: disable=wrong-import-position
-from carla_ros_bridge.gnss import Gnss                          # noqa, pylint: disable=wrong-import-position
-from carla_ros_bridge.custom_sensor import CustomSensor         # noqa, pylint: disable=wrong-import-position
-from carla_ros_bridge.collision_sensor import CollisionSensor   # noqa, pylint: disable=wrong-import-position
+from carla_ros_bridge.camera import Camera                              # noqa, pylint: disable=wrong-import-position
+from carla_ros_bridge.lidar import Lidar                                # noqa, pylint: disable=wrong-import-position
+from carla_ros_bridge.gnss import Gnss                                  # noqa, pylint: disable=wrong-import-position
+from carla_ros_bridge.custom_sensor import CustomSensor                 # noqa, pylint: disable=wrong-import-position
+from carla_ros_bridge.collision_sensor import CollisionSensor           # noqa, pylint: disable=wrong-import-position
+from carla_ros_bridge.lane_invasion_sensor import LaneInvasionSensor    # noqa, pylint: disable=wrong-import-position

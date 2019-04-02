@@ -233,6 +233,16 @@ class EgoVehicle(Vehicle):
         vehicle_control.reverse = ros_vehicle_control.reverse
         self.carla_actor.apply_control(vehicle_control)
 
+    def enable_autopilot_updated(self, enable_auto_pilot):
+        """
+        Function used to enable/disable auto pilot
+        :param enable_auto_pilot: should the autopilot be enabled?
+        :type enable_auto_pilot: std_msgs.Bool
+        :return:
+        """
+        rospy.logdebug("Ego vehicle: Set autopilot to {}".format(enable_auto_pilot.data))
+        self.carla_actor.set_autopilot(enable_auto_pilot.data)
+
     # def send_ego_vehicle_control_info_msg(self):
     #     """
     #     Function used to send carla_ros_bridge.msg.EgoVehicleControlInfo message
