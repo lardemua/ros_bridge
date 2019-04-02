@@ -193,9 +193,7 @@ python spawn_npc.py
 
 
 |Topic                          | Type |
-
 |-------------------------------|------|
-
 | `/carla/<ROLE NAME>/odometry` | [nav_msgs.Odometry](http://docs.ros.org/api/nav_msgs/html/msg/Odometry.html) |
 
 
@@ -217,11 +215,8 @@ Currently the following sensors are supported:
 
 
 |Topic                                 | Type |
-
 |--------------------------------------|------|
-
 | `/carla/<ROLE NAME>/camera/rgb/<SENSOR ROLE NAME>/image_color` | [sensor_msgs.Image](http://docs.ros.org/api/sensor_msgs/html/msg/Image.html) |
-
 | `/carla/<ROLE NAME>/camera/rgb/<SENSOR ROLE NAME>/camera_info` | [sensor_msgs.CameraInfo](http://docs.ros.org/api/sensor_msgs/html/msg/CameraInfo.html) |
 
 
@@ -231,9 +226,7 @@ Currently the following sensors are supported:
 
 
 |Topic                                 | Type |
-
 |--------------------------------------|------|
-
 | `/carla/<ROLE NAME>/lidar/<SENSOR ROLE NAME>/point_cloud` | [sensor_msgs.PointCloud2](http://docs.ros.org/api/sensor_msgs/html/msg/PointCloud2.html) |
 
 
@@ -243,9 +236,7 @@ Currently the following sensors are supported:
 
 
 |Topic                                 | Type |
-
 |--------------------------------------|------|
-
 | `/carla/<ROLE NAME>/gnss/front/gnss` | [sensor_msgs.NavSatFix](http://docs.ros.org/api/sensor_msgs/html/msg/NavSatFix.html) |
 
 
@@ -255,25 +246,23 @@ Currently the following sensors are supported:
 
 
 |Topic                          | Type |
-
 |-------------------------------|------|
-
 | `/carla/<ROLE NAME>/collision` | [carla_ros_bridge.CarlaCollisionEvent](carla_ros_bridge/msg/CarlaCollisionEvent.msg) |
 
+#### Lane Invasion Sensor
 
+|Topic                          | Type |
+|-------------------------------|------|
+| `/carla/<ROLE NAME>/lane_invasion` | [carla_ros_bridge.CarlaLaneInvasionEvent](carla_ros_bridge/msg/CarlaLaneInvasionEvent.msg) |
 
 ### Control
 
 
 
 |Topic                                 | Type |
-
 |--------------------------------------|------|
-
 | `/carla/<ROLE NAME>/vehicle_control_cmd` (subscriber) | [carla_ros_bridge.CarlaEgoVehicleControl](carla_ros_bridge/msg/CarlaEgoVehicleControl.msg) |
-
 | `/carla/<ROLE NAME>/vehicle_status` | [carla_ros_bridge.CarlaEgoVehicleStatus](carla_ros_bridge/msg/CarlaEgoVehicleStatus.msg) |
-
 | `/carla/<ROLE NAME>/vehicle_info` | [carla_ros_bridge.CarlaEgoVehicleInfo](carla_ros_bridge/msg/CarlaEgoVehicleInfo.msg) |
 
 
