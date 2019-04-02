@@ -242,6 +242,7 @@ Currently the following sensors are supported:
 |--------------------------------------|------|
 | `/carla/<ROLE NAME>/lidar/<SENSOR ROLE NAME>/point_cloud` | [sensor_msgs.PointCloud2](http://docs.ros.org/api/sensor_msgs/html/msg/PointCloud2.html) |
 
+![Lidar_Segmentation](./assets/images/lidar_segmentation.png "Lidar_Segmentation")
 
 
 #### GNSS
