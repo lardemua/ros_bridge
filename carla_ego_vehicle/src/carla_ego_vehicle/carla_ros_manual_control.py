@@ -148,6 +148,119 @@ class World(object):
         self.collision_subscriber.unregister()
         self.lane_invasion_subscriber.unregister()
 
+# ==============================================================================
+# -- KeyboardControl ---------------------------------------------------------------------
+# ==============================================================================
 
 
+class KeyboardControl(object):
+    """
+    Class used to handle keyboard input events
+    """
+    def __init__(self, hud):
+        """
+           Constructor for KeyboardControl class
+           :param hud: info display
+        """
+        self.vehicle_control_manual_override_publisher = rospy.Publisher("/vehicle_control_manual_override",
+                                                                         Bool, queue_size=1, latch=True)
+        self.vehicle_control_manual_override = False
+        self.auto_pilot_enable_publisher = rospy.Publisher("/carla/ego_vehicle/enable_autopilot", Bool, queue_size=1)
+        self.vehicle_control_publisher = rospy.Publisher("/carla/ego_vehicle/vehicle_control_cmd",
+                                                         CarlaEgoVehicleControl, queue_size=1)
+        self._autopilot_enabled = False
+        self._control = CarlaEgoVehicleControl()
+        self.set_autopilot(self._autopilot_enabled)
+        self._steer_cache = 0.0
+        self.hud = hud
+        self.set_vehicle_control_manual_override(self.vehicle_control_manual_override)   # disable manual override
+        self.hud.notification("Press 'H' or '?' for help.", seconds=4.0)
 
+    def __del__(self):
+        """
+        Destructor for KeyboardControl class
+        :return:
+        """
+        self.auto_pilot_enable_publisher.unregister()
+        self.vehicle_control_publisher.unregister()
+        self.vehicle_control_manual_override_publisher.unregister()
+
+    def set_vehicle_control_manual_override(self, enable):
+        """
+        Function used to set the manual control override
+        :param enable:
+        :return:
+        """
+        self.hud.notification('Set Vehicle Control Manual Override to: {}'.format(enable))
+        self.vehicle_control_manual_override_publisher.publish((Bool(data=enable)))
+
+    def set_autopilot(self, enable):
+        """
+        Function used to enable/disable the autopilot
+        :param enable:
+        :return:
+        """
+        self.auto_pilot_enable_publisher.publish(Bool(data=enable))
+
+    def parse_events(self, clock):
+        """
+        Function used to parse input events
+        :param clock:
+        :return:
+        """
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                return True
+            elif event.type == pygame.KEYUP:
+                if self._is_quit_shortcut(event.key):
+                    return True
+                elif event.key == K_F1:
+                    self.hud.toggle_info()
+                elif event.key == K_h or (event.key == K_SLASH and pygame.key.get_mods() & KMOD_SHIFT):
+                    self.hud.help.toggle()
+                elif event.key == K_b:
+                    self.vehicle_control_manual_override = not self.vehicle_control_manual_override
+                    self.set_vehicle_control_manual_override(self.vehicle_control_manual_override)
+                if event.key == K_q:
+                    self._control.gear = 1 if self._control.reverse else -1
+                elif event.key == K_m:
+                    self._control.manual_gear_shift = not self._control.manual_gear_shift
+                    self.hud.notification(
+                        '%s Transmission' % ('Manual' if self._control.manual_gear_shift else 'Automatic')
+                    )
+                elif self._control.manual_gear_shift and event.key == K_COMMA:
+                    self._control.gear = max(-1, self._control.gear - 1)
+                elif self._control.manual_gear_shift and event.key == K_PERIOD:
+                    self._control.gear = self._control.gear + 1
+                elif event.key == K_p:
+                    self._autopilot_enabled = not self._autopilot_enabled
+                    self.set_autopilot(self._autopilot_enabled)
+                    self.hud.notification('Autopilot %s' % ('On' if self._autopilot_enabled else 'Off'))
+        if not self._autopilot_enabled and self.vehicle_control_manual_override:
+            self._parse_vehicle_keys(pygame.key.get_pressed(), clock.get_time())
+            self._control.reverse = self._control.gear < 0
+            self.vehicle_control_publisher.publish(self._control)
+
+    def _parse_vehicle_keys(self, keys, milliseconds):
+        """
+        Private function used to parse vehicle key events
+        :param keys: key events
+        :param milliseconds: timestamps
+        :return:
+        """
+        self._control.throttle = 1.0 if keys[K_UP] or keys[K_w] else 0.0
+        steer_increment = 5e-4 * milliseconds
+        if keys[K_LEFT] or keys[K_a]:
+            self._steer_cache -= steer_increment
+        elif keys[K_RIGHT] or keys[K_d]:
+            self._steer_cache += steer_increment
+        else:
+            self._steer_cache = 0.0
+        self._steer_cache = min(0.7, max(-0.7, self._steer_cache))
+        self._control.steer = round(self._steer_cache, 1)
+        self._control.brake = 1.0 if keys[K_DOWN] or keys[K_s] else 0.0
+        self._control.hand_brake = keys[K_SPACE]
+
+    @staticmethod
+    def _is_quit_shortcut(key):
+        return (key == K_ESCAPE) or (key == K_q and pygame.key.get_mods() & KMOD_CTRL)
