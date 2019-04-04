@@ -39,6 +39,7 @@ import rospy
 import tf
 from std_msgs.msg import Bool
 from sensor_msgs.msg import NavSatFix
+from sensor_msgs.msg import Image
 from carla_ros_bridge.msg import CarlaCollisionEvent            # pylint: disable=no-name-in-module, import-error
 from carla_ros_bridge.msg import CarlaLaneInvasionEvent         # pylint: disable=no-name-in-module, import-error
 from carla_ros_bridge.msg import CarlaEgoVehicleControl         # pylint: disable=no-name-in-module, import-error
@@ -149,7 +150,7 @@ class World(object):
         self.lane_invasion_subscriber.unregister()
 
 # ==============================================================================
-# -- KeyboardControl ---------------------------------------------------------------------
+# -- KeyboardControl -----------------------------------------------------------
 # ==============================================================================
 
 
@@ -264,3 +265,340 @@ class KeyboardControl(object):
     @staticmethod
     def _is_quit_shortcut(key):
         return (key == K_ESCAPE) or (key == K_q and pygame.key.get_mods() & KMOD_CTRL)
+
+# ==============================================================================
+# -- HUD -----------------------------------------------------------------------
+# ==============================================================================
+
+
+class HUD(object):
+    """
+    Class used to handle Info Display
+    """
+    def __init__(self, width, height):
+        """
+        Constructor for HUD Class
+        :param width: display width
+        :param height: display height
+        """
+        self.dim = (width, height)
+        font = pygame.font.Font(pygame.font.get_default_font(), 20)
+        fonts = [x for x in pygame.font.get_fonts() if 'mono' in x]
+        default_font = 'ubuntumono'
+        mono = default_font if default_font in fonts else fonts[0]
+        mono = default_font if default_font in fonts else fonts[0]
+        mono = pygame.font.match_font(mono)
+        self._font_mono = pygame.font.Font(mono, 14)
+        self._notifications = FadingText(font, (width, 40), (0, height - 40))
+        self.help = HelpText(pygame.font.Font(mono, 24), width, height)
+        self._show_info = True
+        self._info_text = []
+        self.vehicle_status = CarlaEgoVehicleStatus()
+        self.vehicle_status_subscriber = rospy.Subscriber("/carla/ego_vehicle/vehicle_status",
+                                                          CarlaEgoVehicleStatus, self.vehicle_status_updated)
+        self.vehicle_info = CarlaEgoVehicleInfo()
+        self.vehicle_info_subscriber = rospy.Subscriber("/carla/ego_vehicle/vehicle_info",
+                                                        CarlaEgoVehicleInfo, self.vehicle_info_updated)
+        self.latitude = 0
+        self.longitude = 0
+        self.gnss_subscriber = rospy.Subscriber("/carla/ego_vehicle/gnss/front/gnss",
+                                                NavSatFix, self.gnss_updated)
+        self.tf_listener = tf.TransformListener()
+
+    def __del__(self):
+        """
+        Destructor for HUD Class
+        :return:
+        """
+        self.gnss_subscriber.unregister()
+        self.vehicle_status_subscriber.unregister()
+        self.vehicle_info_subscriber.unregister()
+
+    def tick(self, clock):
+        """
+        Function used to tick the clock
+        :param clock:
+        :return:
+        """
+        self._notifications.tick(clock)
+
+    def vehicle_status_updated(self, vehicle_status):
+        """
+        Callback function used on vehicle status updates
+        :param vehicle_status: vehicle status info
+        :return:
+        """
+        self.vehicle_status = vehicle_status
+        self.update_info_text()
+
+    def vehicle_info_updated(self, vehicle_info):
+        """
+        Callback function used on vehicle info updates
+        :param vehicle_info: vehicle info
+        :return:
+        """
+        self.vehicle_info = vehicle_info
+        self.update_info_text()
+
+    def gnss_updated(self, data):
+        """
+        Callback function used on gnss position updates
+        :param data: gnss data position
+        :return:
+        """
+        self.latitude = data.latitude
+        self.longitude = data.longitude
+        self.update_info_text()
+
+    def update_info_text(self):
+        """
+        Function used to update the displayed info text
+        :return:
+        """
+        if not self._show_info:
+            return
+        try:
+            (position, quaternion) = self.tf_listener.lookupTransform(
+                '/map', '/ego_vehicle', rospy.Time())
+            _, _, yaw = tf.transformations.euler_from_quaternion(quaternion)
+            yaw = -math.degrees(yaw)
+            x = position[0]
+            y = -position[1]
+            z = position[2]
+        except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
+            x = 0
+            y = 0
+            z = 0
+            yaw = 0
+        heading = 'N' if abs(yaw) < 89.5 else ''
+        heading += 'S' if abs(yaw) > 90.5 else ''
+        heading += 'E' if 179.5 > yaw > 0.5 else ''
+        heading += 'W' if -0.5 > yaw > -179.5 else ''
+        self._info_text = [
+            'Vehicle: % 20s' % ' '.join(self.vehicle_info.type.title().split('.')[1:]),
+            'Simulation time: % 12s' % datetime.timedelta(
+                seconds=int(rospy.get_rostime().to_sec())),
+            '',
+            'Speed:   % 15.0f km/h' % (3.6 * self.vehicle_status.velocity),
+            u'Heading:% 16.0f\N{DEGREE SIGN} % 2s' % (yaw, heading),
+            'Location:% 20s' % ('(% 5.1f, % 5.1f)' % (x, y)),
+            'GNSS:% 24s' % ('(% 2.6f, % 3.6f)' % (self.latitude, self.longitude)),
+            'Height:  % 18.0f m' % z,
+            '']
+        self._info_text += [
+            ('Throttle:', self.vehicle_status.control.throttle, 0.0, 1.0),
+            ('Steer:', self.vehicle_status.control.steer, -1.0, 1.0),
+            ('Brake:', self.vehicle_status.control.brake, 0.0, 1.0),
+            ('Reverse:', self.vehicle_status.control.reverse),
+            ('Hand brake:', self.vehicle_status.control.hand_brake),
+            ('Manual:', self.vehicle_status.control.manual_gear_shift),
+            'Gear:        %s' % {-1: 'R', 0: 'N'}.get(self.vehicle_status.control.gear,
+                                                      self.vehicle_status.control.gear)]
+
+    def toggle_info(self):
+        """
+        Function used to show/hide the info text
+        """
+        self._show_info = not self._show_info
+
+    def notification(self, text, seconds=2.0):
+        """
+        Function used to display a notification for x seconds
+        """
+        self._notifications.set_text(text, seconds=seconds)
+
+    def error(self, text):
+        """
+        Function used to display an error message
+        :param text:
+        :return:
+        """
+        self._notifications.set_text('Error: %s' % text, (255, 0, 0))
+
+    def render(self, display):
+        """
+        Function used to render the display
+        :param display:
+        :return:
+        """
+        if self._show_info:
+            info_surface = pygame.Surface((220, self.dim[1]))
+            info_surface.set_alpha(100)
+            display.blit(info_surface, (0, 0))
+            v_offset = 4
+            bar_h_offset = 100
+            bar_width = 106
+            for item in self._info_text:
+                if v_offset + 18 > self.dim[1]:
+                    break
+                if isinstance(item, list):
+                    if len(item) > 1:
+                        points = [(x + 8, v_offset + 8 + (1.0 - y) * 30)
+                                  for x, y in enumerate(item)]
+                        pygame.draw.lines(display, (255, 136, 0), False, points, 2)
+                    item = None
+                    v_offset += 18
+                elif isinstance(item, tuple):
+                    if isinstance(item[1], bool):
+                        rect = pygame.Rect((bar_h_offset, v_offset + 8), (6, 6))
+                        pygame.draw.rect(display, (255, 255, 255), rect, 0 if item[1] else 1)
+                    else:
+                        rect_border = pygame.Rect((bar_h_offset, v_offset + 8), (bar_width, 6))
+                        pygame.draw.rect(display, (255, 255, 255), rect_border, 1)
+                        f = (item[1] - item[2]) / (item[3] - item[2])
+                        if item[2] < 0.0:
+                            rect = pygame.Rect(
+                                (bar_h_offset + f * (bar_width - 6), v_offset + 8), (6, 6))
+                        else:
+                            rect = pygame.Rect((bar_h_offset, v_offset + 8), (f * bar_width, 6))
+                        pygame.draw.rect(display, (255, 255, 255), rect)
+                    item = item[0]
+                if item:  # At this point has to be a str.
+                    surface = self._font_mono.render(item, True, (255, 255, 255))
+                    display.blit(surface, (8, v_offset))
+                v_offset += 18
+        self._notifications.render(display)
+        self.help.render(display)
+
+# ==============================================================================
+# -- FadingText ----------------------------------------------------------------
+# ==============================================================================
+
+
+class FadingText(object):
+    """
+    Support Class for info display, fade out text
+    """
+    def __init__(self, font, dim, pos):
+        """
+        Constructor for FadingText Support Class
+        :param font:
+        :param dim:
+        :param pos:
+        """
+        self.font = font
+        self.dim = dim
+        self.pos = pos
+        self.seconds_left = 0
+        self.surface = pygame.Surface(self.dim)
+
+    def set_text(self, text, color=(255, 255, 255), seconds=2.0):
+        """
+        Function used for set the text
+        :param text:
+        :param color:
+        :param seconds:
+        :return:
+        """
+        text_texture = self.font.render(text, True, color)
+        self.surface = pygame.Surface(self.dim)
+        self.seconds_left = seconds
+        self.surface.fill((0, 0, 0, 0))
+        self.surface.blit(text_texture, (10, 11))
+
+    def tick(self, clock):
+        """
+        Function used to tick for fading text
+        :param clock:
+        :return:
+        """
+        delta_seconds = 1e-3 * clock.get_time()
+        self.seconds_left = max(0.0, self.seconds_left - delta_seconds)
+        self.surface.set_alpha(500.0 * self.seconds_left)
+
+    def render(self, display):
+        """
+        Function used to render the fading text
+        :param display:
+        :return:
+        """
+        display.blit(self.surface, self.pos)
+
+# ==============================================================================
+# -- HelpText ------------------------------------------------------------------
+# ==============================================================================
+
+
+class HelpText(object):
+    """
+    Support Class Help Text Info
+    """
+
+    def __init__(self, font, width, height):
+        """
+        Constructor for HelpText Support Class
+        :param font:
+        :param width:
+        :param height:
+        """
+        lines = __doc__.split('\n')
+        self.font = font
+        self.dim = (680, len(lines) * 22 + 12)
+        self.pos = (0.5 * width - 0.5 * self.dim[0], 0.5 * height - 0.5 * self.dim[1])
+        self.seconds_left = 0
+        self.surface = pygame.Surface(self.dim)
+        self.surface.fill((0, 0, 0, 0))
+        for n, line in enumerate(lines):
+            text_texture = self.font.render(line, True, (255, 255, 255))
+            self.surface.blit(text_texture, (22, n * 22))
+            self._render = False
+        self.surface.set_alpha(220)
+
+    def toggle(self):
+        """
+        Function used to show/hide the help text
+        """
+        self._render = not self._render
+
+    def render(self, display):
+        """
+        Function used to render the help text
+        """
+        if self._render:
+            display.blit(self.surface, self.pos)
+
+# ==============================================================================
+# -- Main Function -------------------------------------------------------------
+# ==============================================================================
+
+
+def main():
+    """
+    Main Function
+    """
+    rospy.init_node('carla_ros_manual_control')
+
+    # resolution should be similar to spawned camera with role-name 'view'
+    resolution = {"width": 800, "height": 600}
+
+    pygame.init()
+    pygame.font.init()
+    world = None
+    try:
+        display = pygame.display.set_mode(
+            (resolution['width'], resolution['height']),
+            pygame.HWSURFACE | pygame.DOUBLEBUF)
+
+        hud = HUD(resolution['width'], resolution['height'])
+        world = World(hud)
+        controller = KeyboardControl(hud)
+
+        clock = pygame.time.Clock()
+
+        while not rospy.core.is_shutdown():
+            clock.tick_busy_loop(60)
+            if controller.parse_events(clock):
+                return
+            hud.tick(clock)
+            world.render(display)
+            pygame.display.flip()
+
+    finally:
+        if world is not None:
+            world.destroy()
+        pygame.quit()
+
+
+if __name__ == '__main__':
+
+    main()
