@@ -188,6 +188,71 @@ python spawn_npc.py
 
 ## Ego Vehicle
 
+This package provides two ROS nodes:
+
+- Carla Example Ego Vehicle: A reference client for spawning an ego vehicle
+- Carla ROS Manual Control: a ROS-only manual control
+
+
+### Carla Example Ego Vehicle
+
+The reference Carla client `carla_example_ego_vehicle` can be used to spawn an ego vehicle (role-name: "ego_vehicle") with the following sensors attached to it.
+
+- GNSS
+- LIDAR
+- Cameras (one front-camera + one camera for visualization in carla_ros_manual_control)
+- Collision Sensor
+- Lane Invasion Sensor
+
+Info: To be able to use carla_ros_manual_control a camera with role-name 'view' is required.
+
+If no specific position is set, the ego vehicle is spawned at a random position.
+
+
+### Spawning at specific position
+
+It is possible to (re)spawn the ego vehicle at the specific location by publishing to `/initialpose`.
+
+The preferred way of doing that is using RVIZ:
+
+![Autoware Runtime Manager Settings](./assets/images/rviz_set_start_goal.png)
+
+Selecting a Pose with '2D Pose Estimate' will delete the current ego_vehicle and respawn it at the specified position.
+
+
+### Create your own sensor setup
+
+To setup your own ego vehicle with sensors, follow a similar approach as in `carla_example_ego_vehicle` by subclassing from `CarlaEgoVehicleBase`.
+
+Define sensors with their attributes as described in the Carla Documentation about [Cameras and Sensors](https://github.com/carla-simulator/carla/blob/master/Docs/cameras_and_sensors.md).
+
+The format is a list of dictionaries. One dictionary has the values as follows:
+
+    {
+        'type': '<SENSOR-TYPE>',
+        'role_name': '<NAME>',
+        'x': 0.0, 'y': 0.0, 'z': 0.0, 'roll': 0.0, 'pitch': 0.0, 'yaw': 0.0, # pose of the sensor, relative to the vehicle
+        <ADDITIONAL-SENSOR-ATTRIBUTES>
+    }
+
+### Carla ROS Manual Control
+
+The node `carla_ros_manual_control` is a ROS-only version of the Carla `manual_control.py`. All data is received
+via ROS topics.
+
+Note: To be able to use carla_ros_manual_control a camera with role-name 'view' needs to be spawned by `carla_ego_vehicle`.
+
+
+### Manual steering
+
+In order to steer manually, you might need to disable sending vehicle control commands within another ROS node.
+
+Therefore the manual control is able to publish to `/vehicle_control_manual_override` ([std_msgs/Bool](http://docs.ros.org/api/std_msgs/html/msg/Bool.html)).
+
+Press `B` to toggle the value.
+
+Note: As sending the vehicle control commands is highly dependent on your setup, you need to implement the subscriber to that topic yourself.
+
 
 
 ### Odometry
@@ -315,7 +380,7 @@ Static information about the vehicle can be received via `/carla/<ROLE NAME>/veh
 
 
 
-#### Carla Ackermann Control
+# Carla Ackermann Control
 
 
 
@@ -323,11 +388,47 @@ In certain cases, the [Carla Control Command](carla_ros_bridge/msg/CarlaEgoVehic
 
 Therefore a ROS-based node ```carla_ackermann_control``` is provided which reads [AckermannDrive](http://docs.ros.org/api/ackermann_msgs/html/msg/AckermannDrive.html) messages.
 
-You can find further documentation [here](carla_ackermann_control/README.md).
+* A PID controller is used to control the acceleration/velocity.
+* Reads the Vehicle Info, required for controlling from Carla (via carla ros bridge)
+
+## Prerequisites
+
+    #install python simple-pid
+    pip install --user simple-pid
+
+## Configuration
+
+Initial parameters can be set via [configuration file](config/settings.yaml).
+
+It is possible to modify the parameters during runtime via ROS dynamic reconfigure.
 
 
+## Available Topics
+
+|Topic                                 | Type | Description |
+|--------------------------------------|------|-------------|
+| `/carla/<ROLE NAME>/ackermann_cmd` (subscriber) | [ackermann_msgs.AckermannDrive](http://docs.ros.org/api/ackermann_msgs/html/msg/AckermannDrive.html) | Subscriber for stearing commands |
+| `/carla/<ROLE NAME>/ackermann_control/control_info` | [carla_ackermann_control.EgoVehicleControlInfo](msg/EgoVehicleControlInfo.msg) | The current values used within the controller (for debugging) |
+
+The role name is specified within the configuration.
+
+## Test control messages
+You can send command to the car using the topic ```/carla/<ROLE NAME>/ackermann_cmd```.
+
+Examples for a ego vehicle with role_name 'ego_vehicle':
+
+Forward movements, speed in in meters/sec.
+
+     rostopic pub /carla/ego_vehicle/ackermann_cmd ackermann_msgs/AckermannDrive "{steering_angle: 0.0, steering_angle_velocity: 0.0, speed: 10, acceleration: 0.0,
+      jerk: 0.0}" -r 10
 
 
+Forward with steering
+
+     rostopic pub /carla/ego_vehicle/ackermann_cmd ackermann_msgs/AckermannDrive "{steering_angle: 1.22, steering_angle_velocity: 0.0, speed: 10, acceleration: 0.0,
+      jerk: 0.0}" -r 10
+
+Info: the steering_angle is the driving angle (in radians) not the wheel angle.
 
 ## Other Topics
 
@@ -381,6 +482,42 @@ This command will create a rosbag /tmp/save_session.bag
 
 You can of course also use rosbag record to do the same, but using the ros_bridge to do the recording you have the guarentee that all the message are saved without small desynchronization that could occurs when using *rosbag record* in an other process.
 
+# Carla-ROS Waypoint Publisher
+
+Carla supports waypoint calculations.
+The node `carla_waypoint_publisher` makes this feature available in the ROS context.
+
+It uses the current pose of the ego vehicle with role-name "ego_vehicle" as starting point. If the
+vehicle is respawned, the route is newly calculated.
+
+## Startup
+
+As the waypoint publisher requires some Carla PythonAPI functionality that is not part of the python egg-file, you
+have to extend your PYTHONPATH.
+
+    export PYTHONPATH=$PYTHONPATH:<path-to-carla>/PythonAPI/carla-<carla_version_and_arch>.egg:<path-to-carla>/PythonAPI/
+
+To run it:
+
+    roslaunch carla_waypoint_publisher carla_ros_waypoint_publisher.launch
+
+
+## Set a goal
+
+The goal is either read from the ROS topic /move_base_simple/goal, if available, or a fixed spawnpoint is used.
+
+The prefered way of setting a goal is to click '2D Nav Goal' in RVIZ.
+
+![rviz_set_start_goal](./assets/images/rviz_set_start_goal.png "RVIZ_Set_Start_Goal")
+
+
+## Published waypoints 
+
+The calculated route is published:
+
+|Topic         | Type |
+|--------------|------|
+| `/carla/ego_vehicle/waypoints` | [nav_msgs.Path](http://docs.ros.org/api/nav_msgs/html/msg/Path.html) |
 
 # ROS-OpenCV Image Convertion
 
@@ -397,4 +534,21 @@ The carla_ros_image_converter package is used to convert images from a ROS Topic
 In the future we will be using the OpenCV Template Matching algorithm in order to track objects in the CARLA world.
 
 
+# Troubleshooting
 
+## ImportError: No module named carla
+
+You're missing Carla Python. Please execute:
+
+    export PYTHONPATH=$PYTHONPATH:<path/to/carla/>/PythonAPI/<your_egg_file>
+
+Please note that you have to put in the complete path to the egg-file including
+the egg-file itself. Please use the one, that is supported by your Python version.
+Depending on the type of CARLA (pre-build, or build from source), the egg files
+are typically located either directly in the PythonAPI folder or in PythonAPI/dist.
+
+Check the installation is successfull by trying to import carla from python:
+
+    python -c 'import carla;print("Success")'
+
+You should see the Success message without any errors.
