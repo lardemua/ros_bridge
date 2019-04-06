@@ -533,9 +533,7 @@ The calculated route is published:
 
 # ROS-OpenCV Image Convertion
 
-
-
-The carla_ros_image_converter package is used to convert images from a ROS Topic to an OpenCV image by running the following command:
+The ```carla_ros_image_converter``` package is used to convert images from a ROS Topic to an OpenCV image by running the following command:
 
 
 
