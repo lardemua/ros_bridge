@@ -145,6 +145,18 @@ To start the ros bridge with rviz use:
     source ~/ros/catkin_ws/devel/setup.bash
 
     roslaunch carla_ros_bridge client_with_rviz.launch
+    
+To start the ros bridge with rqt use:
+
+    source ~/ros/catkin_ws/devel/setup.bash
+
+    roslaunch carla_ros_bridge client_with_rqt.launch
+    
+To  start the ros bridge together with an example ego vehicle
+    
+    source ~/ros/catkin_ws/devel/setup.bash
+    
+    roslaunch carla_ros_bridge client_with_example_ego_vehicle.launch
 
 
 
@@ -398,7 +410,7 @@ Therefore a ROS-based node ```carla_ackermann_control``` is provided which reads
 
 ## Configuration
 
-Initial parameters can be set via [configuration file](config/settings.yaml).
+Initial parameters can be set via settings.yaml file.
 
 It is possible to modify the parameters during runtime via ROS dynamic reconfigure.
 
