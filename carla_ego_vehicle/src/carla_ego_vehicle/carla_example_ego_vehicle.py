@@ -13,7 +13,7 @@ Base Class used as an example for Carla Ego Vehicle
 # ==============================================================================
 # -- IMPORTS ---------------------------------------------------------
 # ==============================================================================
-from carla_ego_vehicle.carla_ego_vehicle_base import CarlaEgoVehicleBase
+from carla_ego_vehicle_base import CarlaEgoVehicleBase
 
 
 class CarlaExampleEgoVehicle(CarlaEgoVehicleBase):
