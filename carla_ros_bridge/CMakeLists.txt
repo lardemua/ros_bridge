@@ -17,6 +17,7 @@ find_package(catkin REQUIRED COMPONENTS
   derived_object_msgs
   tf
   dynamic_reconfigure
+  carla_ros_bridge_msgs
 )
 
 ## System dependencies are found with CMake's conventions
@@ -53,15 +54,15 @@ catkin_python_setup()
 ##   * add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
 
 ## Generate messages in the 'msg' folder
-add_message_files(
-  FILES
-  CarlaEgoVehicleControl.msg
-  CarlaEgoVehicleStatus.msg
-  CarlaEgoVehicleInfoWheel.msg
-  CarlaEgoVehicleInfo.msg
-  CarlaCollisionEvent.msg
-  CarlaLaneInvasionEvent.msg
-)
+# add_message_files(
+#  FILES
+#  CarlaEgoVehicleControl.msg
+#  CarlaEgoVehicleStatus.msg
+#  CarlaEgoVehicleInfoWheel.msg
+#  CarlaEgoVehicleInfo.msg
+#  CarlaCollisionEvent.msg
+#  CarlaLaneInvasionEvent.msg
+# )
 
 ## Generate services in the 'srv' folder
 # add_service_files(
@@ -82,6 +83,7 @@ generate_messages(
    DEPENDENCIES
    std_msgs
    geometry_msgs
+   carla_ros_bridge_msgs
 )
 
 ################################################

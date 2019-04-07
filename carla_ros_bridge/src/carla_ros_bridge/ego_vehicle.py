@@ -20,10 +20,10 @@ from nav_msgs.msg import Odometry
 from std_msgs.msg import ColorRGBA
 from carla import VehicleControl
 from vehicle import Vehicle
-from carla_ros_bridge.msg import CarlaEgoVehicleControl         # pylint: disable=no-name-in-module,import-error
-from carla_ros_bridge.msg import CarlaEgoVehicleStatus          # pylint: disable=no-name-in-module,import-error
-from carla_ros_bridge.msg import CarlaEgoVehicleInfo            # pylint: disable=no-name-in-module,import-error
-from carla_ros_bridge.msg import CarlaEgoVehicleInfoWheel       # pylint: disable=no-name-in-module,import-error
+from carla_ros_bridge_msgs.msg import CarlaEgoVehicleControl         # pylint: disable=no-name-in-module,import-error
+from carla_ros_bridge_msgs.msg import CarlaEgoVehicleStatus          # pylint: disable=no-name-in-module,import-error
+from carla_ros_bridge_msgs.msg import CarlaEgoVehicleInfo            # pylint: disable=no-name-in-module,import-error
+from carla_ros_bridge_msgs.msg import CarlaEgoVehicleInfoWheel       # pylint: disable=no-name-in-module,import-error
 
 
 class EgoVehicle(Vehicle):
