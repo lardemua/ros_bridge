@@ -198,17 +198,18 @@ python spawn_npc.py
 
 
 
-## Ego Vehicle
+## Ego Vehicle / ATLAS Vehicle
 
-This package provides two ROS nodes:
+This package provides three ROS nodes:
 
 - Carla Example Ego Vehicle: A reference client for spawning an ego vehicle
+- Carla Example ATLAS Vehicle : A reference client for spawning an ATLAS vehicle
 - Carla ROS Manual Control: a ROS-only manual control
 
 
 ### Carla Example Ego Vehicle
 
-The reference Carla client `carla_example_ego_vehicle` can be used to spawn an ego vehicle (role-name: "ego_vehicle") with the following sensors attached to it.
+The reference Carla client `carla_example_ego_vehicle` can be used to spawn an ego vehicle (role-name: "ego_vehicle") with the following sensors attached to it:
 
 - GNSS
 - LIDAR
@@ -220,21 +221,35 @@ Info: To be able to use carla_ros_manual_control a camera with role-name 'view' 
 
 If no specific position is set, the ego vehicle is spawned at a random position.
 
+### Carla Example ATLAS Vehicle
+
+The reference Carla client `carla_example_atlas_vehicle` can be used to spawn an ATLAS vehicle (role-name: "atlas_vehicle") with the following sensors attached to it:
+
+- GNSS
+- LIDAR
+- Cameras (one front-camera + one camera for visualization in carla_ros_manual_control)
+- Collision Sensor
+- Lane Invasion Sensor
+
+Info: To be able to use carla_ros_manual_control a camera with role-name 'view' is required.
+
+If no specific position is set, the ATLAS vehicle is spawned at a random position.
+
 
 ### Spawning at specific position
 
-It is possible to (re)spawn the ego vehicle at the specific location by publishing to `/initialpose`.
+It is possible to (re)spawn the example vehicle at the specific location by publishing to `/initialpose`.
 
 The preferred way of doing that is using RVIZ:
 
 ![Autoware Runtime Manager Settings](./assets/images/rviz_set_start_goal.png)
 
-Selecting a Pose with '2D Pose Estimate' will delete the current ego_vehicle and respawn it at the specified position.
+Selecting a Pose with '2D Pose Estimate' will delete the current example vehicle and respawn it at the specified position.
 
 
 ### Create your own sensor setup
 
-To setup your own ego vehicle with sensors, follow a similar approach as in `carla_example_ego_vehicle` by subclassing from `CarlaEgoVehicleBase`.
+To setup your own example vehicle with sensors, follow a similar approach as in `carla_example_ego_vehicle` by subclassing from `CarlaEgoVehicleBase` or follow a similar approach as in `carla_example_atlas_vehicle` by subclassing from `CarlaAtlasVehicleBase`.
 
 Define sensors with their attributes as described in the Carla Documentation about [Cameras and Sensors](https://github.com/carla-simulator/carla/blob/master/Docs/cameras_and_sensors.md).
 
@@ -493,6 +508,17 @@ This command will create a rosbag /tmp/save_session.bag
 
 
 You can of course also use rosbag record to do the same, but using the ros_bridge to do the recording you have the guarentee that all the message are saved without small desynchronization that could occurs when using *rosbag record* in an other process.
+# Carla-ROS Bridge Messages
+The node `carla_ros_bridge_msgs` is a ROS node used to store the ROS messages used in the ROS-CARLA integration.
+
+## Message Files
+The following ROS message files are used in the ROS-CARLA integration:
+- CarlaCollisionEvent.msg
+- CarlaEgoVehicleControl.msg
+- CarlaEgoVehicleInfo.msg
+- CarlaEgoVehicleInfoWheel.msg
+- CarlaEgoVehicleStatus.msg
+- CarlaLaneInvasionEvent.msg
 
 # Carla-ROS Waypoint Publisher
 
