@@ -13,16 +13,16 @@ Base Class used as an example for Carla Ego Vehicle
 # ==============================================================================
 # -- IMPORTS -------------------------------------------------------------------
 # ==============================================================================
-from carla_ego_vehicle_base import CarlaEgoVehicleBase
+from carla_atlas_vehicle_base import CarlaAtlasVehicleBase
 
 
-class CarlaExampleEgoVehicle(CarlaEgoVehicleBase):
+class CarlaExampleAtlasVehicle(CarlaAtlasVehicleBase):
     """
-    Example Class for Carla Ego Vehicle
+    Example Class for Carla ATLAS Vehicle
     """
     def sensors(self):
         """
-        Define all sensors attached to your ego vehicle
+        Define all sensors attached to your ATLAS vehicle
         :return:
         """
         return [
@@ -80,12 +80,12 @@ def main():
     Main Function
     :return:
     """
-    ego_vehicle = CarlaExampleEgoVehicle()
+    atlas_vehicle = CarlaExampleAtlasVehicle()
     try:
-        ego_vehicle.run()
+        atlas_vehicle.run()
     finally:
-        if ego_vehicle is not None:
-            ego_vehicle.destroy()
+        if atlas_vehicle is not None:
+            atlas_vehicle.destroy()
 
 
 if __name__ == '__main__':
