@@ -14,7 +14,7 @@ find_package(catkin REQUIRED COMPONENTS
   geometry_msgs
   ackermann_msgs
   dynamic_reconfigure
-  carla_ros_bridge
+  carla_ros_bridge_msgs
 )
 
 ## System dependencies are found with CMake's conventions
@@ -79,7 +79,7 @@ generate_messages(
    DEPENDENCIES
    std_msgs
    geometry_msgs
-   carla_ros_bridge
+   carla_ros_bridge_msgs
 )
 
 ################################################
