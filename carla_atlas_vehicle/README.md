@@ -15,18 +15,18 @@ If no specific position is set, the ATLAS vehicle is spawned at a random positio
 
 ### Spawning at specific position
 
-It is possible to (re)spawn the ego vehicle at the specific location by publishing to `/initialpose`.
+It is possible to (re)spawn the ATLAS vehicle at the specific location by publishing to `/initialpose`.
 
 The preferred way of doing that is using RVIZ:
 
-![Autoware Runtime Manager Settings](../docs/images/rviz_set_start_goal.png)
+![Autoware Runtime Manager Settings](../assets/images/rviz_set_start_goal.png)
 
-Selecting a Pose with '2D Pose Estimate' will delete the current ego_vehicle and respawn it at the specified position.
+Selecting a Pose with '2D Pose Estimate' will delete the current atlas_vehicle and respawn it at the specified position.
 
 
 ### Create your own sensor setup
 
-To setup your own ego vehicle with sensors, follow a similar approach as in `carla_example_ego_vehicle` by subclassing from `CarlaEgoVehicleBase`.
+To setup your own ATLAS vehicle with sensors, follow a similar approach as in `carla_example_atlas_vehicle` by subclassing from `CarlaAtlasVehicleBase`.
 
 Define sensors with their attributes as described in the Carla Documentation about [Cameras and Sensors](https://github.com/carla-simulator/carla/blob/master/Docs/cameras_and_sensors.md).
 
