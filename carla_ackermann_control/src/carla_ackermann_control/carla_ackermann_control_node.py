@@ -97,7 +97,8 @@ class CarlaAckermannControl(object):
 
         self.reconfigure_server = Server(EgoVehicleControlParameterConfig,
                                          namespace="/carla/ackermann_control",
-                                         callback=(lambda config, level: CarlaAckermannControl.reconfigure_pid_parameters(self, config, level)))
+                                         callback=(lambda config,
+                                                   level: CarlaAckermannControl.reconfigure_PID_parameters(self, config, level)))
         # ackermann drive commands
         self.control_subscriber = rospy.Subscriber("/carla/ego_vehicle/ackermann_cmd",
                                                    AckermannDrive, self.ackermann_command_updated)
