@@ -15,7 +15,7 @@ Class used to handle collision events
 # ------------------------
 #   IMPORTS
 # ------------------------
-from carla_ros_bridge.sensor import Sensor
+from sensor import Sensor
 from carla_ros_bridge.msg import CarlaCollisionEvent
 
 

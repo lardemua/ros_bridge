@@ -17,7 +17,7 @@ Base Classes to handle child objects
 import rospy
 from abc import abstractmethod
 from geometry_msgs.msg import TransformStamped
-from carla_ros_bridge.parent import Parent
+from parent import Parent
 
 
 class Child(Parent):

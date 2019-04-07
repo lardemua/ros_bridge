@@ -33,10 +33,10 @@ class Image_Converter:
 
         (rows, cols, channels) = cv_img.shape
         if cols > 60 and rows > 60:
-            cv.circle(cv_img, (50,50), 10, 255)
+            cv2.circle(cv_img, (50,50), 10, 255)
 
-        cv.imshow("Image Window", cv_img)
-        cv.waitKey(3)
+        cv2.imshow("Image Window", cv_img)
+        cv2.waitKey(3)
 
         try:
             self.image_pub.publish(self.bridge.cv2_to_imgmsg(cv_img, "bgr8"))
@@ -51,7 +51,7 @@ def main(args):
         rospy.spin()
     except KeyboardInterrupt:
         print("Shutting Down!")
-    cv.destroyAllWindows()
+    cv2.destroyAllWindows()
 
 
 if __name__ == '__main__':

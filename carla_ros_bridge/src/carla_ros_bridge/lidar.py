@@ -17,8 +17,8 @@ Classes to handle Carla lidars
 import numpy
 import tf
 from sensor_msgs.point_cloud2 import create_cloud_xyz32
-from carla_ros_bridge.sensor import Sensor
-import carla_ros_bridge.transforms as trans
+from sensor import Sensor
+import transforms as trans
 
 
 class Lidar(Sensor):

@@ -18,8 +18,8 @@ from abc import abstractmethod
 import threading
 import rospy
 from geometry_msgs.msg import TransformStamped
-from carla_ros_bridge.actor import Actor
-import carla_ros_bridge.transforms as trans
+from actor import Actor
+import transforms as trans
 
 
 class Sensor(Actor):

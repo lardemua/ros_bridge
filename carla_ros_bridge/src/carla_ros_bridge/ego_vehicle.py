@@ -19,7 +19,7 @@ import rospy
 from nav_msgs.msg import Odometry
 from std_msgs.msg import ColorRGBA
 from carla import VehicleControl
-from carla_ros_bridge.vehicle import Vehicle
+from vehicle import Vehicle
 from carla_ros_bridge.msg import CarlaEgoVehicleControl         # pylint: disable=no-name-in-module,import-error
 from carla_ros_bridge.msg import CarlaEgoVehicleStatus          # pylint: disable=no-name-in-module,import-error
 from carla_ros_bridge.msg import CarlaEgoVehicleInfo            # pylint: disable=no-name-in-module,import-error

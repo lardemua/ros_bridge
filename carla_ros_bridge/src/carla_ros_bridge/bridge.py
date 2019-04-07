@@ -21,9 +21,9 @@ import rospy
 from rosgraph_msgs.msg import Clock
 from tf2_msgs.msg import TFMessage
 from derived_object_msgs.msg import ObjectArray
-from carla_ros_bridge.parent import Parent
-from carla_ros_bridge.map import Map
-import carla_ros_bridge.object_sensor as obj_sensor
+from parent import Parent
+from map import Map
+import object_sensor as obj_sensor
 
 
 class CarlaRosBridge(Parent):

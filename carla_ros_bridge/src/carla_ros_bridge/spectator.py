@@ -14,7 +14,7 @@ Classes to handle Carla spectator
 # ------------------------
 #   IMPORTS
 # ------------------------
-from carla_ros_bridge.actor import Actor
+from actor import Actor
 
 
 class Spectator(Actor):

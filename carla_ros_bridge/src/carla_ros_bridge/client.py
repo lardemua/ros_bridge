@@ -16,8 +16,8 @@ Entry point for carla simulator ROS bridge
 # ------------------------
 import rospy
 import carla
-from carla_ros_bridge.bridge import CarlaRosBridge
-from carla_ros_bridge.bridge_with_rosbag import CarlaRosBridgeWithBag
+from bridge import CarlaRosBridge
+from bridge_with_rosbag import CarlaRosBridgeWithBag
 
 
 def main():

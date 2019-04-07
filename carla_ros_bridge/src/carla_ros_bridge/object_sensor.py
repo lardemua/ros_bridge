@@ -14,7 +14,7 @@ Handle Object Sensor
 #   IMPORTS
 # ------------------------
 from derived_object_msgs.msg import ObjectArray
-from carla_ros_bridge.vehicle import Vehicle
+from vehicle import Vehicle
 
 
 def get_filtered_objectarray(parent, filtered_ID):
