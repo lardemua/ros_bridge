@@ -167,7 +167,6 @@ include_directories(
 catkin_install_python(PROGRAMS
   src/carla_ego_vehicle/carla_example_ego_vehicle.py
   src/carla_ego_vehicle/carla_ego_vehicle_base.py
-  src/carla_ego_vehicle/carla_ros_manual_control.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
