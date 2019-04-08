@@ -168,7 +168,6 @@ catkin_install_python(PROGRAMS
   src/carla_ros_manual_control/carla_ros_manual_control.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
-
 ## Mark executables and/or libraries for installation
 # install(TARGETS ${PROJECT_NAME} ${PROJECT_NAME}_node
 #   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}

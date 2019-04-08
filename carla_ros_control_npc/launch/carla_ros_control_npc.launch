@@ -1,0 +1,7 @@
+<!-- -->
+<launch>
+
+    <node pkg="carla_ros_control_npc" type="carla_ros_control_npc.py" name="carla_ros_control_npc" output="screen"/>
+
+</launch>
+

@@ -28,7 +28,7 @@ Use ARROWS or WASD keys for control.
 """
 
 # ==============================================================================
-# -- IMPORTS ---------------------------------------------------------
+# -- IMPORTS -------------------------------------------------------------------
 # ==============================================================================
 
 from __future__ import print_function
@@ -40,11 +40,11 @@ import tf
 from std_msgs.msg import Bool
 from sensor_msgs.msg import NavSatFix
 from sensor_msgs.msg import Image
-from carla_ros_bridge.msg import CarlaCollisionEvent            # pylint: disable=no-name-in-module, import-error
-from carla_ros_bridge.msg import CarlaLaneInvasionEvent         # pylint: disable=no-name-in-module, import-error
-from carla_ros_bridge.msg import CarlaEgoVehicleControl         # pylint: disable=no-name-in-module, import-error
-from carla_ros_bridge.msg import CarlaEgoVehicleStatus          # pylint: disable=no-name-in-module, import-error
-from carla_ros_bridge.msg import CarlaEgoVehicleInfo            # pylint: disable=no-name-in-module, import-error
+from carla_ros_bridge_msgs.msg import CarlaCollisionEvent            # pylint: disable=no-name-in-module, import-error
+from carla_ros_bridge_msgs.msg import CarlaLaneInvasionEvent         # pylint: disable=no-name-in-module, import-error
+from carla_ros_bridge_msgs.msg import CarlaEgoVehicleControl         # pylint: disable=no-name-in-module, import-error
+from carla_ros_bridge_msgs.msg import CarlaEgoVehicleStatus          # pylint: disable=no-name-in-module, import-error
+from carla_ros_bridge_msgs.msg import CarlaEgoVehicleInfo            # pylint: disable=no-name-in-module, import-error
 try:
     import pygame
     from pygame.locals import KMOD_CTRL
