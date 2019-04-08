@@ -99,7 +99,7 @@ class World(object):
         """
         array = numpy.frombuffer(data.data, dtype=numpy.dtype("uint8"))
         array = numpy.reshape(array, (data.height, data.width, 4))
-        array = array[:, :, 3]
+        array = array[:, :, :3]
         array = array[:, :, ::-1]
         self._surface = pygame.surfarray.make_surface(array.swapaxes(0, 1))
 
@@ -301,9 +301,11 @@ class HUD(object):
                                                         CarlaEgoVehicleInfo, self.vehicle_info_updated)
         self.latitude = 0
         self.longitude = 0
-        self.gnss_subscriber = rospy.Subscriber("/carla/ego_vehicle/gnss/front/gnss",
+        self.gnss_subscriber = rospy.Subscriber("/carla/ego_vehicle/gnss/gnss1/fix",
                                                 NavSatFix, self.gnss_updated)
         self.tf_listener = tf.TransformListener()
+        self.manual_control = False
+        self.manual_control_subscriber = rospy.Subscriber("/vehicle_control_manual_override", Bool, self.manual_control_override_updated)
 
     def __del__(self):
         """
@@ -348,6 +350,13 @@ class HUD(object):
         """
         self.latitude = data.latitude
         self.longitude = data.longitude
+        self.update_info_text()
+
+    def manual_control_override_updated(self, data):
+        """
+        Callback on vehicle manual control updates
+        """
+        self.manual_control = data.data
         self.update_info_text()
 
     def update_info_text(self):
