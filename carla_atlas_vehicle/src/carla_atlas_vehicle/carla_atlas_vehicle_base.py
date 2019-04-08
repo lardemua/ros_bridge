@@ -85,7 +85,7 @@ class CarlaAtlasVehicleBase(object):
         """
         # get the vehicle blueprint
         blueprint = random.choice(self.world.get_blueprint_library().filter(self.actor_filter))
-        blueprint.set_attribute('role_name', 'ego_vehicle')
+        blueprint.set_attribute('role_name', 'atlas_vehicle')
         if blueprint.has_attribute('color'):
             color = random.choice(blueprint.get_attribute('color').recommended_values)
             blueprint.set_attribute('color', color)
@@ -104,15 +104,13 @@ class CarlaAtlasVehicleBase(object):
             rospy.loginfo("Spawn at x={} y={} z={} yaw={}".format(spawn_point.location.x,
                                                                   spawn_point.location.y,
                                                                   spawn_point.location.z,
-                                                                  spawn_point.rotation.yaw
-                                                                  )
-            )
+                                                                  spawn_point.rotation.yaw))
             if self.player is None:
                 self.destroy()
             while self.player is None:
                 self.player = self.world.try_spawn_actor(blueprint, spawn_point)
         else:
-            if self.player is None:
+            if self.player is not None:
                 spawn_point = self.player.get_transform()
                 spawn_point.location.z += 2.0
                 spawn_point.rotation.roll = 0.0

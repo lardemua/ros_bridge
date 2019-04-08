@@ -6,7 +6,7 @@
 # For a copy, see <https://opensource.org/licenses/MIT>.
 
 """
-Class used for ROS Manual Control
+Class used for ROS Manual Control for ATLAS Vehicle
 
 Welcome to CARLA ROS manual control.
 
@@ -87,9 +87,9 @@ class World(object):
         """
         self._surface = None
         self.hud = hud
-        self.image_subscriber = rospy.Subscriber("/carla/ego_vehicle/camera/rgb/view/image_color", Image, self.on_view_image)
-        self.collision_subscriber = rospy.Subscriber("/carla/ego_vehicle/collision", CarlaCollisionEvent, self.on_collision)
-        self.lane_invasion_subscriber = rospy.Subscriber("/carla/ego_vehicle/lane_invasion", CarlaLaneInvasionEvent, self.on_lane_invasion)
+        self.image_subscriber = rospy.Subscriber("/carla/atlas_vehicle/camera/rgb/view/image_color", Image, self.on_view_image)
+        self.collision_subscriber = rospy.Subscriber("/carla/atlas_vehicle/collision", CarlaCollisionEvent, self.on_collision)
+        self.lane_invasion_subscriber = rospy.Subscriber("/carla/atlas_vehicle/lane_invasion", CarlaLaneInvasionEvent, self.on_lane_invasion)
 
     def on_view_image(self, data):
         """
@@ -166,8 +166,8 @@ class KeyboardControl(object):
         self.vehicle_control_manual_override_publisher = rospy.Publisher("/vehicle_control_manual_override",
                                                                          Bool, queue_size=1, latch=True)
         self.vehicle_control_manual_override = False
-        self.auto_pilot_enable_publisher = rospy.Publisher("/carla/ego_vehicle/enable_autopilot", Bool, queue_size=1)
-        self.vehicle_control_publisher = rospy.Publisher("/carla/ego_vehicle/vehicle_control_cmd",
+        self.auto_pilot_enable_publisher = rospy.Publisher("/carla/atlas_vehicle/enable_autopilot", Bool, queue_size=1)
+        self.vehicle_control_publisher = rospy.Publisher("/carla/atlas_vehicle/vehicle_control_cmd",
                                                          CarlaEgoVehicleControl, queue_size=1)
         self._autopilot_enabled = False
         self._control = CarlaEgoVehicleControl()
@@ -294,14 +294,14 @@ class HUD(object):
         self._show_info = True
         self._info_text = []
         self.vehicle_status = CarlaEgoVehicleStatus()
-        self.vehicle_status_subscriber = rospy.Subscriber("/carla/ego_vehicle/vehicle_status",
+        self.vehicle_status_subscriber = rospy.Subscriber("/carla/atlas_vehicle/vehicle_status",
                                                           CarlaEgoVehicleStatus, self.vehicle_status_updated)
         self.vehicle_info = CarlaEgoVehicleInfo()
-        self.vehicle_info_subscriber = rospy.Subscriber("/carla/ego_vehicle/vehicle_info",
+        self.vehicle_info_subscriber = rospy.Subscriber("/carla/atlas_vehicle/vehicle_info",
                                                         CarlaEgoVehicleInfo, self.vehicle_info_updated)
         self.latitude = 0
         self.longitude = 0
-        self.gnss_subscriber = rospy.Subscriber("/carla/ego_vehicle/gnss/front/gnss",
+        self.gnss_subscriber = rospy.Subscriber("/carla/atlas_vehicle/gnss/front/gnss",
                                                 NavSatFix, self.gnss_updated)
         self.tf_listener = tf.TransformListener()
 
@@ -359,7 +359,7 @@ class HUD(object):
             return
         try:
             (position, quaternion) = self.tf_listener.lookupTransform(
-                '/map', '/ego_vehicle', rospy.Time())
+                '/map', '/atlas_vehicle', rospy.Time())
             _, _, yaw = tf.transformations.euler_from_quaternion(quaternion)
             yaw = -math.degrees(yaw)
             x = position[0]
