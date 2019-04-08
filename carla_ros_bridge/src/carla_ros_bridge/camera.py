@@ -22,8 +22,8 @@ import tf
 from cv_bridge import CvBridge
 from sensor_msgs.msg import CameraInfo
 import carla
-from sensor import Sensor
-import transforms as trans
+from carla_ros_bridge.sensor import Sensor
+import carla_ros_bridge.transforms as trans
 
 
 class Camera(Sensor):

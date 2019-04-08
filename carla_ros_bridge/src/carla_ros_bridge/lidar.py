@@ -17,8 +17,8 @@ Classes to handle Carla lidars
 import numpy
 import tf
 from sensor_msgs.point_cloud2 import create_cloud_xyz32
-from sensor import Sensor
-import transforms as trans
+from carla_ros_bridge.sensor import Sensor
+import carla_ros_bridge.transforms as trans
 
 
 class Lidar(Sensor):
@@ -42,7 +42,8 @@ class Lidar(Sensor):
         if topic_prefix is None:
             topic_prefix = 'lidar'
         super(Lidar, self).__init__(carla_actor=carla_actor, parent=parent,
-                                    topic_prefix=topic_prefix, append_role_name_topic_postfix=append_role_name_topic_postfix)
+                                    topic_prefix=topic_prefix,
+                                    append_role_name_topic_postfix=append_role_name_topic_postfix)
 
     def get_tf_msg(self):
         """

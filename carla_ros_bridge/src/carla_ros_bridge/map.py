@@ -17,7 +17,7 @@ Class to handle the carla map
 import rospy
 from geometry_msgs.msg import Transform
 from std_msgs.msg import String
-from child import Child
+from carla_ros_bridge.child import Child
 
 
 class Map(Child):

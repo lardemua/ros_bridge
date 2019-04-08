@@ -17,8 +17,8 @@ Class used to handle Carla Custom Events
 import numpy
 import tf
 from sensor_msgs.point_cloud2 import create_cloud_xyz32
-from sensor import Sensor
-import transforms as trans
+from carla_ros_bridge.sensor import Sensor
+import carla_ros_bridge.transforms as trans
 
 
 class CustomSensor(Sensor):

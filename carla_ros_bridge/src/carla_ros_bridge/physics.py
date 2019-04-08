@@ -16,7 +16,7 @@ Tool functions to calculate vehicle physics
 # ------------------------
 import math
 import numpy
-import transforms as trans
+import carla_ros_bridge.transforms as trans
 
 
 def get_vector_length_squared(carla_vector):

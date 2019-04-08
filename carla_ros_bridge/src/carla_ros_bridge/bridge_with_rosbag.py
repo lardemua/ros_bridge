@@ -17,7 +17,7 @@ RosBridge class with rosbag support
 import os
 import rospy
 import rosbag
-from bridge import CarlaRosBridge
+from carla_ros_bridge.bridge import CarlaRosBridge
 
 
 class CarlaRosBridgeWithBag(CarlaRosBridge):

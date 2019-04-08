@@ -62,7 +62,6 @@ class Parent(object):
             self.child_actors.clear()
         self.carla_world = None
 
-
     def get_frame_ID(self):
         """
         Getter Function for the frame ID of current object
@@ -165,8 +164,6 @@ class Parent(object):
         Override this function if the derived class has to perform some additional update tasks. But don't forget
         to forward the update call to the super class, ensuring that this concrete function is called.
         The update part of the parent class consists of updating the children of this by:
-        -> Create new child actors
-        -> Destroy dead children
         -> Update the existing children
         :return:
         """
@@ -272,8 +269,6 @@ class Parent(object):
 
 
 # These import have to be added at the end of the file to resolve cyclic dependency
-
-
 from carla_ros_bridge.actor import Actor                     # noqa, pylint: disable=wrong-import-position
 from carla_ros_bridge.spectator import Spectator             # noqa, pylint: disable=wrong-import-position
 from carla_ros_bridge.sensor import Sensor                   # noqa, pylint: disable=wrong-import-position

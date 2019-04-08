@@ -15,7 +15,7 @@ Classes to handle Carla traffic objects
 #   IMPORTS
 # ------------------------
 import rospy
-from actor import Actor
+from carla_ros_bridge.actor import Actor
 
 
 class Traffic(Actor):

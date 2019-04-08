@@ -15,7 +15,7 @@ Classes to handle Carla gnsss
 #   IMPORTS
 # ------------------------
 from sensor_msgs.msg import NavSatFix
-from sensor import Sensor
+from carla_ros_bridge.sensor import Sensor
 
 
 class Gnss(Sensor):
@@ -39,7 +39,8 @@ class Gnss(Sensor):
         if topic_prefix is None:
             topic_prefix = 'gnss'
         super(Gnss, self).__init__(carla_actor=carla_actor, parent=parent,
-                                   topic_prefix=topic_prefix, append_role_name_topic_postfix=append_role_name_topic_postfix)
+                                   topic_prefix=topic_prefix,
+                                   append_role_name_topic_postfix=append_role_name_topic_postfix)
         self.parent = parent
 
     def sensor_data_updated(self, carla_gnss_event):
@@ -54,4 +55,4 @@ class Gnss(Sensor):
         navsatfix_msg.latitude = carla_gnss_event.latitude
         navsatfix_msg.longitude = carla_gnss_event.longitude
         navsatfix_msg.altitude = carla_gnss_event.altitude
-        self.publish_ros_message(self.topic_name() + "/gnss", navsatfix_msg)
+        self.publish_ros_message(self.topic_name() + "/fix", navsatfix_msg)

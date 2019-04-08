@@ -19,8 +19,8 @@ from std_msgs.msg import ColorRGBA
 from derived_object_msgs.msg import Object
 from shape_msgs.msg import SolidPrimitive
 from visualization_msgs.msg import Marker
-from actor import Actor
-import transforms as transforms
+from carla_ros_bridge.actor import Actor
+import carla_ros_bridge.transforms as transforms
 
 
 class Vehicle(Actor):

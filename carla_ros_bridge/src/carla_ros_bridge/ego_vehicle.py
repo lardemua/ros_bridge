@@ -18,8 +18,9 @@ import math
 import rospy
 from nav_msgs.msg import Odometry
 from std_msgs.msg import ColorRGBA
+from std_msgs.msg import Bool
 from carla import VehicleControl
-from vehicle import Vehicle
+from carla_ros_bridge.vehicle import Vehicle
 from carla_ros_bridge_msgs.msg import CarlaEgoVehicleControl         # pylint: disable=no-name-in-module,import-error
 from carla_ros_bridge_msgs.msg import CarlaEgoVehicleStatus          # pylint: disable=no-name-in-module,import-error
 from carla_ros_bridge_msgs.msg import CarlaEgoVehicleInfo            # pylint: disable=no-name-in-module,import-error
@@ -60,6 +61,9 @@ class EgoVehicle(Vehicle):
         self.control_subscriber = rospy.Subscriber(self.topic_name() + "/vehicle_control_cmd",
                                                    CarlaEgoVehicleControl,
                                                    self.control_command_updated)
+        self.enable_autopilot_subscriber = rospy.Subscriber(self.topic_name() + "/enable_autopilot",
+                                                            Bool,
+                                                            self.enable_autopilot_updated)
 
     def get_marker_color(self):
         """
@@ -102,6 +106,8 @@ class EgoVehicle(Vehicle):
         if not self.vehicle_info_published:
             self.vehicle_info_published = True
             vehicle_info = CarlaEgoVehicleInfo()
+            vehicle_info.type = self.carla_actor.type_id
+            vehicle_info.rolename = self.carla_actor.attributes.get('role_name')
             vehicle_physics = self.carla_actor.get_physics_control()
             # Check wheel info
             for wheel in vehicle_physics.wheels:
@@ -210,6 +216,8 @@ class EgoVehicle(Vehicle):
         rospy.logdebug("Destroy Vehicle(id={})".format(self.get_ID()))
         self.control_subscriber.unregister()
         self.control_subscriber = None
+        self.enable_autopilot_subscriber.unregister()
+        self.enable_autopilot_subscriber = None
         super(EgoVehicle, self).destroy()
 
     def control_command_updated(self, ros_vehicle_control):
