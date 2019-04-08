@@ -8,7 +8,7 @@
 #
 
 """
-Classes to handle Carla vehicles
+Classes to handle Carla Ego Vehicles
 """
 
 # ------------------------
