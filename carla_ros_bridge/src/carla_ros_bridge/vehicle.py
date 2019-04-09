@@ -155,7 +155,7 @@ class Vehicle(Actor):
             self.classification_age += 1
             vehicle_object.classification_age = self.classification_age
 
-        #self.publish_ros_message('/carla/objects', vehicle_object)
+        # self.publish_ros_message('/carla/objects', vehicle_object)
         return vehicle_object
 
 

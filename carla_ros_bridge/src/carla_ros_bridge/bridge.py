@@ -47,11 +47,11 @@ class CarlaRosBridge(Parent):
         self.msgs_to_publish = []
         self.actor_list = []
         # register callback to create/delete actors
-        self.carla_world.on_tick(self._carla_update_child_actors)
         self.update_child_actors_lock = threading.Lock()
+        self.carla_world.on_tick(self._carla_update_child_actors)
         # register callback to update actors
-        self.carla_world.on_tick(self._carla_time_tick)
         self.update_lock = threading.Lock()
+        self.carla_world.on_tick(self._carla_time_tick)
         self.publishers = {}
         self.publishers['clock'] = rospy.Publisher('clock', Clock, queue_size=10)
         self.publishers['tf'] = rospy.Publisher('tf', TFMessage, queue_size=100)

@@ -95,9 +95,12 @@ class Parent(object):
             if (actor.parent and actor.parent.id == self.carla_ID) or (actor.parent is None and self.carla_ID == 0):
                 if actor.id not in self.child_actors:
                     if self.get_param("challenge_mode"):
-                        # In challenge mode only the Ego Vehicle and its sensors are created
-                        if actor.type_id.startswith("vehicle") and (actor.attributes.get('role_name') == self.get_param('ego_vehicle').get('role_name')):
+                        if actor.type_id.startswith("vehicle") and \
+                                (actor.attributes.get('role_name') == self.get_param('ego_vehicle').get('role_name')):
                             self.new_child_actors[actor.id] = EgoVehicle.create_actor(carla_actor=actor, parent=self)
+                        elif actor.type_id.startswith("vehicle") and \
+                                (actor.attributes.get('role_name') == self.get_param('atlas_vehicle').get('role_name')):
+                            self.new_child_actors[actor.id] = AtlasVehicle.create_actor(carla_actor=actor, parent=self)
                         elif actor.type_id.startswith("sensor"):
                             self.new_child_actors[actor.id] = Sensor.create_actor(carla_actor=actor, parent=self)
                     else:
@@ -105,7 +108,11 @@ class Parent(object):
                             self.new_child_actors[actor.id] = Traffic.create_actor(carla_actor=actor, parent=self)
                         elif actor.type_id.startswith("vehicle"):
                             if actor.attributes.get('role_name') in self.get_param('ego_vehicle').get('role_name'):
-                                self.new_child_actors[actor.id] = EgoVehicle.create_actor(carla_actor=actor, parent=self)
+                                self.new_child_actors[actor.id] = EgoVehicle.create_actor(carla_actor=actor,
+                                                                                          parent=self)
+                            elif actor.attributes.get('role_name') in self.get_param('atlas_vehicle').get('role_name'):
+                                self.new_child_actors[actor.id] = AtlasVehicle.create_actor(carla_actor=actor,
+                                                                                            parent=self)
                             else:
                                 self.new_child_actors[actor.id] = Vehicle.create_actor(carla_actor=actor, parent=self)
                         elif actor.type_id.startswith("sensor"):
@@ -275,3 +282,4 @@ from carla_ros_bridge.sensor import Sensor                   # noqa, pylint: dis
 from carla_ros_bridge.traffic import Traffic                 # noqa, pylint: disable=wrong-import-position
 from carla_ros_bridge.vehicle import Vehicle                 # noqa, pylint: disable=wrong-import-position
 from carla_ros_bridge.ego_vehicle import EgoVehicle          # noqa, pylint: disable=wrong-import-position
+from carla_ros_bridge.atlas_vehicle import AtlasVehicle      # noqa, pylint: disable=wrong-import-position
