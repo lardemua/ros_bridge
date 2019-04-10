@@ -27,7 +27,6 @@ except IndexError:
     pass
 import carla
 import argparse
-import logging
 import random
 import roslib
 roslib.load_manifest('carla_ros_control_npc')
