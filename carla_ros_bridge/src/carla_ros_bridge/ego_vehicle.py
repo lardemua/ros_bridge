@@ -118,7 +118,6 @@ class EgoVehicle(Vehicle):
                 wheel_info.disable_steering = wheel.disable_steering
                 vehicle_info.wheels.append(wheel_info)
             vehicle_info.max_rpm = vehicle_physics.max_rpm
-            vehicle_info.max_rpm = vehicle_physics.max_rpm
             vehicle_info.moi = vehicle_physics.moi
             vehicle_info.damping_rate_full_throttle = vehicle_physics.damping_rate_full_throttle
             vehicle_info.damping_rate_zero_throttle_clutch_engaged = \
@@ -219,9 +218,7 @@ class EgoVehicle(Vehicle):
         :return: squared vector length
         :rtype: float64
         """
-        return carla_vector.x * carla_vector.x + \
-               carla_vector.y * carla_vector.y + \
-               carla_vector.z * carla_vector.z
+        return carla_vector.x * carla_vector.x + carla_vector.y * carla_vector.y + carla_vector.z * carla_vector.z
 
     @staticmethod
     def get_vehicle_speed_squared(carla_vehicle):
