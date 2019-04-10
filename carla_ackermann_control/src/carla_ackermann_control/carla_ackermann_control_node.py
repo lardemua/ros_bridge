@@ -26,7 +26,7 @@ from carla_ros_bridge_msgs.msg import CarlaEgoVehicleControl                # py
 from carla_ros_bridge_msgs.msg import CarlaEgoVehicleInfo                   # pylint: disable=no-name-in-module,import-error
 from carla_ackermann_control.msg import EgoVehicleControlInfo               # pylint: disable=no-name-in-module,import-error
 from carla_ackermann_control.cfg import EgoVehicleControlParameterConfig    # pylint: disable=no-name-in-module,import-error
-import carla_control_physics as phys                                        # pylint: disable=no-name-in-module,import-error
+import carla_control_physics as phys                                       # pylint: disable=no-name-in-module,import-error
 
 
 class CarlaAckermannControl(object):
@@ -96,23 +96,23 @@ class CarlaAckermannControl(object):
             (lambda: rospy.get_rostime().to_sec())        # pylint: disable=protected-access
 
         self.reconfigure_server = Server(EgoVehicleControlParameterConfig,
-                                         namespace="/carla/ackermann_control",
+                                         namespace="/carla/" + self.role_name + "/ackermann_control",
                                          callback=(lambda config,
                                                    level: CarlaAckermannControl.reconfigure_PID_parameters(self, config, level)))
         # ackermann drive commands
-        self.control_subscriber = rospy.Subscriber("/carla/ego_vehicle/ackermann_cmd",
+        self.control_subscriber = rospy.Subscriber("/carla/" + self.role_name + "/ackermann_cmd",
                                                    AckermannDrive, self.ackermann_command_updated)
         # current status of the vehicle
-        self.vehicle_status_subscriber = rospy.Subscriber("/carla/ego_vehicle/vehicle_status",
+        self.vehicle_status_subscriber = rospy.Subscriber("/carla/" + self.role_name + "/vehicle_status",
                                                           CarlaEgoVehicleStatus, self.vehicle_status_updated)
         # vehicle info
-        self.vehicle_info_subscriber = rospy.Subscriber("/carla/ego_vehicle/vehicle_info",
+        self.vehicle_info_subscriber = rospy.Subscriber("/carla/" + self.role_name + "/vehicle_info",
                                                         CarlaEgoVehicleInfo, self.vehicle_info_updated)
         # to send command to carla
-        self.carla_control_publisher = rospy.Publisher("/carla/ego_vehicle/vehicle_control_cmd",
+        self.carla_control_publisher = rospy.Publisher("/carla/" + self.role_name + "/vehicle_control_cmd",
                                                        CarlaEgoVehicleControl, queue_size=1)
         # report controller info
-        self.control_info_publisher = rospy.Publisher("/carla/ackermann_control/control_info",
+        self.control_info_publisher = rospy.Publisher("/carla/" + self.role_name + "/ackermann_control/control_info",
                                                       EgoVehicleControlInfo, queue_size=1)
 
     def destroy(self):
@@ -161,7 +161,7 @@ class CarlaAckermannControl(object):
         :type vehicle_status: ackermann_msgs.AckermannDrive
         :return:
         """
-        # return target status
+        # set target status
         self.vehicle_status = vehicle_status
 
     def vehicle_info_updated(self, vehicle_info):
