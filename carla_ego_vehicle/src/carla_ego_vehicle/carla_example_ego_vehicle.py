@@ -43,6 +43,38 @@ class CarlaExampleEgoVehicle(CarlaEgoVehicleBase):
                 'fov': 100
             },
             {
+                'type': 'sensor.camera.depth',
+                'role_name': 'front',
+                'x': -2.0, 'y': 0.0, 'z': -2.0, 'roll': 0.0, 'pitch': 0.0, 'yaw': 0.0,
+                'width': 800,
+                'height': 600,
+                'fov': 100
+            },
+            {
+                'type': 'sensor.camera.depth',
+                'role_name': 'view',
+                'x': -4.5, 'y': 0.0, 'z': 2.8, 'roll': 0.0, 'pitch': -20.0, 'yaw': 0.0,
+                'width': 800,
+                'height': 600,
+                'fov': 100
+            },
+            {
+                'type': 'sensor.camera.semantic_segmentation',
+                'role_name': 'front',
+                'x': 4.0, 'y': 0.0, 'z': 4.0, 'roll': 0.0, 'pitch': 0.0, 'yaw': 0.0,
+                'width': 800,
+                'height': 600,
+                'fov': 100
+            },
+            {
+                'type': 'sensor.camera.semantic_segmentation',
+                'role_name': 'view',
+                'x': -4.5, 'y': 0.0, 'z': 2.8, 'roll': 0.0, 'pitch': -20.0, 'yaw': 0.0,
+                'width': 800,
+                'height': 600,
+                'fov': 100
+            },
+            {
                 'type': 'sensor.lidar.ray_cast',
                 'role_name': 'front',
                 'x': 0.0, 'y': 0.0, 'z': 2.4, 'roll': 0.0, 'pitch': 0.0, 'yaw': 0.0,
