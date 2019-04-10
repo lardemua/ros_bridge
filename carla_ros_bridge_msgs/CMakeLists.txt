@@ -58,6 +58,7 @@ add_message_files(
   CarlaEgoVehicleInfo.msg
   CarlaCollisionEvent.msg
   CarlaLaneInvasionEvent.msg
+  CarlaMapInfo.msg
 )
 
 ## Generate services in the 'srv' folder
