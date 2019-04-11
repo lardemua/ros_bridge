@@ -32,9 +32,9 @@ This documentation is for CARLA versions *newer* than 0.9.4.
 
 - [x] Lidar sensor support
 
-- [ ] Rosbag in the bridge (in order to avoid rosbag record -a small time errors)
+- [x] Add traffic light support
 
-- [ ] Add traffic light support
+- [ ] Rosbag in the bridge (in order to avoid rosbag record -a small time errors)
 
 - [ ] ROS/OpenCV image convertion and Object Tracking using Template Matching.
 
