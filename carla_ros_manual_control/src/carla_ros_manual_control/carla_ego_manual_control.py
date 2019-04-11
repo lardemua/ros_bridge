@@ -93,47 +93,61 @@ class World(object):
         Constructor for World class
         :param hud: info display
         """
-        self._surface = None
+        self._surface_rgb = None
+        self._surface_depth = None
+        self._surface_semantic_segmentation = None
         self.hud = hud
-        # self.rgb_subscriber = rospy.Subscriber("/carla/ego_vehicle/camera/rgb/view/image_color", Image, self.on_rgb_view_image)
-        # self.depth_subscriber = rospy.Subscriber("/carla/ego_vehicle/camera/depth/view/image_color", Image, self.on_depth_view_image)
-        # self.semantic_subscriber = rospy.Subscriber("/carla/ego_vehicle/camera/semantic_segmentation/view/image_color", Image, self.on_semantic_view_image)
-        self.image_subscriber = None
-        if image_topic == 0:
-            self.image_subscriber = rospy.Subscriber("/carla/ego_vehicle/camera/rgb/view/image_color", Image, self.on_image_view)
-        elif image_topic == 1:
-            self.image_subscriber = rospy.Subscriber("/carla/ego_vehicle/camera/depth/view/image_color", Image, self.on_image_view)
-        elif image_topic == 2:
-            self.image_subscriber = rospy.Subscriber("/carla/ego_vehicle/camera/semantic_segmentation/view/image_color", Image, self.on_image_view)
+        self.rgb_subscriber = rospy.Subscriber("/carla/ego_vehicle/camera/rgb/view/image_color", Image, self.on_rgb_view_image)
+        self.depth_subscriber = rospy.Subscriber("/carla/ego_vehicle/camera/depth/view/image_color", Image, self.on_depth_view_image)
+        self.semantic_subscriber = rospy.Subscriber("/carla/ego_vehicle/camera/semantic_segmentation/view/image_color", Image, self.on_semantic_view_image)
+        # self.image_subscriber = None
+        # if image_topic == 0:
+        #     self.image_subscriber = rospy.Subscriber("/carla/ego_vehicle/camera/rgb/view/image_color", Image, self.on_image_view)
+        # elif image_topic == 1:
+        #     self.image_subscriber = rospy.Subscriber("/carla/ego_vehicle/camera/depth/view/image_color", Image, self.on_image_view)
+        # elif image_topic == 2:
+        #     self.image_subscriber = rospy.Subscriber("/carla/ego_vehicle/camera/semantic_segmentation/view/image_color", Image, self.on_image_view)
 
         self.collision_subscriber = rospy.Subscriber("/carla/ego_vehicle/collision", CarlaCollisionEvent, self.on_collision)
         self.lane_invasion_subscriber = rospy.Subscriber("/carla/ego_vehicle/lane_invasion", CarlaLaneInvasionEvent, self.on_lane_invasion)
 
-    # def on_rgb_view_image(self, data):
-    #     """
-    #     Callback function used on view rgb camera image event
-    #     :param data: data info
-    #     :return:
-    #     """
-    #     array = numpy.frombuffer(data.data, dtype=numpy.dtype("uint8"))
-    #     array = numpy.reshape(array, (data.height, data.width, 4))
-    #     array = array[:, :, :3]
-    #     array = array[:, :, ::-1]
-    #     self._surface = pygame.surfarray.make_surface(array.swapaxes(0, 1))
-    #
-    # def on_depth_view_image(self, data):
-    #     """
-    #     Callback function used on view depth camera image event
-    #     :param data: data info
-    #     :return:
-    #     """
-    #     array = numpy.frombuffer(data.data, dtype=numpy.dtype("uint8"))
-    #     array = numpy.reshape(array, (data.height, data.width, 4))
-    #     array = array[:, :, :3]
-    #     array = array[:, :, ::-1]
-    #     self._surface = pygame.surfarray.make_surface(array.swapaxes(0, 1))
-    #
-    # def on_semantic_view_image(self, data):
+    def on_rgb_view_image(self, data):
+        """
+        Callback function used on view rgb camera image event
+        :param data: data info
+        :return:
+        """
+        array = numpy.frombuffer(data.data, dtype=numpy.dtype("uint8"))
+        array = numpy.reshape(array, (data.height, data.width, 4))
+        array = array[:, :, :3]
+        array = array[:, :, ::-1]
+        self._surface_rgb = pygame.surfarray.make_surface(array.swapaxes(0, 1))
+
+    def on_depth_view_image(self, data):
+        """
+        Callback function used on view depth camera image event
+        :param data: data info
+        :return:
+        """
+        array = numpy.frombuffer(data.data, dtype=numpy.dtype("uint8"))
+        array = numpy.reshape(array, (data.height, data.width, 4))
+        array = array[:, :, :3]
+        array = array[:, :, ::-1]
+        self._surface_depth = pygame.surfarray.make_surface(array.swapaxes(0, 1))
+
+    def on_semantic_view_image(self, data):
+        """
+        Callback function used on view semantic segmentation camera image event
+        :param data: data info
+        :return:
+        """
+        array = numpy.frombuffer(data.data, dtype=numpy.dtype("uint8"))
+        array = numpy.reshape(array, (data.height, data.width, 4))
+        array = array[:, :, :3]
+        array = array[:, :, ::-1]
+        self._surface_semantic_segmentation = pygame.surfarray.make_surface(array.swapaxes(0, 1))
+
+    # def on_image_view(self, data):
     #     """
     #     Callback function used on view semantic segmentation camera image event
     #     :param data: data info
@@ -144,18 +158,6 @@ class World(object):
     #     array = array[:, :, :3]
     #     array = array[:, :, ::-1]
     #     self._surface = pygame.surfarray.make_surface(array.swapaxes(0, 1))
-
-    def on_image_view(self, data):
-        """
-        Callback function used on view semantic segmentation camera image event
-        :param data: data info
-        :return:
-        """
-        array = numpy.frombuffer(data.data, dtype=numpy.dtype("uint8"))
-        array = numpy.reshape(array, (data.height, data.width, 4))
-        array = array[:, :, :3]
-        array = array[:, :, ::-1]
-        self._surface = pygame.surfarray.make_surface(array.swapaxes(0, 1))
 
     def on_collision(self, data):
         """
@@ -190,8 +192,12 @@ class World(object):
         :param display: image data
         :return:
         """
-        if self._surface is not None:
-            display.blit(self._surface, (0, 0))
+        if self._surface_rgb is not None:
+            display.blit(self._surface_rgb, (0, 0))
+        if self._surface_depth is not None:
+            display.blit(self._surface_depth, (50, 50))
+        if self._surface_semantic_segmentation is not None:
+            display.blit(self._surface_semantic_segmentation, (100, 100))
         self.hud.render(display)
 
     def destroy(self):
@@ -199,10 +205,10 @@ class World(object):
         Function used to destroy all objects in the world
         :return:
         """
-        # self.rgb_subscriber.unregister()
-        # self.depth_subscriber.unregister()
-        # self.semantic_subscriber.unregister()
-        self.image_subscriber.unregister()
+        self.rgb_subscriber.unregister()
+        self.depth_subscriber.unregister()
+        self.semantic_subscriber.unregister()
+        # self.image_subscriber.unregister()
         self.collision_subscriber.unregister()
         self.lane_invasion_subscriber.unregister()
         image_topic = 0
@@ -273,12 +279,12 @@ class KeyboardControl(object):
             elif event.type == pygame.KEYUP:
                 if self._is_quit_shortcut(event.key):
                     return True
-                elif event.key == K_1:
-                    image_topic = 0
-                elif event.key == K_2:
-                    image_topic = 1
-                elif event.key == K_3:
-                    image_topic = 2
+                # elif event.key == K_1:
+                #     image_topic = 0
+                # elif event.key == K_2:
+                #     image_topic = 1
+                # elif event.key == K_3:
+                #     image_topic = 2
                 elif event.key == K_F1:
                     self.hud.toggle_info()
                 elif event.key == K_h or (event.key == K_SLASH and pygame.key.get_mods() & KMOD_SHIFT):

@@ -98,9 +98,6 @@ class Parent(object):
                         if actor.type_id.startswith("vehicle") and \
                                 (actor.attributes.get('role_name') == self.get_param('ego_vehicle').get('role_name')):
                             self.new_child_actors[actor.id] = EgoVehicle.create_actor(carla_actor=actor, parent=self)
-                        elif actor.type_id.startswith("vehicle") and \
-                                (actor.attributes.get('role_name') == self.get_param('atlas_vehicle').get('role_name')):
-                            self.new_child_actors[actor.id] = AtlasVehicle.create_actor(carla_actor=actor, parent=self)
                         elif actor.type_id.startswith("sensor"):
                             self.new_child_actors[actor.id] = Sensor.create_actor(carla_actor=actor, parent=self)
                     else:
@@ -110,9 +107,36 @@ class Parent(object):
                             if actor.attributes.get('role_name') in self.get_param('ego_vehicle').get('role_name'):
                                 self.new_child_actors[actor.id] = EgoVehicle.create_actor(carla_actor=actor,
                                                                                           parent=self)
-                            elif actor.attributes.get('role_name') in self.get_param('atlas_vehicle').get('role_name'):
+                            else:
+                                self.new_child_actors[actor.id] = Vehicle.create_actor(carla_actor=actor, parent=self)
+                        elif actor.type_id.startswith("sensor"):
+                            self.new_child_actors[actor.id] = Sensor.create_actor(carla_actor=actor, parent=self)
+                        elif actor.type_id.startswith("spectator"):
+                            self.new_child_actors[actor.id] = Spectator.create_actor(carla_actor=actor, parent=self)
+                        else:
+                            self.new_child_actors[actor.id] = Actor(carla_actor=actor, parent=self)
+
+    def get_new_atlas_child_actors(self):
+        """
+        Private Function used to get children actors of the parent node
+        :return:
+        """
+        for actor in self.get_actor_list():
+            if (actor.parent and actor.parent.id == self.carla_ID) or (actor.parent is None and self.carla_ID == 0):
+                if actor.id not in self.child_actors:
+                    if self.get_param("challenge_mode"):
+                        if actor.type_id.startswith("vehicle") and \
+                                (actor.attributes.get('role_name') == self.get_param('atlas_vehicle').get('role_name')):
+                            self.new_child_actors[actor.id] = AtlasVehicle.create_actor(carla_actor=actor, parent=self)
+                        elif actor.type_id.startswith("sensor"):
+                            self.new_child_actors[actor.id] = Sensor.create_actor(carla_actor=actor, parent=self)
+                    else:
+                        if actor.type_id.startswith("traffic"):
+                            self.new_child_actors[actor.id] = Traffic.create_actor(carla_actor=actor, parent=self)
+                        elif actor.type_id.startswith("vehicle"):
+                            if actor.attributes.get('role_name') in self.get_param('atlas_vehicle').get('role_name'):
                                 self.new_child_actors[actor.id] = AtlasVehicle.create_actor(carla_actor=actor,
-                                                                                            parent=self)
+                                                                                          parent=self)
                             else:
                                 self.new_child_actors[actor.id] = Vehicle.create_actor(carla_actor=actor, parent=self)
                         elif actor.type_id.startswith("sensor"):

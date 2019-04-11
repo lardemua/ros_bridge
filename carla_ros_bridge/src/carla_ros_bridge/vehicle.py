@@ -82,7 +82,7 @@ class Vehicle(Actor):
         Finally forwards call to super class
         :return:
         """
-        rospy.logdebug("Destroy Vehicle(id={})".format(self.get_id()))
+        rospy.logdebug("Destroy Vehicle(id={})".format(self.get_ID()))
         super(Vehicle, self).destroy()
 
     def update(self):
