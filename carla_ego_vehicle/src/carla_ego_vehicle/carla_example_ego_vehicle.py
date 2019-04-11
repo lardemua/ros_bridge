@@ -86,6 +86,17 @@ class CarlaExampleEgoVehicle(CarlaEgoVehicleBase):
                 'rotation_frequency': 20
             },
             {
+                'type': 'sensor.lidar.ray_cast',
+                'role_name': 'lidar1',
+                'x': 0.0, 'y': 0.0, 'z': 2.4, 'roll': 0.0, 'pitch': 0.0, 'yaw': 0.0,
+                'range': 5000,
+                'channels': 32,
+                'points_per_second': 320000,
+                'upper_fov': 2.0,
+                'lower_fov': -26.8,
+                'rotation_frequency': 20
+            },
+            {
                 'type': 'sensor.other.gnss',
                 'role_name': 'sensor',
                 'x': 1.0, 'y': 0.0, 'z': 2.0
