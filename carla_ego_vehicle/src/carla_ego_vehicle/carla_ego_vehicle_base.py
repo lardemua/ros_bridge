@@ -26,6 +26,7 @@ import sys
 import glob
 import os
 import random
+import json
 import math
 import rospy
 from tf.transformations import euler_from_quaternion
@@ -58,10 +59,11 @@ class CarlaEgoVehicleBase(object):
         rospy.init_node('ego_vehicle')
         self.host = rospy.get_param('/carla/host', '127.0.0.1')
         self.port = rospy.get_param('/carla/port', '2000')
+        self.sensor_definition = rospy.get_param('~sensor_definition_file')
         self.world = None
         self.player = None
         self.sensor_actors = []
-        self.actor_filter = rospy.get_param('/carla/client/vehicle_filter', 'vehicle.*')
+        self.actor_filter = rospy.get_param('~vehicle_filter', 'vehicle.*')
         self.actor_spawnpoint = None
         self.initialpose_subscriber = rospy.Subscriber("/initalpose", PoseWithCovarianceStamped, self.on_initialpose)
         rospy.loginfo('Listening to Server %s:%s', self.host, self.port)
@@ -105,7 +107,7 @@ class CarlaEgoVehicleBase(object):
                                                                   spawn_point.location.y,
                                                                   spawn_point.location.z,
                                                                   spawn_point.rotation.yaw))
-            if self.player is None:
+            if self.player is not None:
                 self.destroy()
             while self.player is None:
                 self.player = self.world.try_spawn_actor(blueprint, spawn_point)
@@ -121,8 +123,15 @@ class CarlaEgoVehicleBase(object):
                 spawn_points = self.world.get_map().get_spawn_points()
                 spawn_point = random.choice(spawn_points) if spawn_points else carla.Transforms()
                 self.player = self.world.try_spawn_actor(blueprint, spawn_point)
+
+        # read sensors from sensor file
+        if not os.path.exists(self.sensor_definition):
+            raise RuntimeError("Could not read sensor-definition from {}".format(self.sensor_definition))
+        json_sensors = None
+        with open(self.sensor_definition) as handle:
+            json_sensors = json.loads(handle.read())
         # setup the vehicle sensors
-        self.sensor_actors = self.setup_sensors(self.sensors())
+        self.sensor_actors = self.setup_sensors(json_sensors["sensors"])
 
     def setup_sensors(self, sensors):
         """
@@ -135,7 +144,7 @@ class CarlaEgoVehicleBase(object):
         for sensor_spec in sensors:
             try:
                 blueprint = blueprint_library.find(sensor_spec['type'])
-                blueprint.set_attribute('role_name', str(sensor_spec['role_name']))
+                blueprint.set_attribute('role_name', str(sensor_spec['id']))
                 if sensor_spec['type'].startswith('sensor.camera'):
                     blueprint.set_attribute('image_size_x', str(sensor_spec['width']))
                     blueprint.set_attribute('image_size_y', str(sensor_spec['height']))
@@ -205,3 +214,24 @@ class CarlaEgoVehicleBase(object):
             rospy.spin()
         except rospy.ROSInterruptException:
             pass
+
+# ==============================================================================
+# -- Main Function ---------------------------------------------------------
+# ==============================================================================
+
+
+def main():
+    """
+    Main Function
+    :return:
+    """
+    ego_vehicle = CarlaEgoVehicleBase()
+    try:
+        ego_vehicle.run()
+    finally:
+        if ego_vehicle is not None:
+            ego_vehicle.destroy()
+
+
+if __name__ == '__main__':
+    main()

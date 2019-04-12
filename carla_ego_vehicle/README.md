@@ -38,30 +38,19 @@ To setup your own ego vehicle with sensors, follow a similar approach as in `car
 
 Define sensors with their attributes as described in the Carla Documentation about [Cameras and Sensors](https://github.com/carla-simulator/carla/blob/master/Docs/cameras_and_sensors.md).
 
-The format is a list of dictionaries. One dictionary has the values as follows:
+The sensors attached to the ego vehicle can be defined via a json file `sensors.json`. The `carla_ego_vehicle` reads it from the file location defined via the private ros parameter `sensor_definition_file`.
 
-    {
-        'type': '<SENSOR-TYPE>',
-        'role_name': '<NAME>',
-        'x': 0.0, 'y': 0.0, 'z': 0.0, 'roll': 0.0, 'pitch': 0.0, 'yaw': 0.0, # pose of the sensor, relative to the vehicle
-        <ADDITIONAL-SENSOR-ATTRIBUTES>
+The json format is defined like this:
+
+    { 
+        "sensors" = [
+            {
+              "type": "<SENSOR-TYPE>",
+              "id": "<NAME>",
+              "x": 0.0, "y": 0.0, "z": 0.0, "roll": 0.0, "pitch": 0.0, "yaw": 0.0, # pose of the sensor, relative to the vehicle
+              <ADDITIONAL-SENSOR-ATTRIBUTES>
+            },
+            ...
+        ]
     }
-
-## Carla ROS Manual Control
-
-The node `carla_ros_manual_control` is a ROS-only version of the Carla `manual_control.py`. All data is received
-via ROS topics.
-
-Note: To be able to use carla_ros_manual_control a camera with role-name 'view' needs to be spawned by `carla_ego_vehicle`.
-
-
-### Manual steering
-
-In order to steer manually, you might need to disable sending vehicle control commands within another ROS node.
-
-Therefore the manual control is able to publish to `/vehicle_control_manual_override` ([std_msgs/Bool](http://docs.ros.org/api/std_msgs/html/msg/Bool.html)).
-
-Press `B` to toggle the value.
-
-Note: As sending the vehicle control commands is highly dependent on your setup, you need to implement the subscriber to that topic yourself.
 
