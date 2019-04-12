@@ -21,12 +21,12 @@ import rospy
 from simple_pid import PID
 from dynamic_reconfigure.server import Server
 from ackermann_msgs.msg import AckermannDrive
-from carla_ros_bridge_msgs.msg import CarlaEgoVehicleStatus                 # pylint: disable=no-name-in-module,import-error
-from carla_ros_bridge_msgs.msg import CarlaEgoVehicleControl                # pylint: disable=no-name-in-module,import-error
-from carla_ros_bridge_msgs.msg import CarlaEgoVehicleInfo                   # pylint: disable=no-name-in-module,import-error
-from carla_ackermann_control.msg import EgoVehicleControlInfo               # pylint: disable=no-name-in-module,import-error
-from carla_ackermann_control.cfg import EgoVehicleControlParameterConfig    # pylint: disable=no-name-in-module,import-error
-import carla_control_physics as phys                                       # pylint: disable=no-name-in-module,import-error
+from carla_ros_bridge_msgs.msg import CarlaEgoVehicleStatus               # pylint: disable=no-name-in-module,import-error
+from carla_ros_bridge_msgs.msg import CarlaEgoVehicleControl              # pylint: disable=no-name-in-module,import-error
+from carla_ros_bridge_msgs.msg import CarlaEgoVehicleInfo                 # pylint: disable=no-name-in-module,import-error
+from carla_ackermann_control.msg import EgoVehicleControlInfo             # pylint: disable=no-name-in-module,import-error
+from carla_ackermann_control.cfg import EgoVehicleControlParameterConfig  # pylint: disable=no-name-in-module,import-error
+import carla_control_physics as phys                                      # pylint: disable=no-name-in-module,import-error
 
 
 class CarlaAckermannControl(object):
@@ -36,7 +36,7 @@ class CarlaAckermannControl(object):
 
     def __init__(self):
         """
-        Constructor for CarlaAckermannContrl Class
+        Constructor for CarlaAckermannControl Class
         """
         self.control_loop_rate = rospy.Rate(10)     #10Hz
         self.lastAckermannMsgReceived = datetime.datetime(datetime.MINYEAR, 1, 1)

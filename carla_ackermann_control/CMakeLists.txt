@@ -13,6 +13,7 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
   geometry_msgs
   ackermann_msgs
+  message_generation
   dynamic_reconfigure
   carla_ros_bridge_msgs
 )
