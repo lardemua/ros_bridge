@@ -152,12 +152,12 @@ class CarlaEgoVehicleBase(object):
                     sensor_location = carla.Location(x=sensor_spec['x'], y=sensor_spec['y'], z=sensor_spec['z'])
                     sensor_rotation = carla.Rotation(pitch=sensor_spec['pitch'], roll=sensor_spec['roll'], yaw=sensor_spec['yaw'])
                 elif sensor_spec['type'].startswith('sensor.lidar'):
-                    blueprint.set_attribute('range', '200')
-                    blueprint.set_attribute('rotation_frequency', '10')
-                    blueprint.set_attribute('channels', '32')
-                    blueprint.set_attribute('upper_fov', '15')
-                    blueprint.set_attribute('lower_fov', '-30')
-                    blueprint.set_attribute('points_per_second', '500000')
+                    blueprint.set_attribute('range', str(sensor_spec['range']))
+                    blueprint.set_attribute('rotation_frequency', str(sensor_spec['rotation_frequency']))
+                    blueprint.set_attribute('channels', str(sensor_spec['channels']))
+                    blueprint.set_attribute('upper_fov', str(sensor_spec['upper_fov']))
+                    blueprint.set_attribute('lower_fov', str(sensor_spec['lower_fov']))
+                    blueprint.set_attribute('points_per_second', str(sensor_spec['points_per_second']))
                     sensor_location = carla.Location(x=sensor_spec['x'], y=sensor_spec['y'], z=sensor_spec['z'])
                     sensor_rotation = carla.Rotation(pitch=sensor_spec['pitch'], roll=sensor_spec['roll'], yaw=sensor_spec['yaw'])
                 elif sensor_spec['type'].startswith('sensor.other.gnss'):
