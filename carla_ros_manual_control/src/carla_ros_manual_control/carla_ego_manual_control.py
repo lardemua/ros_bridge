@@ -74,10 +74,6 @@ try:
 except ImportError:
     raise RuntimeError('Cannot import pygame, make sure pygame package is installed before running this module')
 
-# ==============================================================================
-# -- Global --------------------------------------------------------------------
-# ==============================================================================
-image_topic = 0     # use this to change image camera topic
 
 # ==============================================================================
 # -- World ---------------------------------------------------------------------
@@ -93,49 +89,14 @@ class World(object):
         Constructor for World class
         :param hud: info display
         """
-        self._surface_rgb = None
-        self._surface_depth = None
-        self._surface_semantic_segmentation = None
+        self._surface = None
         self.hud = hud
-        self.rgb_subscriber = rospy.Subscriber("/carla/ego_vehicle/camera/rgb/view/image_color", Image, self.on_rgb_view_image)
-        self.depth_subscriber = rospy.Subscriber("/carla/ego_vehicle/camera/depth/view/image_color", Image, self.on_depth_view_image)
-        self.semantic_subscriber = rospy.Subscriber("/carla/ego_vehicle/camera/semantic_segmentation/view/image_color", Image, self.on_semantic_view_image)
-        # self.image_subscriber = None
-        # if image_topic == 0:
-        #     self.image_subscriber = rospy.Subscriber("/carla/ego_vehicle/camera/rgb/view/image_color", Image, self.on_image_view)
-        # elif image_topic == 1:
-        #     self.image_subscriber = rospy.Subscriber("/carla/ego_vehicle/camera/depth/view/image_color", Image, self.on_image_view)
-        # elif image_topic == 2:
-        #     self.image_subscriber = rospy.Subscriber("/carla/ego_vehicle/camera/semantic_segmentation/view/image_color", Image, self.on_image_view)
 
+        self.image_subscriber = rospy.Subscriber("/carla/ego_vehicle/camera/rgb/view/image_color", Image, self.on_view_image)
         self.collision_subscriber = rospy.Subscriber("/carla/ego_vehicle/collision", CarlaCollisionEvent, self.on_collision)
         self.lane_invasion_subscriber = rospy.Subscriber("/carla/ego_vehicle/lane_invasion", CarlaLaneInvasionEvent, self.on_lane_invasion)
 
-    def on_rgb_view_image(self, data):
-        """
-        Callback function used on view rgb camera image event
-        :param data: data info
-        :return:
-        """
-        array = numpy.frombuffer(data.data, dtype=numpy.dtype("uint8"))
-        array = numpy.reshape(array, (data.height, data.width, 4))
-        array = array[:, :, :3]
-        array = array[:, :, ::-1]
-        self._surface_rgb = pygame.surfarray.make_surface(array.swapaxes(0, 1))
-
-    def on_depth_view_image(self, data):
-        """
-        Callback function used on view depth camera image event
-        :param data: data info
-        :return:
-        """
-        array = numpy.frombuffer(data.data, dtype=numpy.dtype("uint8"))
-        array = numpy.reshape(array, (data.height, data.width, 4))
-        array = array[:, :, :3]
-        array = array[:, :, ::-1]
-        self._surface_depth = pygame.surfarray.make_surface(array.swapaxes(0, 1))
-
-    def on_semantic_view_image(self, data):
+    def on_view_image(self, data):
         """
         Callback function used on view semantic segmentation camera image event
         :param data: data info
@@ -145,19 +106,7 @@ class World(object):
         array = numpy.reshape(array, (data.height, data.width, 4))
         array = array[:, :, :3]
         array = array[:, :, ::-1]
-        self._surface_semantic_segmentation = pygame.surfarray.make_surface(array.swapaxes(0, 1))
-
-    # def on_image_view(self, data):
-    #     """
-    #     Callback function used on view semantic segmentation camera image event
-    #     :param data: data info
-    #     :return:
-    #     """
-    #     array = numpy.frombuffer(data.data, dtype=numpy.dtype("uint8"))
-    #     array = numpy.reshape(array, (data.height, data.width, 4))
-    #     array = array[:, :, :3]
-    #     array = array[:, :, ::-1]
-    #     self._surface = pygame.surfarray.make_surface(array.swapaxes(0, 1))
+        self._surface = pygame.surfarray.make_surface(array.swapaxes(0, 1))
 
     def on_collision(self, data):
         """
@@ -165,7 +114,7 @@ class World(object):
         :param data: data info
         :return:
         """
-        intensity = math.sqrt(data.normal_impulse.x*2 + data.normal_impulse.y*2 + data.normal_impulse.z*2)
+        intensity = math.sqrt(data.normal_impulse.x**2 + data.normal_impulse.y**2 + data.normal_impulse.z**2)
         self.hud.notification('Collision with {} (impulse {})'.format(data.other_actor_id, intensity))
 
     def on_lane_invasion(self, data):
@@ -192,12 +141,8 @@ class World(object):
         :param display: image data
         :return:
         """
-        if self._surface_rgb is not None:
-            display.blit(self._surface_rgb, (0, 0))
-        if self._surface_depth is not None:
-            display.blit(self._surface_depth, (50, 50))
-        if self._surface_semantic_segmentation is not None:
-            display.blit(self._surface_semantic_segmentation, (100, 100))
+        if self._surface is not None:
+            display.blit(self._surface, (0, 0))
         self.hud.render(display)
 
     def destroy(self):
@@ -205,13 +150,9 @@ class World(object):
         Function used to destroy all objects in the world
         :return:
         """
-        self.rgb_subscriber.unregister()
-        self.depth_subscriber.unregister()
-        self.semantic_subscriber.unregister()
-        # self.image_subscriber.unregister()
+        self.image_subscriber.unregister()
         self.collision_subscriber.unregister()
         self.lane_invasion_subscriber.unregister()
-        image_topic = 0
 
 # ==============================================================================
 # -- KeyboardControl -----------------------------------------------------------
@@ -279,12 +220,6 @@ class KeyboardControl(object):
             elif event.type == pygame.KEYUP:
                 if self._is_quit_shortcut(event.key):
                     return True
-                # elif event.key == K_1:
-                #     image_topic = 0
-                # elif event.key == K_2:
-                #     image_topic = 1
-                # elif event.key == K_3:
-                #     image_topic = 2
                 elif event.key == K_F1:
                     self.hud.toggle_info()
                 elif event.key == K_h or (event.key == K_SLASH and pygame.key.get_mods() & KMOD_SHIFT):
@@ -356,7 +291,6 @@ class HUD(object):
         fonts = [x for x in pygame.font.get_fonts() if 'mono' in x]
         default_font = 'ubuntumono'
         mono = default_font if default_font in fonts else fonts[0]
-        mono = default_font if default_font in fonts else fonts[0]
         mono = pygame.font.match_font(mono)
         self._font_mono = pygame.font.Font(mono, 14)
         self._notifications = FadingText(font, (width, 40), (0, height - 40))
@@ -375,7 +309,8 @@ class HUD(object):
                                                 NavSatFix, self.gnss_updated)
         self.tf_listener = tf.TransformListener()
         self.manual_control = False
-        self.manual_control_subscriber = rospy.Subscriber("/vehicle_control_manual_override", Bool, self.manual_control_override_updated)
+        self.manual_control_subscriber = rospy.Subscriber("/vehicle_control_manual_override",
+                                                          Bool, self.manual_control_override_updated)
 
     def __del__(self):
         """
@@ -472,7 +407,9 @@ class HUD(object):
             ('Hand brake:', self.vehicle_status.control.hand_brake),
             ('Manual:', self.vehicle_status.control.manual_gear_shift),
             'Gear:        %s' % {-1: 'R', 0: 'N'}.get(self.vehicle_status.control.gear,
-                                                      self.vehicle_status.control.gear)]
+                                                      self.vehicle_status.control.gear),
+            '']
+        self._info_text += [('Manual ctrl:', self.manual_control)]
 
     def toggle_info(self):
         """
