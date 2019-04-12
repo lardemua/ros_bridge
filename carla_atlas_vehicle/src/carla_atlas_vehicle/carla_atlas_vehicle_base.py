@@ -144,7 +144,7 @@ class CarlaAtlasVehicleBase(object):
         blueprint_library = self.world.get_blueprint_library()
         for sensor_spec in sensors:
             try:
-                blueprint = blueprint_library.find(sensor_spec['type'])
+                blueprint = blueprint_library.find(str(sensor_spec['type']))
                 blueprint.set_attribute('role_name', str(sensor_spec['id']))
                 if sensor_spec['type'].startswith('sensor.camera'):
                     blueprint.set_attribute('image_size_x', str(sensor_spec['width']))
