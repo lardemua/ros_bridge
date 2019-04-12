@@ -26,16 +26,23 @@ Selecting a Pose with '2D Pose Estimate' will delete the current atlas_vehicle a
 
 ### Create your own sensor setup
 
-To setup your own ATLAS vehicle with sensors, follow a similar approach as in `carla_example_atlas_vehicle` by subclassing from `CarlaAtlasVehicleBase`.
+To setup your own atlas vehicle with sensors, follow a similar approach as in `carla_example_atlas_vehicle` by subclassing from `CarlaAtlasVehicleBase`.
 
 Define sensors with their attributes as described in the Carla Documentation about [Cameras and Sensors](https://github.com/carla-simulator/carla/blob/master/Docs/cameras_and_sensors.md).
 
-The format is a list of dictionaries. One dictionary has the values as follows:
+The sensors attached to the atlas vehicle can be defined via a json file `sensors.json`. The `carla_atlas_vehicle` reads it from the file location defined via the private ros parameter `sensor_definition_file`.
 
-    {
-        'type': '<SENSOR-TYPE>',
-        'role_name': '<NAME>',
-        'x': 0.0, 'y': 0.0, 'z': 0.0, 'roll': 0.0, 'pitch': 0.0, 'yaw': 0.0, # pose of the sensor, relative to the vehicle
-        <ADDITIONAL-SENSOR-ATTRIBUTES>
+The json format is defined like this:
+
+    { 
+        "sensors" = [
+            {
+              "type": "<SENSOR-TYPE>",
+              "id": "<NAME>",
+              "x": 0.0, "y": 0.0, "z": 0.0, "roll": 0.0, "pitch": 0.0, "yaw": 0.0, # pose of the sensor, relative to the vehicle
+              <ADDITIONAL-SENSOR-ATTRIBUTES>
+            },
+            ...
+        ]
     }
 

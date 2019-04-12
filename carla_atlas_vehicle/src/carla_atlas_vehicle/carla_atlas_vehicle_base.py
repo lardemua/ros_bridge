@@ -27,6 +27,7 @@ import glob
 import os
 import random
 import math
+import json
 import rospy
 from tf.transformations import euler_from_quaternion
 from geometry_msgs.msg import PoseWithCovarianceStamped
@@ -58,10 +59,11 @@ class CarlaAtlasVehicleBase(object):
         rospy.init_node('atlas_vehicle')
         self.host = rospy.get_param('/carla/host', '127.0.0.1')
         self.port = rospy.get_param('/carla/port', '2000')
+        self.sensor_definition = rospy.get_param('~sensor_definition_file')
         self.world = None
         self.player = None
         self.sensor_actors = []
-        self.actor_filter = rospy.get_param('/carla/client/vehicle_filter', 'vehicle.*')
+        self.actor_filter = rospy.get_param('~vehicle_filter', 'vehicle.*')
         self.actor_spawnpoint = None
         self.initialpose_subscriber = rospy.Subscriber("/initalpose", PoseWithCovarianceStamped, self.on_initialpose)
         rospy.loginfo('Listening to Server %s:%s', self.host, self.port)
@@ -105,7 +107,7 @@ class CarlaAtlasVehicleBase(object):
                                                                   spawn_point.location.y,
                                                                   spawn_point.location.z,
                                                                   spawn_point.rotation.yaw))
-            if self.player is None:
+            if self.player is not None:
                 self.destroy()
             while self.player is None:
                 self.player = self.world.try_spawn_actor(blueprint, spawn_point)
@@ -121,8 +123,16 @@ class CarlaAtlasVehicleBase(object):
                 spawn_points = self.world.get_map().get_spawn_points()
                 spawn_point = random.choice(spawn_points) if spawn_points else carla.Transforms()
                 self.player = self.world.try_spawn_actor(blueprint, spawn_point)
+
+        # read sensors from file
+        if not os.path.exists(self.sensor_definition):
+            raise RuntimeError("Could not read sensor-definition from {}".format(self.sensor_definition))
+        json_sensors = None
+        with open(self.sensor_definition) as handle:
+            json_sensors = json.loads(handle.read())
+
         # setup the vehicle sensors
-        self.sensor_actors = self.setup_sensors(self.sensors())
+        self.sensor_actors = self.setup_sensors(json_sensors["sensors"])
 
     def setup_sensors(self, sensors):
         """
@@ -135,7 +145,7 @@ class CarlaAtlasVehicleBase(object):
         for sensor_spec in sensors:
             try:
                 blueprint = blueprint_library.find(sensor_spec['type'])
-                blueprint.set_attribute('role_name', str(sensor_spec['role_name']))
+                blueprint.set_attribute('role_name', str(sensor_spec['id']))
                 if sensor_spec['type'].startswith('sensor.camera'):
                     blueprint.set_attribute('image_size_x', str(sensor_spec['width']))
                     blueprint.set_attribute('image_size_y', str(sensor_spec['height']))
@@ -143,12 +153,12 @@ class CarlaAtlasVehicleBase(object):
                     sensor_location = carla.Location(x=sensor_spec['x'], y=sensor_spec['y'], z=sensor_spec['z'])
                     sensor_rotation = carla.Rotation(pitch=sensor_spec['pitch'], roll=sensor_spec['roll'], yaw=sensor_spec['yaw'])
                 elif sensor_spec['type'].startswith('sensor.lidar'):
-                    blueprint.set_attribute('range', '200')
-                    blueprint.set_attribute('rotation_frequency', '10')
-                    blueprint.set_attribute('channels', '32')
-                    blueprint.set_attribute('upper_fov', '15')
-                    blueprint.set_attribute('lower_fov', '-30')
-                    blueprint.set_attribute('points_per_second', '500000')
+                    blueprint.set_attribute('range', str(sensor_spec['range']))
+                    blueprint.set_attribute('rotation_frequency', str(sensor_spec['rotation_frequency']))
+                    blueprint.set_attribute('channels', str(sensor_spec['channels']))
+                    blueprint.set_attribute('upper_fov', str(sensor_spec['upper_fov']))
+                    blueprint.set_attribute('lower_fov', str(sensor_spec['lower_fov']))
+                    blueprint.set_attribute('points_per_second', str(sensor_spec['points_per_second']))
                     sensor_location = carla.Location(x=sensor_spec['x'], y=sensor_spec['y'], z=sensor_spec['z'])
                     sensor_rotation = carla.Rotation(pitch=sensor_spec['pitch'], roll=sensor_spec['roll'], yaw=sensor_spec['yaw'])
                 elif sensor_spec['type'].startswith('sensor.other.gnss'):
@@ -199,3 +209,24 @@ class CarlaAtlasVehicleBase(object):
             rospy.spin()
         except rospy.ROSInterruptException:
             pass
+
+# ==============================================================================
+# -- Main Function ---------------------------------------------------------
+# ==============================================================================
+
+
+def main():
+    """
+    Main Function
+    :return:
+    """
+    atlas_vehicle = CarlaAtlasVehicleBase()
+    try:
+        atlas_vehicle.run()
+    finally:
+        if atlas_vehicle is not None:
+            atlas_vehicle.destroy()
+
+
+if __name__ == '__main__':
+    main()
