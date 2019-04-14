@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<launch>
+    <!-- This starts multi target tracking for stage laser measurements-->
+    <group ns="/pcp/fus/planar_pc">
+        <remap from="/base_laser_link" to="/robot_0/base_laser_link"/>
+        <remap from="/laserscan0" to="/robot_0/base_scan"/>
+        <remap from="/tracking_frame" to="/map"/>
+        <remap from="/pc_out" to="/pointcloud"/>
+        <node name="planar_pc" pkg="mtt" type="simple_planar_pc_generator_atlasmv" output="screen">
+            <param name="output_frequency" value="100.0"/>
+            <param name="perpendicular_threshold" value="0.15"/>
+        </node>
+    </group>
+</launch>

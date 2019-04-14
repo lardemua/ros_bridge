@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<!-- receives pointcloud from laser and detect targets -->
+<launch>
+    <node name="node" pkg="mtt" type="mtt_pedect">
+        <remap from="/points" to="/scan_cloud"/>
+        <!-- 	<remap from="/points" to="/pcp/fus/planar_pc/points"/> -->
+        <remap from="/markers" to="/ids"/>
+    </node>
+</launch>

@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<launch>
+
+    <remap from="/tf" to="/trf/frames"/>
+
+    <!-- This is a atlascar launch files for starting a planar_pc_generator from the left and right bumper lasers-->
+    <group ns="/pcp/fus/planar_pc">
+
+        <!-- 		<remap from="/laserscan0" to="/atc/laser/left_bumper/laser_scan"/> -->
+        <!-- 		<remap from="/laserscan1" to="/atc/laser/right_bumper/laser_scan"/> -->
+        <remap from="/laserscan0" to="/snr/las/2/scan"/>
+        <remap from="/laserscan1" to="/snr/las/3/scan"/>
+
+        <remap from="/tracking_frame" to="/atc/vehicle/center_bumper"/>
+        <remap from="/pc_out" to="/pcp/fus/planar_pc/points"/>
+
+        <node name="planar_pc" pkg="mtt" type="simple_planar_pc_generator">
+            <param name="output_frequency" value="200.0"/>
+            <param name="perpendicular_threshold" value="0.15"/>
+        </node>
+
+    </group>
+</launch>

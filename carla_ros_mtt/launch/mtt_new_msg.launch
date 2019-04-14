@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<!-- receives pointcloud from laser and detect targets -->
+<launch>
+    <node name="node" pkg="mtt" type="mtt_new_msg">
+        <remap from="/points" to="/pcp/fus/planar_pc/points"/>
+        <remap from="/markers" to="/ids"/>
+    </node>
+</launch>

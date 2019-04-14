@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<launch>
+    <!-- This is a atlascar launch files for starting a planar_pc_generator from the left and right bumper lasers-->
+    <!--   <node name="mht_node" pkg="mtt" type="mht" args="/home/atlas/Dropbox/taem/matlab/trials/roundabout/data_nh"> -->
+    <!-- 	<remap from="/points" to="/pcp/fus/planar_pc/points"/> -->
+    <!--   </node> -->
+
+    <node name="demo_node" pkg="mtt" type="demo">
+        <param name="port" value="coisas"/>
+    </node>
+</launch>

@@ -1,0 +1,12 @@
+%YAML:1.0
+
+clustering_distance: 0.5
+exclusion_zone_A: 0.0
+exclusion_zone_B: 0.0
+
+max_missing_iterations: 50
+max_ellipse_axis: 0.6
+min_ellipse_axis: 0.2
+
+size_factor: 0.1
+not_found_factor: 0.1

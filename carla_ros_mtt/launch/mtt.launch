@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<launch>
+    <remap from="/tf" to="/trf/frames"/>
+    <!-- This is a atlascar launch files for starting a planar_pc_generator from the left and right bumper lasers-->
+    <group ns="/pcp/track/mtt">
+        <!-- 	<remap from="/mtt/points" to="/planar_pc_generator/planar_pc"/> -->
+        <node name="node" pkg="mtt" type="mtt">
+            <remap from="/points" to="/pcp/fus/planar_pc/points"/>
+            <remap from="/markers" to="/pcp/trck/mtt/markers"/>
+            <remap from="/marker" to="/pcp/trck/mtt/marker"/>
+            <remap from="/targets" to="/mtt/trck/targets"/>
+            <!--<param name="/scan" value="/planar_pc_generator/planar_pc"/>-->
+        </node>
+    </group>
+</launch>

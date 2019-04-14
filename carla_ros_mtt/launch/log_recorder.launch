@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<launch>
+    <!-- This is a atlascar launch files for starting a planar_pc_generator from the left and right bumper lasers-->
+    <node name="log_recorder_mode" pkg="mtt" type="log_recorder">
+        <param name="output" value="/home/daniel/Desktop/laserData.txt"/>
+        <remap from="/scan" to="/snr/las/2/scan"/>
+        <remap from="/points" to="/pcp/fus/planar_pc/points"/>
+    </node>
+</launch>

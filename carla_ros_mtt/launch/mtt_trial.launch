@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<launch>
+    <!-- This is a atlascar launch files for starting a planar_pc_generator from the left and right bumper lasers-->
+    <node name="mtt_node" pkg="mtt" type="mht" >
+        <remap from="/points" to="/planar_pc_generator/planar_pc"/>
+        <!--<param name="/scan" value="/planar_pc_generator/planar_pc"/>-->
+    </node>
+</launch>

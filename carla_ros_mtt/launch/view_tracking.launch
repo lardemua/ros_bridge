@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<launch>
+    <!-- Launch rviz with the propper parameters for loading the atlascar rviz configuration file -->
+    <remap from="/tf" to="/trf/frames"/>
+    <node name="rviz" pkg="rviz" type="rviz" />
+    <!-- args="- -display-config $(find mtt)/rvizconfig/view_tracking.vcg"/> -->
+
+</launch>

@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<launch>
+    <remap from="/tf" to="/trf/frames"/>
+
+    <remap from="demo/laser_1" to="/snr/las/1/scan"/>
+    <remap from="demo/laser_2" to="/snr/las/2/scan"/>
+    <remap from="demo/laser_3" to="/snr/las/3/scan"/>
+    <remap from="demo/atlascar_status" to="/vhc/plc/status"/>
+    <remap from="demo/atlascar_velocity_status" to="/vhc/velocity/status"/>
+
+    <remap from="base_link" to="/atc/vehicle/center_bumper"/>
+
+    <remap from="laser_1_report" to="/home/atlas/Desktop/laser_1"/>
+    <remap from="laser_2_report" to="/home/atlas/Desktop/laser_2"/>
+    <remap from="laser_3_report" to="/home/atlas/Desktop/laser_3"/>
+    <remap from="atlascar_status_report" to="/home/atlas/Desktop/atlascar_status"/>
+    <remap from="atlascar_velocity_status_report" to="/home/atlas/Desktop/atlascar_velocity_status"/>
+
+    <param name="use_sim_time" value="true" />
+
+    <node name="demo" pkg="mtt" type="demo" />
+
+</launch>
