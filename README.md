@@ -22,8 +22,6 @@ This documentation is for CARLA versions *newer* than 0.9.5.
 
 # Features
 
-
-
 - [x] Cameras (depth, segmentation, rgb) support
 
 - [x] Transform publications
