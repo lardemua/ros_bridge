@@ -21,7 +21,7 @@ This documentation is for CARLA versions *newer* than 0.9.5.
 ![rviz setup](./assets/images/rviz_carla_session11.png "rviz")
 
 # Features
-
+``
 - [x] Cameras (depth, segmentation, rgb) support
 
 - [x] Transform publications
