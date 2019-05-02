@@ -84,17 +84,20 @@ class World(object):
     """
     Class used to handle the CARLA world rendering
     """
-    def __init__(self, hud):
+    def __init__(self, role_name, hud):
         """
         Constructor for World class
         :param hud: info display
         """
         self._surface = None
         self.hud = hud
-
-        self.image_subscriber = rospy.Subscriber("/carla/ego_vehicle/camera/rgb/view/image_color", Image, self.on_view_image)
-        self.collision_subscriber = rospy.Subscriber("/carla/ego_vehicle/collision", CarlaCollisionEvent, self.on_collision)
-        self.lane_invasion_subscriber = rospy.Subscriber("/carla/ego_vehicle/lane_invasion", CarlaLaneInvasionEvent, self.on_lane_invasion)
+        self.role_name = role_name
+        self.image_subscriber = rospy.Subscriber("/carla/{}/camera/rgb/view/image_color".format(self.role_name),
+                                                 Image, self.on_view_image)
+        self.collision_subscriber = rospy.Subscriber("/carla/{}/collision".format(self.role_name),
+                                                     CarlaCollisionEvent, self.on_collision)
+        self.lane_invasion_subscriber = rospy.Subscriber("/carla/{}/lane_invasion".format(self.role_name),
+                                                         CarlaLaneInvasionEvent, self.on_lane_invasion)
 
     def on_view_image(self, data):
         """
@@ -163,16 +166,18 @@ class KeyboardControl(object):
     """
     Class used to handle keyboard input events
     """
-    def __init__(self, hud):
+    def __init__(self, role_name, hud):
         """
            Constructor for KeyboardControl class
            :param hud: info display
         """
-        self.vehicle_control_manual_override_publisher = rospy.Publisher("/vehicle_control_manual_override",
+        self.role_name = role_name
+        self.vehicle_control_manual_override_publisher = rospy.Publisher("/carla/{}/vehicle_control_manual_override".format(self.role_name),
                                                                          Bool, queue_size=1, latch=True)
         self.vehicle_control_manual_override = False
-        self.auto_pilot_enable_publisher = rospy.Publisher("/carla/ego_vehicle/enable_autopilot", Bool, queue_size=1)
-        self.vehicle_control_publisher = rospy.Publisher("/carla/ego_vehicle/vehicle_control_cmd",
+        self.auto_pilot_enable_publisher = rospy.Publisher("/carla/{}/enable_autopilot".format(self.role_name),
+                                                           Bool, queue_size=1)
+        self.vehicle_control_publisher = rospy.Publisher("/carla/{}/vehicle_control_cmd".format(self.role_name),
                                                          CarlaEgoVehicleControl, queue_size=1)
         self._autopilot_enabled = False
         self._control = CarlaEgoVehicleControl()
@@ -280,12 +285,13 @@ class HUD(object):
     """
     Class used to handle Info Display
     """
-    def __init__(self, width, height):
+    def __init__(self, role_name, width, height):
         """
         Constructor for HUD Class
         :param width: display width
         :param height: display height
         """
+        self.role_name = role_name
         self.dim = (width, height)
         font = pygame.font.Font(pygame.font.get_default_font(), 20)
         fonts = [x for x in pygame.font.get_fonts() if 'mono' in x]
@@ -298,14 +304,14 @@ class HUD(object):
         self._show_info = True
         self._info_text = []
         self.vehicle_status = CarlaEgoVehicleStatus()
-        self.vehicle_status_subscriber = rospy.Subscriber("/carla/ego_vehicle/vehicle_status",
+        self.vehicle_status_subscriber = rospy.Subscriber("/carla/{}/vehicle_status".format(self.role_name),
                                                           CarlaEgoVehicleStatus, self.vehicle_status_updated)
         self.vehicle_info = CarlaEgoVehicleInfo()
-        self.vehicle_info_subscriber = rospy.Subscriber("/carla/ego_vehicle/vehicle_info",
+        self.vehicle_info_subscriber = rospy.Subscriber("/carla/{}/vehicle_info".format(self.role_name),
                                                         CarlaEgoVehicleInfo, self.vehicle_info_updated)
         self.latitude = 0
         self.longitude = 0
-        self.gnss_subscriber = rospy.Subscriber("/carla/ego_vehicle/gnss/gnss1/fix",
+        self.gnss_subscriber = rospy.Subscriber("/carla/{}/gnss/gnss1/fix".format(self.role_name),
                                                 NavSatFix, self.gnss_updated)
         self.tf_listener = tf.TransformListener()
         self.manual_control = False
@@ -373,7 +379,7 @@ class HUD(object):
             return
         try:
             (position, quaternion) = self.tf_listener.lookupTransform(
-                '/map', '/ego_vehicle', rospy.Time())
+                '/map', "{}".format(self.role_name), rospy.Time())
             _, _, yaw = tf.transformations.euler_from_quaternion(quaternion)
             yaw = -math.degrees(yaw)
             x = position[0]
@@ -583,6 +589,7 @@ def main():
     Main Function
     """
     rospy.init_node('carla_ros_manual_control')
+    role_name = rospy.get_param("~role_name", "ego_vehicle")
 
     # resolution should be similar to spawned camera with role-name 'view'
     resolution = {"width": 800, "height": 600}
@@ -595,9 +602,9 @@ def main():
             (resolution['width'], resolution['height']),
             pygame.HWSURFACE | pygame.DOUBLEBUF)
 
-        hud = HUD(resolution['width'], resolution['height'])
-        world = World(hud)
-        controller = KeyboardControl(hud)
+        hud = HUD(role_name, resolution['width'], resolution['height'])
+        world = World(role_name, hud)
+        controller = KeyboardControl(role_name, hud)
 
         clock = pygame.time.Clock()
 
