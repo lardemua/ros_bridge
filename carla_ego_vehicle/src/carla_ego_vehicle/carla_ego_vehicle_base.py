@@ -114,7 +114,7 @@ class CarlaEgoVehicleBase(object):
         """
         # get the vehicle blueprint
         blueprint = random.choice(self.world.get_blueprint_library().filter(self.actor_filter))
-        blueprint.set_attribute('role_name', 'ego_vehicle')
+        blueprint.set_attribute('role_name', "{}".format(self.role_name))
         if blueprint.has_attribute('color'):
             color = random.choice(blueprint.get_attribute('color').recommended_values)
             blueprint.set_attribute('color', color)
