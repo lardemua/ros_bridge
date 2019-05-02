@@ -54,3 +54,6 @@ The json format is defined like this:
         ]
     }
 
+Define sensors with their attributes as described in the Carla Documentation about [Cameras and Sensors](https://github.com/carla-simulator/carla/blob/master/Docs/cameras_and_sensors.md).
+
+An example is provided by [carla_example_ego_vehicle.launch](launch/carla_example_ego_vehicle.launch). It uses the sensors from [sensors.json](config/sensors.json)

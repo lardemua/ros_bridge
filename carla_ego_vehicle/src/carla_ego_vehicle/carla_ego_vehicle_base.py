@@ -21,6 +21,7 @@ position. If no /initialpose is set at startup, a random spawnpoint is used.
 # ==============================================================================
 # -- IMPORTS -------------------------------------------------------------------
 # ==============================================================================
+from __future__ import print_function
 from abc import abstractmethod
 import sys
 import glob
@@ -30,7 +31,9 @@ import json
 import math
 import rospy
 from tf.transformations import euler_from_quaternion
+from tf.transformations import quaternion_from_euler
 from geometry_msgs.msg import PoseWithCovarianceStamped
+from geometry_msgs.msg import Pose
 # ==============================================================================
 # -- Find CARLA Module ---------------------------------------------------------
 # ==============================================================================
@@ -65,7 +68,31 @@ class CarlaEgoVehicleBase(object):
         self.sensor_actors = []
         self.actor_filter = rospy.get_param('~vehicle_filter', 'vehicle.*')
         self.actor_spawnpoint = None
-        self.initialpose_subscriber = rospy.Subscriber("/initalpose", PoseWithCovarianceStamped, self.on_initialpose)
+        self.role_name = rospy.get_param('~role_name', 'ego_vehicle')
+        # set spawning point
+        spawn_point = rospy.get_param('~spawn_point')
+        if spawn_point:
+            print("Using ROS parameter for spawnpoint: {}".format(spawn_point))
+            spawn_coordinates = spawn_point.split(",")
+            if len(spawn_coordinates) != 6:
+                raise ValueError("Invalid spawnpoint '{}'".format(spawn_point))
+            # create pose and set position
+            pose = Pose()
+            pose.position.x = float(spawn_coordinates[0])
+            pose.position.y = -float(spawn_coordinates[1])
+            pose.position.z = float(spawn_coordinates[2])
+            # set orientation
+            quaternion = quaternion_from_euler(math.radians(float(spawn_coordinates[3])),
+                                               math.radians(float(spawn_coordinates[4])),
+                                               math.radians(float(spawn_coordinates[5])))
+            pose.orientation.x = quaternion[0]
+            pose.orientation.y = quaternion[1]
+            pose.orientation.z = quaternion[2]
+            pose.orientation.w = quaternion[3]
+            self.actor_spawnpoint = pose
+
+        self.initialpose_subscriber = rospy.Subscriber("/carla/{}/initalpose".format(self.role_name),
+                                                       PoseWithCovarianceStamped, self.on_initialpose)
         rospy.loginfo('Listening to Server %s:%s', self.host, self.port)
         rospy.loginfo('Using Vehicle Filter: %s', self.actor_filter)
 
