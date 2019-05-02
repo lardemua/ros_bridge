@@ -50,11 +50,14 @@ class CarlaToRosWaypointConverter(object):
         self.world = carla_world
         self.map = carla_world.get_map()
         self.ego_vehicle = None
-        self.waypoint_publisher = rospy.Publisher('/carla/ego_vehicle/waypoints', Path, queue_size=1, latch=True)
+        self.role_name = rospy.get_param("~role_name", "ego_vehicle")
+        self.waypoint_publisher = rospy.Publisher('/carla/{}/waypoints'.format(self.role_name),
+                                                  Path, queue_size=1, latch=True)
         # set initial goal
         self.goal = self.world.get_map().get_spawn_points()[0]
         self.current_route = None
-        self.goal_subscriber = rospy.Subscriber("/move_base_simple/goal", PoseStamped, self.on_goal)
+        self.goal_subscriber = rospy.Subscriber("/carla/{}/move_base_simple/goal".format(self.role_name),
+                                                PoseStamped, self.on_goal)
         self._update_lock = threading.Lock()
         # use callback to wait for ego vehicle
         rospy.loginfo("Waiting for ego vehicle...")
@@ -100,7 +103,7 @@ class CarlaToRosWaypointConverter(object):
         with self._update_lock:
             hero = None
             for actor in self.world.get_actors():
-                if actor.attributes.get('role_name') == "ego_vehicle":
+                if actor.attributes.get('role_name') == self.role_name:
                     hero = actor
                     break
             ego_vehicle_changed = False
