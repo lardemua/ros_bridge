@@ -5,6 +5,7 @@
 # For a copy, see <https://opensource.org/licenses/MIT>.
 #
 
+uint32 ID
 string type
 string rolename
 CarlaEgoVehicleInfoWheel[] wheels
