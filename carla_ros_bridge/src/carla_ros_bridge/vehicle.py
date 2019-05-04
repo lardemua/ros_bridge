@@ -62,6 +62,7 @@ class Vehicle(Actor):
                                       topic_prefix=topic_prefix,
                                       append_role_name_topic_postfix=append_role_name_topic_postfix)
 
+        # self.carla_actor = carla_actor
         self.classification = Object.CLASSIFICATION_UNKNOWN
         if carla_actor.attributes.has_key('object_type'):
             if carla_actor.attributes['object_type'] == 'car':
@@ -106,9 +107,30 @@ class Vehicle(Actor):
         :rtype: std_msgs.msg.ColorRGBA
         """
         color = ColorRGBA()
-        color.r = 255
-        color.g = 0
-        color.b = 0
+        if self.carla_actor.attributes.has_key('object_type'):
+            if self.carla_actor.attributes['object_type'] == 'car':
+                color.r = 255
+                color.g = 0
+                color.b = 0
+            elif self.carla_actor.attributes['object_type'] == 'bike':
+                color.r = 255
+                color.g = 255
+                color.b = 0
+            elif self.carla_actor.attributes['object_type'] == 'motorcycle':
+                color.r = 0
+                color.g = 255
+                color.b = 255
+            elif self.carla_actor.attributes['object_type'] == 'truck':
+                color.r = 255
+                color.g = 255
+                color.b = 0
+            elif self.carla_actor.attributes['object_type'] == 'other':
+                color.r = 255
+                color.g = 0
+                color.b = 0
+        # color.r = 255
+        # color.g = 0
+        # color.b = 0
         return color
 
     def send_marker_msg(self):
