@@ -16,7 +16,7 @@ Classes to handle Carla lidars
 # ------------------------
 import numpy
 import tf
-from sensor_msgs.point_cloud2 import create_cloud_xyz32
+from sensor_msgs.point_cloud2 import create_cloud_xyz32, create_cloud, PointField
 from carla_ros_bridge.sensor import Sensor
 import carla_ros_bridge.transforms as trans
 
@@ -71,7 +71,10 @@ class Lidar(Sensor):
         """
         header = self.get_msg_header(use_parent_frame=False)
         lidar_data = numpy.frombuffer(carla_lidar_measurement.raw_data, dtype=numpy.float32)
+        # lidar_data = numpy.append(lidar_data, [255, 0, 0])
         lidar_data = numpy.reshape(lidar_data, (int(lidar_data.shape[0] / 3), 3))
+        # lidar_data = numpy.append(lidar_data, [255, 0, 0])
+
         # we take the oposite of y axis
         # (as lidar point are express in left handed coordinate system, and ros need right handed)
         # we need a copy here, because the data are read only in carla numpy
@@ -79,5 +82,22 @@ class Lidar(Sensor):
         lidar_data = -lidar_data
         # we also need to permute x and y
         lidar_data = lidar_data[..., [1, 0, 2]]
+        # add rgb colors
+        # lidar_data = numpy.append(lidar_data, [255, 0, 0])
+        # # convert from float 64 to int
+        # sensor_lidar_data = lidar_data.astype(type('float', (float, ), {}))
+        # # convert from float to int 64
+        # sensor_lidar_data = numpy.int_(sensor_lidar_data)
+        # sensor_lidar_data = numpy.int(sensor_lidar_data)
+        # sensor_lidar_data = lidar_data.astype(numpy.int)
+        msg_fields = [
+            PointField('x', 0, PointField.FLOAT32, 1),
+            PointField('y', 4, PointField.FLOAT32, 1),
+            PointField('z', 8, PointField.FLOAT32, 1),
+            PointField('r', 12, PointField.FLOAT32, 1),
+            PointField('g', 16, PointField.FLOAT32, 1),
+            PointField('b', 20, PointField.FLOAT32, 1)
+        ]
         point_cloud_msg = create_cloud_xyz32(header, lidar_data)
+        # point_cloud_msg = create_cloud(header, msg_fields, lidar_data)
         self.publish_ros_message(self.topic_name() + "/point_cloud", point_cloud_msg)
