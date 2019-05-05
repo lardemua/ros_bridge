@@ -202,42 +202,27 @@ python spawn_npc.py
 
 
 
-## Ego Vehicle / ATLAS Vehicle
+## Carla ROS Vehicle Setup
 
-This package provides three ROS nodes:
+This package provides two ROS nodes:
 
-- Carla Example Ego Vehicle: A reference client for spawning an ego vehicle
-- Carla Example ATLAS Vehicle : A reference client for spawning an ATLAS vehicle
-- Carla ROS Manual Control: a ROS-only manual control
+- Carla Example ROS Vehicle: A reference client used for spawning a vehicle using ROS.
+- Carla ROS Manual Control: a ROS-only manual control package.
 
 
-### Carla Example Ego Vehicle
+### Carla Example ROS Vehicle
 
-The reference Carla client `carla_example_ego_vehicle` can be used to spawn an ego vehicle (role-name: "ego_vehicle") with the following sensors attached to it:
+The reference Carla client `carla_example_ros_vehicle` can be used to spawn a vehicle (ex: role-name: "ego_vehicle") with the following sensors attached to it:
 
 - GNSS
-- LIDAR
+- 3 LIDAR Sensors (front + right + left)
 - Cameras (one front-camera + one camera for visualization in carla_ros_manual_control)
 - Collision Sensor
 - Lane Invasion Sensor
 
 Info: To be able to use carla_ros_manual_control a camera with role-name 'view' is required.
 
-If no specific position is set, the ego vehicle is spawned at a random position.
-
-### Carla Example ATLAS Vehicle
-
-The reference Carla client `carla_example_atlas_vehicle` can be used to spawn an ATLAS vehicle (role-name: "atlas_vehicle") with the following sensors attached to it:
-
-- GNSS
-- LIDAR
-- Cameras (one front-camera + one camera for visualization in carla_ros_manual_control)
-- Collision Sensor
-- Lane Invasion Sensor
-
-Info: To be able to use carla_ros_manual_control a camera with role-name 'view' is required.
-
-If no specific position is set, the ATLAS vehicle is spawned at a random position.
+If no specific position is set, the vehicle shall be spawned at a random position.
 
 
 ### Spawning at specific position
@@ -253,7 +238,7 @@ Selecting a Pose with '2D Pose Estimate' will delete the current example vehicle
 
 ### Create your own sensor setup
 
-To setup your own example vehicle with sensors, follow a similar approach as in `carla_example_ego_vehicle` by subclassing from `CarlaEgoVehicleBase` or follow a similar approach as in `carla_example_atlas_vehicle` by subclassing from `CarlaAtlasVehicleBase`.
+To setup your own example vehicle with sensors, follow a similar approach as in `carla_example_ros_vehicle` by subclassing from `CarlaRosVehicleBase`.
 
 Define sensors with their attributes as described in the Carla Documentation about [Cameras and Sensors](https://github.com/carla-simulator/carla/blob/master/Docs/cameras_and_sensors.md).
 
@@ -271,7 +256,7 @@ The format is a list of dictionaries. One dictionary has the values as follows:
 The node `carla_ros_manual_control` is a ROS-only version of the Carla `manual_control.py`. All data is received
 via ROS topics.
 
-Note: To be able to use carla_ros_manual_control a camera with role-name 'view' needs to be spawned by `carla_ego_vehicle`.
+Note: To be able to use carla_ros_manual_control a camera with role-name 'view' needs to be spawned by `carla_ros_vehicle`.
 
 
 ### Manual steering
@@ -300,7 +285,7 @@ Note: As sending the vehicle control commands is highly dependent on your setup,
 
 
 
-The ego vehicle sensors are provided via topics with prefix /carla/ego_vehicle/<sensor_topic>
+The vehicle sensors are provided via topics with prefix `/carla/<ROLE NAME>/<sensor_topic>`
 
 
 
@@ -377,11 +362,11 @@ Currently the following sensors are supported:
 
 
 
-You can stear the ego vehicle from the commandline by publishing to the topic `/carla/<ROLE NAME>/vehicle_control_cmd`.
+You can stear the vehicle from the commandline by publishing to the topic `/carla/<ROLE NAME>/vehicle_control_cmd`.
 
 
 
-Examples for a ego vehicle with role_name 'ego_vehicle':
+Examples for a vehicle with role_name 'ego_vehicle':
 
 
 
@@ -446,7 +431,7 @@ The role name is specified within the configuration.
 ## Test control messages
 You can send command to the car using the topic ```/carla/<ROLE NAME>/ackermann_cmd```.
 
-Examples for a ego vehicle with role_name 'ego_vehicle':
+Examples for a vehicle with role_name 'ego_vehicle':
 
 Forward movements, speed in in meters/sec.
 
@@ -475,7 +460,7 @@ Info: the steering_angle is the driving angle (in radians) not the wheel angle.
 
 
 
-Object information of all vehicles, except the ego-vehicle(s) is published.
+Object information of all vehicles, except the ROS-vehicle(s) is published.
 
 
 
@@ -559,7 +544,7 @@ The calculated route is published:
 
 |Topic         | Type |
 |--------------|------|
-| `/carla/ego_vehicle/waypoints` | [nav_msgs.Path](http://docs.ros.org/api/nav_msgs/html/msg/Path.html) |
+| `/carla/<ROLE NAME>/waypoints` | [nav_msgs.Path](http://docs.ros.org/api/nav_msgs/html/msg/Path.html) |
 
 # ROS-OpenCV Image Convertion
 
