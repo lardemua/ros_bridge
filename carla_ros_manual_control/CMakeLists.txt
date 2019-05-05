@@ -166,8 +166,7 @@ include_directories(
 # )
 
 catkin_install_python(PROGRAMS
-        src/carla_ros_manual_control/carla_ego_manual_control.py
-        src/carla_ros_manual_control/carla_atlas_manual_control.py
+        src/carla_ros_manual_control/carla_ros_manual_control.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 ## Mark executables and/or libraries for installation

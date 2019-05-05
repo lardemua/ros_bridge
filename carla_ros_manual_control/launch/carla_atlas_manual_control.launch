@@ -1,7 +1,0 @@
-<!-- -->
-<launch>
-
-    <node pkg="carla_ros_manual_control" type="carla_atlas_manual_control.py" name="carla_atlas_manual_control" output="screen"/>
-
-</launch>
-
