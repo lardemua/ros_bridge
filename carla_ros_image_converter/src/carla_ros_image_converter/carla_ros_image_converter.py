@@ -38,11 +38,20 @@ class Image_Converter:
         # cv2.circle(cv_img, (50,50), 10, 255)
 
         client = carla.Client('127.0.0.1', 2000)
+        client.set_timeout(2000)
         world = client.get_world()
         blueprints = world.get_blueprint_library().filter('vehicle.*')
 
         # print blueprints
-        print(blueprints)
+        # print(blueprints)
+
+        for vehicle in world.get_actors().filter('vehicle.*'):
+            # print(vehicle.bounding_box)
+            # Draw bounding box
+            transform = vehicle.get_transform()
+            bounding_box = vehicle.bounding_box
+            bounding_box.location += transform.location
+            world.debug.draw_box(bounding_box, transform.rotation)
 
         cv2.imshow("Image Window", cv_img)
         cv2.waitKey(3)
