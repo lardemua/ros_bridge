@@ -9,6 +9,7 @@ import sys
 import rospy
 import cv2
 import carla
+import json
 from std_msgs.msg import String
 from sensor_msgs.msg import Image
 from cv_bridge import CvBridge, CvBridgeError
@@ -45,6 +46,7 @@ class Image_Converter:
         # print blueprints
         # print(blueprints)
 
+        data = None
         for vehicle in world.get_actors().filter('vehicle.*'):
             # print(vehicle.bounding_box)
             # Draw bounding box
@@ -52,6 +54,7 @@ class Image_Converter:
             bounding_box = vehicle.bounding_box
             bounding_box.location += transform.location
             world.debug.draw_box(bounding_box, transform.rotation)
+            data = self.write_json_dataset(vehicle, transform)
 
         cv2.imshow("Image Window", cv_img)
         cv2.waitKey(3)
@@ -60,6 +63,34 @@ class Image_Converter:
             self.image_pub.publish(self.bridge.cv2_to_imgmsg(cv_img, "bgr8"))
         except CvBridgeError as e:
             print(e)
+        # save json dataset
+        self.save_json_dataset(data)
+    def write_json_dataset(self, vehicle, transform):
+        data = {}
+        data['vehicle'] = []
+        data['vehicle'].append({
+            'x': transform.location.x,
+            'y': transform.location.y,
+            'z': transform.location.z,
+            'yaw': transform.rotation.yaw
+        })
+        # data['people'].append({
+        #     'name': 'Larry',
+        #     'website': 'google.com',
+        #     'from': 'Michigan'
+        # })
+        # data['people'].append({
+        #     'name': 'Tim',
+        #     'website': 'apple.com',
+        #     'from': 'Alabama'
+        # })
+        return data
+
+    def save_json_dataset(self, data):
+        with open('/home/pedro/catkin_ws/src/ros_bridge/datasets/data.json', 'w') as outfile:
+            json.dump(data, outfile)
+
+
 
 
 def main(args):
