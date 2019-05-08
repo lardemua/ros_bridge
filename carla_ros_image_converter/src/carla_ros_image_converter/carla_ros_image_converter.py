@@ -46,7 +46,7 @@ class Image_Converter:
         # print blueprints
         # print(blueprints)
 
-        data = None
+        data = {}
         for vehicle in world.get_actors().filter('vehicle.*'):
             # print(vehicle.bounding_box)
             # Draw bounding box
@@ -54,7 +54,7 @@ class Image_Converter:
             bounding_box = vehicle.bounding_box
             bounding_box.location += transform.location
             world.debug.draw_box(bounding_box, transform.rotation)
-            data = self.write_json_dataset(vehicle, transform)
+            data = self.write_json_dataset(data, vehicle, transform)
 
         cv2.imshow("Image Window", cv_img)
         cv2.waitKey(3)
@@ -65,8 +65,8 @@ class Image_Converter:
             print(e)
         # save json dataset
         self.save_json_dataset(data)
-    def write_json_dataset(self, vehicle, transform):
-        data = {}
+
+    def write_json_dataset(self, data, vehicle, transform):
         data['vehicle'] = []
         data['vehicle'].append({
             'x': transform.location.x,
