@@ -6,8 +6,7 @@
       "x": 2.0, "y": 0.0, "z": 2.0, "roll": 0.0, "pitch": 0.0, "yaw": 0.0,
       "width": 800,
       "height": 600,
-      "fov": 100,
-      "sensor_tick": 0.1
+      "fov": 100
     },
     {
       "type": "sensor.camera.rgb",
@@ -15,8 +14,7 @@
       "x": -4.5, "y": 0.0, "z": 2.8, "roll": 0.0, "pitch": -20.0, "yaw": 0.0,
       "width": 800,
       "height": 600,
-      "fov": 100,
-      "sensor_tick": 0.1
+      "fov": 100
     },
     {
       "type": "sensor.lidar.ray_cast",
