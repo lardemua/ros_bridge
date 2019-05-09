@@ -65,6 +65,7 @@ class CarlaRosVehicleBase(object):
         self.sensor_definition = rospy.get_param('~sensor_definition_file')
         self.world = None
         self.player = None
+        self.settings = None
         self.sensor_actors = []
         self.actor_filter = rospy.get_param('~vehicle_filter', 'vehicle.*')
         self.actor_spawnpoint = None
@@ -242,6 +243,25 @@ class CarlaRosVehicleBase(object):
         except rospy.ROSInterruptException:
             pass
 
+    def run_synchronous(self):
+        """
+        Main Loop Function synchronous
+        :return:
+        """
+        client = carla.Client(self.host, self.port)
+        client.set_timeout(2.0)
+        self.world = client.get_world()
+        # enable synchronous mode
+        rospy.loginfo('Enabling Synchronous Mode')
+        self.settings = self.world.get_settings()
+        self.settings.synchronous_mode = True
+        self.world.apply_settings(self.settings)
+        self.restart()
+        try:
+            rospy.spin()
+        except rospy.ROSInterruptException:
+            pass
+
 # ==============================================================================
 # -- Main Function ---------------------------------------------------------
 # ==============================================================================
@@ -255,6 +275,7 @@ def main():
     ros_vehicle = CarlaRosVehicleBase()
     try:
         ros_vehicle.run()
+        # ros_vehicle.run_synchronous()
     finally:
         if ros_vehicle is not None:
             ros_vehicle.destroy()

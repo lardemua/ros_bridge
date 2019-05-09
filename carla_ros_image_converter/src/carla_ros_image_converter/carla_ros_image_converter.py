@@ -47,6 +47,7 @@ class Image_Converter:
         # print(blueprints)
 
         data = {}
+        data['vehicle'] = []
         for vehicle in world.get_actors().filter('vehicle.*'):
             # print(vehicle.bounding_box)
             # Draw bounding box
@@ -57,7 +58,7 @@ class Image_Converter:
             data = self.write_json_dataset(data, vehicle, transform)
 
         cv2.imshow("Image Window", cv_img)
-        cv2.waitKey(3)
+        cv2.waitKey(1)
 
         try:
             self.image_pub.publish(self.bridge.cv2_to_imgmsg(cv_img, "bgr8"))
@@ -67,7 +68,6 @@ class Image_Converter:
         self.save_json_dataset(data)
 
     def write_json_dataset(self, data, vehicle, transform):
-        data['vehicle'] = []
         data['vehicle'].append({
             'x': transform.location.x,
             'y': transform.location.y,
