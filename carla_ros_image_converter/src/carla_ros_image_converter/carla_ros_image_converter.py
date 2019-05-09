@@ -69,11 +69,13 @@ class Image_Converter:
 
     def write_json_dataset(self, data, vehicle, transform):
         data['vehicle'].append({
+            'model': vehicle.attributes['object_type'],
             'x': transform.location.x,
             'y': transform.location.y,
             'z': transform.location.z,
-            'yaw': transform.rotation.yaw
+            'yaw': transform.rotation.yaw,
         })
+        # data['vehicle'].append("\\n\\n")
         # data['people'].append({
         #     'name': 'Larry',
         #     'website': 'google.com',
@@ -88,7 +90,8 @@ class Image_Converter:
 
     def save_json_dataset(self, data):
         with open('/home/pedro/catkin_ws/src/ros_bridge/datasets/data.json', 'w') as outfile:
-            json.dump(data, outfile)
+            # json.dump(data, outfile)
+            json.dumps(data, outfile, indent=2)
 
 
 
