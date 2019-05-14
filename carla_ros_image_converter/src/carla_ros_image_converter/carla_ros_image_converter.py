@@ -47,7 +47,7 @@ class Image_Converter:
         # print(blueprints)
 
         data = {}
-        data['vehicle'] = []
+        data['vehicles'] = []
         for vehicle in world.get_actors().filter('vehicle.*'):
             # print(vehicle.bounding_box)
             # Draw bounding box
@@ -68,7 +68,7 @@ class Image_Converter:
         self.save_json_dataset(data)
 
     def write_json_dataset(self, data, vehicle, transform):
-        data['vehicle'].append({
+        data['vehicles'].append({
             'model': str(vehicle.attributes['object_type']) + "\n\n",
             'x': str(transform.location.x) + "\n\n",
             'y': str(transform.location.y) + "\n\n",
@@ -89,8 +89,9 @@ class Image_Converter:
         return data
 
     def save_json_dataset(self, data):
-        with open('/home/pedro/catkin_ws/src/ros_bridge/datasets/data.json', 'w') as outfile:
-            json.dump(data, outfile)
+        with open('/home/pedro/catkin_ws/src/ros_bridge/datasets/data.json', 'w') as json_file:
+            json.dump(data, json_file)
+            json_file.write('\n')
             # json.dumps(data, outfile)
 
 
