@@ -145,6 +145,8 @@ class Vehicle(Actor):
         if not self.parent.get_param("challenge_mode"):
             marker = self.get_marker(use_parent_frame=False)
             marker.type = Marker.CUBE
+            marker.ns = str(self.classification)
+            marker.text = str(self.classification)
             marker.pose = transforms.carla_location_to_pose(self.carla_actor.bounding_box.location)
             marker.scale.x = self.carla_actor.bounding_box.extent.x * 2.0
             marker.scale.y = self.carla_actor.bounding_box.extent.y * 2.0
