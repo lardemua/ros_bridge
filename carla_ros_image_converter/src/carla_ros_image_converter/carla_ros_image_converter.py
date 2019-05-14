@@ -66,14 +66,15 @@ class Image_Converter:
             print(e)
         # save json dataset
         self.save_json_dataset(data)
+        self.parse_json_dataset()
 
     def write_json_dataset(self, data, vehicle, transform):
         data['vehicles'].append({
-            'model': str(vehicle.attributes['object_type']) + "\n\n",
-            'x': str(transform.location.x) + "\n\n",
-            'y': str(transform.location.y) + "\n\n",
-            'z': str(transform.location.z) + "\n\n",
-            'yaw': str(transform.rotation.yaw) + "\n\n",
+            'model': str(vehicle.attributes['object_type']),
+            'x': str(transform.location.x),
+            'y': str(transform.location.y),
+            'z': str(transform.location.z),
+            'yaw': str(transform.rotation.yaw),
         })
         # data['vehicle'].append("\\n\\n")
         # data['people'].append({
@@ -91,8 +92,14 @@ class Image_Converter:
     def save_json_dataset(self, data):
         with open('/home/pedro/catkin_ws/src/ros_bridge/datasets/data.json', 'w') as json_file:
             json.dump(data, json_file)
-            json_file.write('\n')
-            # json.dumps(data, outfile)
+
+    def parse_json_dataset(self):
+        with open('/home/pedro/catkin_ws/src/ros_bridge/datasets/data.json', 'r') as json_file:
+            for row in json_file:
+                data = json.loads(row)
+                json.dumps(data, sort_keys=True, indent=2, separators=(',', ': '))
+
+
 
 
 
