@@ -1,6 +1,6 @@
 # CARLA-ROS Point Cloud Map Creation
 
-The node `carla_ros_pcl` is used to create pointcloud maps for Carla levels.
+The node `carla_ros_pcl_recorder` is used to create pointcloud maps for Carla levels.
 
 The point clouds are created by driving around with an ego vehicle, using the autopilot functionality within the Carla PythonAPI.
 

@@ -15,6 +15,14 @@
 #include <pcl/io/pcd_io.h>
 #include <pcl_ros/transforms.h>
 #include <sstream>
+#include <iostream>
+#include <vector>
+#include <ros/ros.h>
+#include <cstdlib>
+
+using namespace std;
+using namespace boost;
+using namespace ros;
 
 PclConverter::PclConverter()
 {

@@ -14,16 +14,16 @@
 
 
 class PclRecorder{
-    public:
-        PclRecorder();
-        void callback(const pcl::PCLPointCloud2::ConstPtr& cloud);
+public:
+    PclRecorder();
+    void callback(const pcl::PCLPointCloud2::ConstPtr& cloud);
 
-    private:
-        ros::NodeHandle nh;
-        ros::Subscriber sub;
-        tf2_ros::Buffer tf_buffer_;
-        tf2_ros::TransformListener *tfListener;
-        static constexpr const char* fixed_frame_ = "map";
+private:
+    ros::NodeHandle nh;
+    ros::Subscriber sub;
+    tf2_ros::Buffer tf_buffer_;
+    tf2_ros::TransformListener *tfListener;
+    static constexpr const char* fixed_frame_ = "map";
 
 };
 
