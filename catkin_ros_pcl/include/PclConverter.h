@@ -1,11 +1,9 @@
-/*
- * Copyright (c) 2019 Intel Corporation
- *
- * This work is licensed under the terms of the MIT license.
- * For a copy, see <https://opensource.org/licenses/MIT>.
- */
+//
+// Created by pedro on 15-05-2019.
+//
 
-#pragma once
+#ifndef ROS_BRIDGE_PCLCONVERTER_H
+#define ROS_BRIDGE_PCLCONVERTER_H
 
 /* System Includes */
 #include <ros/ros.h>
@@ -15,9 +13,9 @@
 #include <tf2_eigen/tf2_eigen.h>
 
 
-class PclRecorder{
+class PclConverter{
     public:
-        PclRecorder();
+        PclConverter();
         void callback(const pcl::PCLPointCloud2::ConstPtr& cloud);
 
     private:
@@ -28,3 +26,5 @@ class PclRecorder{
         static constexpr const char* fixed_frame_ = "map";
 
 };
+
+#endif //ROS_BRIDGE_PCLCONVERTER_H

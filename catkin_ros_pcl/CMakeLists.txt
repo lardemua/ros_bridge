@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(carla_ros_pcl_recorder)
+project(catkin_ros_pcl)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
 # add_compile_options(-std=c++11)
@@ -14,7 +14,6 @@ find_package(catkin REQUIRED COMPONENTS
   sensor_msgs
   pcl_conversions
   pcl_ros
-
 )
 
 ## System dependencies are found with CMake's conventions
@@ -108,7 +107,7 @@ find_package(catkin REQUIRED COMPONENTS
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
 #  INCLUDE_DIRS include
-#  LIBRARIES carla_ros_pcl_recorder
+#  LIBRARIES catkin_ros_pcl
   CATKIN_DEPENDS roscpp rospy std_msgs sensor_msgs pcl_conversions pcl_ros
 #  DEPENDS system_lib
 )
@@ -126,7 +125,7 @@ include_directories(
 
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
-#   src/${PROJECT_NAME}/carla_ros_pcl_recorder.cpp
+#   src/${PROJECT_NAME}/catkin_ros_pcl.cpp
 # )
 
 ## Add cmake target dependencies of the library
@@ -137,10 +136,16 @@ include_directories(
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
-# add_executable(${PROJECT_NAME}_node src/carla_ros_pcl_recorder_node.cpp)
-add_executable(${PROJECT_NAME}_node
-        src/PclRecorder.cpp
-        src/main.cpp
+# add_executable(${PROJECT_NAME}_node src/catkin_ros_pcl_node.cpp)
+
+add_executable(${PROJECT_NAME}_node_converter
+        src/PclConverter.cpp
+        src/pcl_converter.cpp
+)
+
+add_executable(${PROJECT_NAME}_node_recorder
+        src/PclConverter.cpp
+        src/pcl_converter.cpp
 )
 
 ## Rename C++ executable without prefix
@@ -154,8 +159,16 @@ add_executable(${PROJECT_NAME}_node
 # add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
-target_link_libraries(${PROJECT_NAME}_node
-   ${catkin_LIBRARIES}
+# target_link_libraries(${PROJECT_NAME}_node
+#   ${catkin_LIBRARIES}
+# )
+
+target_link_libraries(${PROJECT_NAME}_node_converter
+        ${catkin_LIBRARIES}
+)
+
+target_link_libraries(${PROJECT_NAME}_node_recorder
+        ${catkin_LIBRARIES}
 )
 
 #############
@@ -179,7 +192,12 @@ target_link_libraries(${PROJECT_NAME}_node
 #   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 # )
 
-install(TARGETS ${PROJECT_NAME}_node
+install(TARGETS ${PROJECT_NAME}_node_converter
+        ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+        LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+        RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
+
+install(TARGETS ${PROJECT_NAME}_node_recorder
         ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
         LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
         RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
@@ -195,7 +213,6 @@ install(DIRECTORY launch/
         DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/launch
 )
 
-
 ## Mark other files for installation (e.g. launch and bag files, etc.)
 # install(FILES
 #   # myfile1
@@ -208,7 +225,7 @@ install(DIRECTORY launch/
 #############
 
 ## Add gtest based cpp test target and link libraries
-# catkin_add_gtest(${PROJECT_NAME}-test test/test_carla_ros_pcl_recorder.cpp)
+# catkin_add_gtest(${PROJECT_NAME}-test test/test_catkin_ros_pcl.cpp)
 # if(TARGET ${PROJECT_NAME}-test)
 #   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
 # endif()
