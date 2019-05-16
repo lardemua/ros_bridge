@@ -1,6 +1,6 @@
 # CARLA-ROS Point Cloud Map Creation
 
-The node `carla_ros_pcl_converter` is used to create pointcloud maps for Carla levels.
+The node `carla_ros_pcl_filter` is used to create pointcloud maps for Carla levels.
 
 The point clouds are created by driving around with an ego vehicle, using the autopilot functionality within the Carla PythonAPI.
 
@@ -23,7 +23,7 @@ Execute the Carla Simulator and the Pcl-Recorder.
     #The captured point clouds are saved to /tmp/pcl_capture directory.
     export PYTHONPATH=<path-to-carla>/PythonAPI/carla/dist/carla-<version_and_arch>.egg:<path-to-carla>/PythonAPI/carla/
     source <path-to-catkin-workspace>/devel/setup.bash
-    roslaunch carla_ros_pcl_converter pcl_converter.launch
+    roslaunch carla_ros_pcl_filter pcl_filter.launch
 
 
 When the capture drive is done, you can reduce the overall size of the point cloud.

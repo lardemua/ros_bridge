@@ -1,9 +1,9 @@
 //
-// Created by pedro on 15-05-2019.
+// Created by pedro on 16-05-2019.
 //
 
-#ifndef ROS_BRIDGE_PCLCONVERTER_H
-#define ROS_BRIDGE_PCLCONVERTER_H
+#ifndef ROS_BRIDGE_PCLFILTER_H
+#define ROS_BRIDGE_PCLFILTER_H
 
 /* System Includes */
 #include <ros/ros.h>
@@ -14,9 +14,9 @@
 #include <sensor_msgs/PointCloud2.h>
 
 
-class PclConverter{
+class PclFilter{
     public:
-        PclConverter();
+        PclFilter();
         void callback(const pcl::PCLPointCloud2::ConstPtr& cloud);
 
     private:
@@ -29,4 +29,4 @@ class PclConverter{
 
 };
 
-#endif //ROS_BRIDGE_PCLCONVERTER_H
+#endif //ROS_BRIDGE_PCLFILTER_H

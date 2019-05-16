@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>carla_ros_pcl_converter</name>
+  <name>carla_ros_pcl_filter</name>
   <version>0.0.0</version>
-  <description>The carla_ros_pcl_converter package</description>
+  <description>The carla_ros_pcl_filter package</description>
 
   <!-- One maintainer tag required, multiple allowed, one person per tag -->
   <!-- Example:  -->
@@ -19,7 +19,7 @@
   <!-- Url tags are optional, but multiple are allowed, one per tag -->
   <!-- Optional attribute type can be: website, bugtracker, or repository -->
   <!-- Example: -->
-  <!-- <url type="website">http://wiki.ros.org/carla_ros_pcl_converter</url> -->
+  <!-- <url type="website">http://wiki.ros.org/carla_ros_pcl_filter</url> -->
 
 
   <!-- Author tags are optional, multiple are allowed, one per tag -->
@@ -67,7 +67,6 @@
 
   <build_depend>pcl_conversions</build_depend>
   <build_export_depend>pcl_conversions</build_export_depend>
-
 
   <!-- The export tag contains other, unspecified, tags -->
   <export>

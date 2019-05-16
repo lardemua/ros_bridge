@@ -10,7 +10,7 @@
  */
 
 /* System Includes */
-#include "PclConverter.h"
+#include "PclFilter.h"
 #include <string>
 #include <sstream>
 #include <iostream>
@@ -38,7 +38,7 @@ using namespace boost;
 using namespace ros;
 using namespace pcl;
 
-PclConverter::PclConverter()
+PclFilter::PclFilter()
 {
     tfListener = new tf2_ros::TransformListener(tf_buffer_);
 
@@ -47,7 +47,7 @@ PclConverter::PclConverter()
 //    }
 
     // Create a ROS subscriber for the input point cloud
-    sub = nh.subscribe("/carla/ego_vehicle/lidar/lidar1/point_cloud", 1000000, &PclConverter::callback, this);
+    sub = nh.subscribe("/carla/ego_vehicle/lidar/lidar1/point_cloud", 1000000, &PclFilter::callback, this);
 
     // Create a ROS publisher for the PCL point cloud and advertise ROS publisher
     pub = (boost::shared_ptr<Publisher>) new Publisher;
@@ -56,7 +56,7 @@ PclConverter::PclConverter()
 
 }
 
-void PclConverter::callback(const PCLPointCloud2::ConstPtr& cloud)
+void PclFilter::callback(const PCLPointCloud2::ConstPtr& cloud)
 {
     if ((cloud->width * cloud->height) == 0) {
         return;

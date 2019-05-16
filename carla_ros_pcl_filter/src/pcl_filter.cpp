@@ -11,11 +11,11 @@
 
 /* System Includes */
 #include <ros/ros.h>
-#include "PclConverter.h"
+#include "PclFilter.h"
 
 int main(int argc, char** argv)
 {
-    ros::init(argc, argv, "pcl_converter");
-    PclConverter pclConverter;
+    ros::init(argc, argv, "pcl_filter");
+    PclFilter pclFilter;
     ros::spin();
 };
