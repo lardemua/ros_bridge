@@ -22,6 +22,7 @@ class PclConverter{
     private:
         ros::NodeHandle nh;
         ros::Subscriber sub;
+        boost::shared_ptr<ros::Publisher> pub;
         tf2_ros::Buffer tf_buffer_;
         tf2_ros::TransformListener *tfListener;
         static constexpr const char* fixed_frame_ = "map";

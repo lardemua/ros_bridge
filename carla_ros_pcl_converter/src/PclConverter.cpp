@@ -27,9 +27,11 @@
 #include <pcl/io/io.h>
 #include <pcl/io/pcd_io.h>
 #include <pcl/recognition/point_types.h>
-#include <pcl/visualization/cloud_viewer.h>
+#include <pcl/visualization/pcl_visualizer.h>
+#include <pcl/filters/voxel_grid.h>
 #include <pcl/registration/icp.h>
 #include <pcl_ros/transforms.h>
+#include <pcl_ros/point_cloud.h>
 
 using namespace std;
 using namespace boost;
@@ -46,6 +48,12 @@ PclConverter::PclConverter()
 
     // Create a ROS subscriber for the input point cloud
     sub = nh.subscribe("/carla/ego_vehicle/lidar/lidar1/point_cloud", 1000000, &PclConverter::callback, this);
+
+    // Create a ROS publisher for the PCL point cloud and advertise ROS publisher
+    pub = (boost::shared_ptr<Publisher>) new Publisher;
+    (*pub) = nh.advertise<sensor_msgs::PointCloud2>("/carla/ego_vehicle/lidar/lidar1/new_point_cloud", 0);
+
+
 }
 
 void PclConverter::callback(const PCLPointCloud2::ConstPtr& cloud)
@@ -69,8 +77,55 @@ void PclConverter::callback(const PCLPointCloud2::ConstPtr& cloud)
         PointCloud<PointXYZ> transformedCloud;
         transformPointCloud (pclCloud, transformedCloud, transform);
 
+        PointCloud<PointXYZ>::Ptr transformedCloudPtr (new PointCloud<PointXYZ>);
+        transformedCloudPtr = transformedCloud.makeShared();
+
+        PointCloud<PointXYZ>::Ptr filteredCloud (new PointCloud<PointXYZ>);
+
+        PointCloud<PointXYZ> cloud_out;
+        PointCloud<PointXYZ>::Ptr cloud_out_ptr (new PointCloud<PointXYZ>);
+        sensor_msgs::PointCloud2 cloud_out_msg;
+
+
+//        pcl::visualization::PCLVisualizer visualizer("Cloud Visualizer");
+
 //        pcl::PCDWriter writer;
 //        writer.writeBinary(ss.str(), transformedCloud);
+
+        // Create the filtering object: downsample the dataset using a leaf size
+        pcl::VoxelGrid<PointXYZ> avg;
+        avg.setInputCloud(transformedCloudPtr);
+        avg.setLeafSize(0.25f, 0.25f, 0.25f);
+        avg.filter(*filteredCloud);
+
+        // searchPoint
+        PointXYZ searchPoint = filteredCloud->at(0);
+
+        //result from radiusSearch()
+        std::vector<int> pointIdxRadiusSearch;
+        std::vector<float> pointRadiusSquaredDistance;
+
+        //kdTree
+        pcl::KdTreeFLANN<PointXYZ> kdtree;
+        kdtree.setInputCloud (filteredCloud);
+        kdtree.setSortedResults(true);
+
+        if ( kdtree.radiusSearch (searchPoint, 100, pointIdxRadiusSearch, pointRadiusSquaredDistance) > 0 )
+        {
+            //delete every point in target
+            for (size_t j = 0; j < pointIdxRadiusSearch.size (); ++j)
+            {
+                //is this the way to erase correctly???
+                cloud_out.push_back(filteredCloud->points[pointIdxRadiusSearch[j]]);
+            }
+        }
+
+        cloud_out_ptr = cloud_out.makeShared();
+        // Convert PCL cloud to PointCloud2 message
+        pcl::toROSMsg(*cloud_out_ptr.get(),cloud_out_msg );
+
+        // Publish PointCloud2 message in another topic
+        pub->publish (cloud_out_msg);
     }
     catch (tf2::TransformException &ex)
     {
