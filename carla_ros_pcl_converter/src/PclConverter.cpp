@@ -12,13 +12,24 @@
 /* System Includes */
 #include "PclConverter.h"
 #include <string>
-#include <pcl/io/pcd_io.h>
-#include <pcl_ros/transforms.h>
 #include <sstream>
 #include <iostream>
 #include <vector>
 #include <ros/ros.h>
 #include <cstdlib>
+
+// OpenCV Includes
+#include <opencv2/core/core.hpp>
+#include <opencv2/highgui/highgui.hpp>
+#include <opencv2/calib3d/calib3d.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
+// PCL Includes
+#include <pcl/io/io.h>
+#include <pcl/io/pcd_io.h>
+#include <pcl/recognition/point_types.h>
+#include <pcl/visualization/cloud_viewer.h>
+#include <pcl/registration/icp.h>
+#include <pcl_ros/transforms.h>
 
 using namespace std;
 using namespace boost;
