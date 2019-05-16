@@ -20,7 +20,7 @@ PclRecorder::PclRecorder()
 {
     tfListener = new tf2_ros::TransformListener(tf_buffer_);
 
-    if (mkdir("/tmp/pcl_capture", 0777) == -1) {
+    if (mkdir("/home/pedro/catkin_ws/src/ros_bridge/pointclouds", 0777) == -1) {
         ROS_WARN("Could not create directory!");
     }
 
@@ -35,7 +35,7 @@ void PclRecorder::callback(const pcl::PCLPointCloud2::ConstPtr& cloud)
     }
 
     std::stringstream ss;
-    ss << "/tmp/pcl_capture/capture" << cloud->header.stamp << ".pcd";
+    ss << "/home/pedro/catkin_ws/src/ros_bridge/pointclouds/capture" << cloud->header.stamp << ".pcd";
 
     ROS_INFO ("Received %d data points. Storing in %s",
               (int)cloud->width * cloud->height,
