@@ -10,7 +10,7 @@ See setup of carla-ros-bridge.
 
 ## Run
 
-Execute the Carla Simulator and the Pcl-Recorder.
+Execute the Carla Simulator and the Pcl-Filter.
 
     #Terminal 1
 
