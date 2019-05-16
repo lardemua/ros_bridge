@@ -36,11 +36,17 @@ This documentation is for CARLA versions *newer* than 0.9.5.
 
 - [x] Lidar sensor support
 
-- [x] Add traffic light support
+- [x] Traffic light support
 
-- [ ] Rosbag in the bridge (in order to avoid rosbag record -a small time errors)
+- [x] Rosbag in the bridge (the "rosbag record -a" command has some small timing issues)
 
-- [ ] ROS/OpenCV image convertion and Object Tracking using Template Matching.
+- [x] ROS/OpenCV Image Convertion.
+
+- [x] Object Tracking using bounding box information from the CARLA objects and data storage in .JSON datasets.
+
+- [x] Point Cloud Filtering and Recording in .PCD format.
+ 
+- [ ] Object Tracking using Template Matching.
 
 # Setup
 
