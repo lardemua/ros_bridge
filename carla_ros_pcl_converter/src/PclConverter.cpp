@@ -23,6 +23,7 @@
 using namespace std;
 using namespace boost;
 using namespace ros;
+using namespace pcl;
 
 PclConverter::PclConverter()
 {
@@ -36,7 +37,7 @@ PclConverter::PclConverter()
     sub = nh.subscribe("/carla/ego_vehicle/lidar/lidar1/point_cloud", 1000000, &PclConverter::callback, this);
 }
 
-void PclConverter::callback(const pcl::PCLPointCloud2::ConstPtr& cloud)
+void PclConverter::callback(const PCLPointCloud2::ConstPtr& cloud)
 {
     if ((cloud->width * cloud->height) == 0) {
         return;
@@ -51,11 +52,11 @@ void PclConverter::callback(const pcl::PCLPointCloud2::ConstPtr& cloud)
     try {
         transform = tf2::transformToEigen (tf_buffer_.lookupTransform(fixed_frame_, cloud->header.frame_id,  pcl_conversions::fromPCL (cloud->header.stamp), ros::Duration(1)));
 
-        pcl::PointCloud<pcl::PointXYZ> pclCloud;
-        pcl::fromPCLPointCloud2(*cloud, pclCloud);
+        PointCloud<PointXYZ> pclCloud;
+        fromPCLPointCloud2(*cloud, pclCloud);
 
-        pcl::PointCloud<pcl::PointXYZ> transformedCloud;
-        pcl::transformPointCloud (pclCloud, transformedCloud, transform);
+        PointCloud<PointXYZ> transformedCloud;
+        transformPointCloud (pclCloud, transformedCloud, transform);
 
 //        pcl::PCDWriter writer;
 //        writer.writeBinary(ss.str(), transformedCloud);
