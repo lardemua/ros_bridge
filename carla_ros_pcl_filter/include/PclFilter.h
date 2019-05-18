@@ -20,8 +20,11 @@ class PclFilter{
         void callback_lidar_front(const pcl::PCLPointCloud2::ConstPtr& cloud);
         void callback_lidar_left(const pcl::PCLPointCloud2::ConstPtr& cloud);
         void callback_lidar_right(const pcl::PCLPointCloud2::ConstPtr& cloud);
+        void callback_radius_outlier_removal(const pcl::PCLPointCloud2::ConstPtr& cloud);
+        void callback_conditional_removal(const pcl::PCLPointCloud2::ConstPtr& cloud);
 
-    private:
+
+private:
         ros::NodeHandle nh;
         ros::Subscriber sub_lidar_front;
         ros::Subscriber sub_lidar_left;
