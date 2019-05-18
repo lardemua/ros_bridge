@@ -18,15 +18,20 @@
 class PclVisualizer{
     public:
         PclVisualizer();
-        void callback(const pcl::PCLPointCloud2::ConstPtr& cloud);
+        void callback_lidar_front(const pcl::PCLPointCloud2::ConstPtr& cloud);
+        void callback_lidar_left(const pcl::PCLPointCloud2::ConstPtr& cloud);
+        void callback_lidar_right(const pcl::PCLPointCloud2::ConstPtr& cloud);
 
     private:
         ros::NodeHandle nh;
-        ros::Subscriber sub;
-        boost::shared_ptr<ros::Publisher> pub;
+        ros::Subscriber sub_lidar_front;
+        ros::Subscriber sub_lidar_left;
+        ros::Subscriber sub_lidar_right;
         tf2_ros::Buffer tf_buffer_;
         tf2_ros::TransformListener *tfListener;
-        pcl::visualization::PCLVisualizer *viewer;
+        pcl::visualization::PCLVisualizer *viewer_lidar_front;
+        pcl::visualization::PCLVisualizer *viewer_lidar_left;
+        pcl::visualization::PCLVisualizer *viewer_lidar_right;
         static constexpr const char* fixed_frame_ = "map";
 
 };
