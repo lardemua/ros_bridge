@@ -125,6 +125,8 @@ void PclFilter::callback(const PCLPointCloud2::ConstPtr& cloud)
         pcl::toROSMsg(*cloud_out_ptr.get(),cloud_out_msg );
 
         // Publish PointCloud2 message in another topic
+        cloud_out_msg.header.frame_id = cloud->header.frame_id; // get header frame ID
+//        cloud_out_msg.header.stamp = cloud->header.stamp;       // get header time stamp
         pub->publish (cloud_out_msg);
     }
     catch (tf2::TransformException &ex)
