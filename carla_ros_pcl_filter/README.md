@@ -36,3 +36,14 @@ When the capture drive is done, you can reduce the overall size of the point clo
 
     #verify the result
     pcl_viewer map.pcd
+    
+For example, the first capture should look like this:
+![pcl_first_capture](../assets/images/pcl_first_capture.png "first_capture")
+
+And the map result should look like this:
+![pcl_map_capture](../assets/images/pcl_map_capture.png "map_capture")
+
+## Image Results with RVIZ
+![rviz_filter setup](../assets/images/rviz_carla_filter01.png "rviz")
+![rviz_filter setup](../assets/images/rviz_carla_filter02.png "rviz")
+![rviz_filter_setup](../assets/images/rviz_carla_filter03.png "rviz")
