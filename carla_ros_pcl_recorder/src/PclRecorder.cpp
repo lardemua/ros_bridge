@@ -24,20 +24,22 @@ PclRecorder::PclRecorder()
         ROS_WARN("Could not create directory!");
     }
 
-    // Create a ROS subscriber for the input point cloud
-    sub = nh.subscribe("/carla/ego_vehicle/lidar/lidar1/point_cloud", 1000000, &PclRecorder::callback, this);
+    // Create a ROS subscriber for the input point clouds
+    sub_lidar_front = nh.subscribe("/carla/ego_vehicle/lidar/front/point_cloud", 1000000, &PclRecorder::callback_lidar_front, this);
+    sub_lidar_left = nh.subscribe("/carla/ego_vehicle/lidar/left/point_cloud", 1000000, &PclRecorder::callback_lidar_left, this);
+    sub_lidar_right = nh.subscribe("/carla/ego_vehicle/lidar/right/point_cloud", 1000000, &PclRecorder::callback_lidar_right, this);
 }
 
-void PclRecorder::callback(const pcl::PCLPointCloud2::ConstPtr& cloud)
+void PclRecorder::callback_lidar_front(const pcl::PCLPointCloud2::ConstPtr& cloud)
 {
     if ((cloud->width * cloud->height) == 0) {
         return;
     }
 
     std::stringstream ss;
-    ss << "/home/pedro/catkin_ws/src/ros_bridge/pointclouds/capture" << cloud->header.stamp << ".pcd";
+    ss << "/home/pedro/catkin_ws/src/ros_bridge/pointclouds/front_capture" << cloud->header.stamp << ".pcd";
 
-    ROS_INFO ("Received %d data points. Storing in %s",
+    ROS_INFO ("Received %d data points from front LIDAR sensor. Storing in %s",
               (int)cloud->width * cloud->height,
               ss.str().c_str());
 
@@ -59,3 +61,68 @@ void PclRecorder::callback(const pcl::PCLPointCloud2::ConstPtr& cloud)
         ROS_WARN("Could NOT transform: %s", ex.what());
     }
 }
+
+void PclRecorder::callback_lidar_left(const pcl::PCLPointCloud2::ConstPtr& cloud)
+{
+    if ((cloud->width * cloud->height) == 0) {
+        return;
+    }
+
+    std::stringstream ss;
+    ss << "/home/pedro/catkin_ws/src/ros_bridge/pointclouds/left_capture" << cloud->header.stamp << ".pcd";
+
+    ROS_INFO ("Received %d data points from left LIDAR sensor. Storing in %s",
+              (int)cloud->width * cloud->height,
+              ss.str().c_str());
+
+    Eigen::Affine3d transform;
+    try {
+        transform = tf2::transformToEigen (tf_buffer_.lookupTransform(fixed_frame_, cloud->header.frame_id,  pcl_conversions::fromPCL (cloud->header.stamp), ros::Duration(1)));
+
+        pcl::PointCloud<pcl::PointXYZ> pclCloud;
+        pcl::fromPCLPointCloud2(*cloud, pclCloud);
+
+        pcl::PointCloud<pcl::PointXYZ> transformedCloud;
+        pcl::transformPointCloud (pclCloud, transformedCloud, transform);
+
+        pcl::PCDWriter writer;
+        writer.writeBinary(ss.str(), transformedCloud);
+    }
+    catch (tf2::TransformException &ex)
+    {
+        ROS_WARN("Could NOT transform: %s", ex.what());
+    }
+}
+
+void PclRecorder::callback_lidar_right(const pcl::PCLPointCloud2::ConstPtr& cloud)
+{
+    if ((cloud->width * cloud->height) == 0) {
+        return;
+    }
+
+    std::stringstream ss;
+    ss << "/home/pedro/catkin_ws/src/ros_bridge/pointclouds/right_capture" << cloud->header.stamp << ".pcd";
+
+    ROS_INFO ("Received %d data points from right LIDAR sensor. Storing in %s",
+              (int)cloud->width * cloud->height,
+              ss.str().c_str());
+
+    Eigen::Affine3d transform;
+    try {
+        transform = tf2::transformToEigen (tf_buffer_.lookupTransform(fixed_frame_, cloud->header.frame_id,  pcl_conversions::fromPCL (cloud->header.stamp), ros::Duration(1)));
+
+        pcl::PointCloud<pcl::PointXYZ> pclCloud;
+        pcl::fromPCLPointCloud2(*cloud, pclCloud);
+
+        pcl::PointCloud<pcl::PointXYZ> transformedCloud;
+        pcl::transformPointCloud (pclCloud, transformedCloud, transform);
+
+        pcl::PCDWriter writer;
+        writer.writeBinary(ss.str(), transformedCloud);
+    }
+    catch (tf2::TransformException &ex)
+    {
+        ROS_WARN("Could NOT transform: %s", ex.what());
+    }
+}
+
