@@ -1,0 +1,19 @@
+<!-- -->
+<launch>
+    <arg name='host' default='localhost'/>
+    <arg name='port' default='2000'/>
+
+    <!-- enable autopilot -->
+    <node pkg="rostopic" type="rostopic" name="enable_autopilot_rostopic"
+          args="pub -l /carla/ego_vehicle/enable_autopilot std_msgs/Bool '{ data: true}' " />
+
+    <!-- pcl map capturing -->
+    <node pkg="carla_ros_pcl_filter" type="carla_ros_pcl_filter_node" name="carla_ros_pcl_filter_node" output="screen"/>
+
+    <!-- common -->
+    <include file="$(find carla_ros_bridge)/launch/client_with_example_ros_vehicle.launch">
+        <arg name='host' default='$(arg host)'/>
+        <arg name='port' default='$(arg port)'/>
+    </include>
+
+</launch>
