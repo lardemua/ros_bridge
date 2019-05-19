@@ -14,15 +14,15 @@ from std_msgs.msg import String
 from sensor_msgs.msg import Image
 from cv_bridge import CvBridge, CvBridgeError
 import roslib
-roslib.load_manifest('carla_ros_image_converter')
+roslib.load_manifest('carla_ros_template_matching')
 
 
-class Image_Converter:
+class Template_Matching:
     """
     Class used for converting ROS images to OpenCV images
     """
     def __init__(self):
-        self.image_pub = rospy.Publisher("/carla/ego_vehicle/camera/rgb/front/image_color_2", Image)
+        self.image_pub = rospy.Publisher("/carla/ego_vehicle/camera/rgb/front/template_matching", Image)
         self.bridge = CvBridge()
         self.image_sub = rospy.Subscriber("/carla/ego_vehicle/camera/rgb/front/image_color", Image, self.callback)
 
@@ -100,12 +100,9 @@ class Image_Converter:
                 json.dumps(data, sort_keys=True, indent=2, separators=(',', ': '))
 
 
-
-
-
 def main(args):
-    img_converter = Image_Converter()
-    rospy.init_node('image_converter', anonymous=True)
+    template_matching = Template_Matching()
+    rospy.init_node('template_matching', anonymous=True)
     try:
         rospy.spin()
     except KeyboardInterrupt:
