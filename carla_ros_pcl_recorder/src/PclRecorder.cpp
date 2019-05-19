@@ -20,7 +20,14 @@ PclRecorder::PclRecorder()
 {
     tfListener = new tf2_ros::TransformListener(tf_buffer_);
 
-    if (mkdir("/home/pedro/catkin_ws/src/ros_bridge/pointclouds", 0777) == -1) {
+    ROS_INFO ("Creating point cloud directories...");
+    if (mkdir("/home/pedro/catkin_ws/src/ros_bridge/pointclouds/front", 0777) == -1) {
+        ROS_WARN("Could not create directory!");
+    }
+    if (mkdir("/home/pedro/catkin_ws/src/ros_bridge/pointclouds/left", 0777) == -1) {
+        ROS_WARN("Could not create directory!");
+    }
+    if (mkdir("/home/pedro/catkin_ws/src/ros_bridge/pointclouds/right", 0777) == -1) {
         ROS_WARN("Could not create directory!");
     }
 
@@ -37,7 +44,7 @@ void PclRecorder::callback_lidar_front(const pcl::PCLPointCloud2::ConstPtr& clou
     }
 
     std::stringstream ss;
-    ss << "/home/pedro/catkin_ws/src/ros_bridge/pointclouds/front_capture" << cloud->header.stamp << ".pcd";
+    ss << "/home/pedro/catkin_ws/src/ros_bridge/pointclouds/front/front_capture" << cloud->header.stamp << ".pcd";
 
     ROS_INFO ("Received %d data points from front LIDAR sensor. Storing in %s",
               (int)cloud->width * cloud->height,
@@ -69,7 +76,7 @@ void PclRecorder::callback_lidar_left(const pcl::PCLPointCloud2::ConstPtr& cloud
     }
 
     std::stringstream ss;
-    ss << "/home/pedro/catkin_ws/src/ros_bridge/pointclouds/left_capture" << cloud->header.stamp << ".pcd";
+    ss << "/home/pedro/catkin_ws/src/ros_bridge/pointclouds/left/left_capture" << cloud->header.stamp << ".pcd";
 
     ROS_INFO ("Received %d data points from left LIDAR sensor. Storing in %s",
               (int)cloud->width * cloud->height,
@@ -101,7 +108,7 @@ void PclRecorder::callback_lidar_right(const pcl::PCLPointCloud2::ConstPtr& clou
     }
 
     std::stringstream ss;
-    ss << "/home/pedro/catkin_ws/src/ros_bridge/pointclouds/right_capture" << cloud->header.stamp << ".pcd";
+    ss << "/home/pedro/catkin_ws/src/ros_bridge/pointclouds/right/right_capture" << cloud->header.stamp << ".pcd";
 
     ROS_INFO ("Received %d data points from right LIDAR sensor. Storing in %s",
               (int)cloud->width * cloud->height,
