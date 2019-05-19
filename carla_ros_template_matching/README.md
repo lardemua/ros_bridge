@@ -14,8 +14,8 @@ The ```carla_ros_image_converter``` package is used to convert images from a ROS
 
 The ```carla_ros_image_converter``` package can be used to draw the bounding boxes around the objects present in the CARLA world according to their location/rotation and convert the results into an OpenCV image.
 
-![rviz setup](../assets/images/carla_bounding_box_01.png "box_01")
-![rviz setup](../assets/images/carla_bounding_box_02.png "box_02")
+![rviz setup](../assets/images/carla_bounding_box_01.png?style=centerme "box_01")
+![rviz setup](../assets/images/carla_bounding_box_02.png?style=centerme "box_02")
 
 
 # Carla ROS Datasets
@@ -34,3 +34,8 @@ The json format is defined like this:
             ...
         ]
     }
+    
+img[src$="centerme"] {
+  display:block;
+  margin: 0 auto;
+}
