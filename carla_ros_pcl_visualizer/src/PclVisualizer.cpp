@@ -15,7 +15,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <pcl/io/pcd_io.h>
-#include <pcl/visualization/cloud_viewer.h>
+#include <pcl/visualization/pcl_visualizer.h>
 #include <pcl_ros/transforms.h>
 #include <sstream>
 
