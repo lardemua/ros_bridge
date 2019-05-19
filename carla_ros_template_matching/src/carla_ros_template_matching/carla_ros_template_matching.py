@@ -45,13 +45,13 @@ class Template_Matching:
         # print blueprints
         # print(blueprints)
 
-        template_1 = cv2.imread('template01.png', cv2.IMREAD_GRAYSCALE)
+        template_1 = cv2.imread('/home/pedro/catkin_ws/src/ros_bridge/carla_ros_template_matching/templates/template09.png', cv2.IMREAD_GRAYSCALE)
         tW1, tH1 = template_1.shape[::-1]
 
-        template_2 = cv2.imread('template02.png', cv2.IMREAD_GRAYSCALE)
+        template_2 = cv2.imread('/home/pedro/catkin_ws/src/ros_bridge/carla_ros_template_matching/templates/template10.png', cv2.IMREAD_GRAYSCALE)
         tW2, tH2 = template_2.shape[::-1]
 
-        template_3 = cv2.imread('template03.png', cv2.IMREAD_GRAYSCALE)
+        template_3 = cv2.imread('/home/pedro/catkin_ws/src/ros_bridge/carla_ros_template_matching/templates/template11.png', cv2.IMREAD_GRAYSCALE)
         tW3, tH3 = template_3.shape[::-1]
 
         gray_img = cv2.cvtColor(cv_img, cv2.COLOR_BGR2GRAY)
@@ -67,8 +67,8 @@ class Template_Matching:
         upper_white = numpy.array([255, sensitivity, 255])
 
         # threshold the HSV image to get only white colors
-        mask = cv2.inRange(hsv_img, lower_white, upper_white)
-        cv2.imshow('mask', mask)
+        # mask = cv2.inRange(hsv_img, lower_white, upper_white)
+        # cv2.imshow('mask', mask)
         res1 = cv2.matchTemplate(gray_img, template_1, cv2.TM_CCOEFF_NORMED)
         loc1 = numpy.where(res1 >= threshold)
         res2 = cv2.matchTemplate(gray_img, template_2, cv2.TM_CCOEFF_NORMED)
