@@ -12,8 +12,10 @@
 /* System Includes */
 #include "PclVisualizer.h"
 #include <string>
+#include <stdio.h>
+#include <stdlib.h>
 #include <pcl/io/pcd_io.h>
-#include <pcl/visualization/pcl_visualizer.h>
+#include <pcl/visualization/cloud_viewer.h>
 #include <pcl_ros/transforms.h>
 #include <sstream>
 
@@ -76,6 +78,7 @@ void PclVisualizer::callback_lidar_front(const pcl::PCLPointCloud2::ConstPtr& cl
         pcl::transformPointCloud (pclCloud, transformedCloud, transform);
 
         // TO DO : Implement cloud visualizer for front LIDAR point cloud
+        system("/home/pedro/catkin_ws/src/ros_bridge/carla_ros_pcl_visualizer/scripts/front_visualizer.sh");
     }
     catch (tf2::TransformException &ex)
     {
@@ -107,6 +110,7 @@ void PclVisualizer::callback_lidar_left(const pcl::PCLPointCloud2::ConstPtr& clo
         pcl::transformPointCloud (pclCloud, transformedCloud, transform);
 
         // TO DO: Implement cloud visualizer for left LIDAR point cloud
+        system("/home/pedro/catkin_ws/src/ros_bridge/carla_ros_pcl_visualizer/scripts/left_visualizer.sh");
     }
     catch (tf2::TransformException &ex)
     {
@@ -137,6 +141,7 @@ void PclVisualizer::callback_lidar_right(const pcl::PCLPointCloud2::ConstPtr& cl
         pcl::transformPointCloud (pclCloud, transformedCloud, transform);
 
         // TO DO : Implement cloud visualizer for right LIDAR point cloud
+        system("/home/pedro/catkin_ws/src/ros_bridge/carla_ros_pcl_visualizer/scripts/right_visualizer.sh");
     }
     catch (tf2::TransformException &ex)
     {

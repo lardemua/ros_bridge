@@ -9,7 +9,7 @@ echo " "
 # Concatenate point cloud files
 echo "Concatenating point cloud files"
 echo " "
-pcl_concatenate_ponts_pcd *.pcd
+pcl_concatenate_points_pcd *.pcd
 sleep 5
 echo " "
 
