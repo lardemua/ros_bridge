@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 # Move to left LIDAR cloud directory
 cd /home/pedro/catkin_ws/src/ros_bridge/pointclouds/left/
 
