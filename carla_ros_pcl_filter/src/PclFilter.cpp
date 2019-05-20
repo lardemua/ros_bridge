@@ -29,6 +29,7 @@
 #include <pcl/recognition/point_types.h>
 #include <pcl/visualization/pcl_visualizer.h>
 #include <pcl/filters/voxel_grid.h>
+#include <pcl/filters/passthrough.h>
 #include <pcl/filters/radius_outlier_removal.h>
 #include <pcl/filters/conditional_removal.h>
 #include <pcl/registration/icp.h>
@@ -96,6 +97,8 @@ void PclFilter::callback_lidar_front(const PCLPointCloud2::ConstPtr& cloud)
         PointCloud<PointXYZ>::Ptr cloud_out_ptr (new PointCloud<PointXYZ>);
         sensor_msgs::PointCloud2 cloud_out_msg;
 
+        PointCloud<PointXYZ>::Ptr cloud_out_filtered (new PointCloud<PointXYZ>);
+        PointCloud<PointXYZ>::Ptr cloud_out_final (new PointCloud<PointXYZ>);
 
 //        pcl::visualization::PCLVisualizer visualizer("Cloud Visualizer");
 
@@ -103,36 +106,70 @@ void PclFilter::callback_lidar_front(const PCLPointCloud2::ConstPtr& cloud)
 //        writer.writeBinary(ss.str(), transformedCloud);
 
         // Create the filtering object: downsample the dataset using a leaf size
-        pcl::VoxelGrid<PointXYZ> avg;
-        avg.setInputCloud(transformedCloudPtr);
-        avg.setLeafSize(0.25f, 0.25f, 0.25f);
-        avg.filter(*filteredCloud);
+        // define a voxelgrid
+        pcl::VoxelGrid<PointXYZ> voxel_grid_y;
+        // set input point cloud
+        voxel_grid_y.setInputCloud(transformedCloudPtr);
+        // set leaf size (x, y, z)
+        voxel_grid_y.setLeafSize(0.1f, 0.1f, 0.1f);
+        // apply the filter to dereferenced filteredCloud
+        voxel_grid_y.filter(*filteredCloud);
+
+        // define a PassThrough filter
+        pcl::PassThrough<pcl::PointXYZ> pass_filter_y;
+        // set input to filteredCloud
+        pass_filter_y.setInputCloud(filteredCloud);
+        // filter along z-axis
+        pass_filter_y.setFilterFieldName("z");
+        // set z-limits
+        pass_filter_y.setFilterLimits(-0.2, 1.0);
+        pass_filter_y.filter(*cloud_out_ptr);
+
+        // define a voxelgrid
+//        pcl::VoxelGrid<PointXYZ> voxel_grid_x;
+//        // set input point cloud
+//        voxel_grid_x.setInputCloud(cloud_out_ptr);
+//        // set leaf size (x, y, z)
+//        voxel_grid_x.setLeafSize(0.1f, 0.1f, 0.1f);
+//        // apply the filter to dereferenced filteredCloud
+//        voxel_grid_x.filter(*cloud_out_filtered);
+
+        // define a PassThrough filter
+        pcl::PassThrough<pcl::PointXYZ> pass_filter_x;
+        // set input to filteredCloud
+        pass_filter_x.setInputCloud(cloud_out_ptr);
+        // filter along x-axis
+        pass_filter_x.setFilterFieldName("x");
+        // set z-limits
+        pass_filter_x.setFilterLimits(0, 2.0);
+        pass_filter_x.filter(*cloud_out_final);
+
 
         // searchPoint
-        PointXYZ searchPoint = filteredCloud->at(0);
+//        PointXYZ searchPoint = filteredCloud->at(0);
+//
+//        //result from radiusSearch()
+//        std::vector<int> pointIdxRadiusSearch;
+//        std::vector<float> pointRadiusSquaredDistance;
+//
+//        //kdTree
+//        pcl::KdTreeFLANN<PointXYZ> kdtree;
+//        kdtree.setInputCloud (filteredCloud);
+//        kdtree.setSortedResults(true);
+//
+//        if ( kdtree.radiusSearch (searchPoint, 100, pointIdxRadiusSearch, pointRadiusSquaredDistance) > 0 )
+//        {
+//            //delete every point in target
+//            for (size_t j = 0; j < pointIdxRadiusSearch.size (); ++j)
+//            {
+//                //is this the way to erase correctly???
+//                cloud_out.push_back(filteredCloud->points[pointIdxRadiusSearch[j]]);
+//            }
+//        }
 
-        //result from radiusSearch()
-        std::vector<int> pointIdxRadiusSearch;
-        std::vector<float> pointRadiusSquaredDistance;
-
-        //kdTree
-        pcl::KdTreeFLANN<PointXYZ> kdtree;
-        kdtree.setInputCloud (filteredCloud);
-        kdtree.setSortedResults(true);
-
-        if ( kdtree.radiusSearch (searchPoint, 100, pointIdxRadiusSearch, pointRadiusSquaredDistance) > 0 )
-        {
-            //delete every point in target
-            for (size_t j = 0; j < pointIdxRadiusSearch.size (); ++j)
-            {
-                //is this the way to erase correctly???
-                cloud_out.push_back(filteredCloud->points[pointIdxRadiusSearch[j]]);
-            }
-        }
-
-        cloud_out_ptr = cloud_out.makeShared();
+//        cloud_out_ptr = cloud_out.makeShared();
         // Convert PCL cloud to PointCloud2 message
-        pcl::toROSMsg(*cloud_out_ptr.get(),cloud_out_msg );
+        pcl::toROSMsg(*cloud_out_final.get(),cloud_out_msg );
 
         // Publish PointCloud2 message in another topic
         cloud_out_msg.header.frame_id = cloud->header.frame_id; // get header frame ID
