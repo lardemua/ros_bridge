@@ -272,20 +272,23 @@ void PclFilter::callback_lidar_spherical(const PCLPointCloud2::ConstPtr& cloud)
         ROS_INFO("Calculating spherical coordinates");
         double rho = 0.0;
         double theta = 0.0;
-        double x = 0.0;
-        double y = 0.0;
-        double z = 0.0;
+        float x = 0.0;
+        float y = 0.0;
+        float z = 0.0;
         for(size_t i = 0; i < transformedCloudPtr->points.size(); i++){
+//            ROS_INFO("x:%f", transformedCloudPtr->points[i].x);
+//            ROS_INFO("y:%f", transformedCloudPtr->points[i].y);
+//            ROS_INFO("z:%f", transformedCloudPtr->points[i].z);
             x = transformedCloudPtr->points[i].x;
             y = transformedCloudPtr->points[i].z;
             z = -transformedCloudPtr->points[i].y;
             rho = sqrt(x*x + y*y + z*z);
             theta = acos(z / rho);
-            ROS_INFO("theta: %d", theta);
+//            ROS_INFO("theta: %f", theta);
             if (theta > M_PI/2 && theta < M_PI/2 + M_PI){
                 outputCloud->points[i].x = x;
                 outputCloud->points[i].y = y;
-                outputCloud->points[i].z= z;
+                outputCloud->points[i].z = z;
             };
 
         }
