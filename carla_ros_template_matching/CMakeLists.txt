@@ -168,6 +168,7 @@ include_directories(
 install(PROGRAMS
         src/carla_ros_template_matching/carla_ros_template_matching.py
         src/carla_ros_template_matching/carla_ros_connected_components.py
+        src/carla_ros_template_matching/carla_ros_shape_selection.py
         DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
         )
 
@@ -195,6 +196,7 @@ install(PROGRAMS
 install(FILES
         launch/template_matching.launch
         launch/connected_components.launch
+        launch/shape_selection.launch
         DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
         )
 
