@@ -270,8 +270,8 @@ void PclFilter::callback_lidar_spherical(const PCLPointCloud2::ConstPtr& cloud)
         sensor_msgs::PointCloud2 cloud_out_msg;
 
         ROS_INFO("Calculating spherical coordinates");
-        double rho = 0.0;
-        double theta = 0.0;
+        float rho = 0.0;
+        float theta = 0.0;
         float x = 0.0;
         float y = 0.0;
         float z = 0.0;
@@ -319,7 +319,7 @@ void PclFilter::callback_lidar_spherical(const PCLPointCloud2::ConstPtr& cloud)
 //
 //        // Publish PointCloud2 message in another topic
 //        cloud_out_msg.header.frame_id = cloud->header.frame_id; // get header frame ID
-////        cloud_out_msg.header.stamp = cloud->header.stamp;       // get header time stamp
+//        cloud_out_msg.header.stamp = cloud->header.stamp;       // get header time stamp
 //        pub_lidar_front->publish (cloud_out_msg);
     }
     catch (tf2::TransformException &ex)
