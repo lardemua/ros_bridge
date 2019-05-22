@@ -18,7 +18,7 @@ roslib.load_manifest('carla_ros_template_matching')
 
 class Template_Matching:
     """
-    Class used for converting ROS images to OpenCV images and apply Template Matching
+    Class used for converting ROS images to OpenCV images and apply Template Matching with Connected Components
     """
     def __init__(self):
         self.image_pub = rospy.Publisher("/carla/ego_vehicle/camera/rgb/front/template_matching", Image)

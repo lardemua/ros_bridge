@@ -18,7 +18,7 @@ roslib.load_manifest('carla_ros_template_matching')
 
 class Shape_Selection:
     """
-    Class used for converting ROS images to OpenCV images and apply Template Matching
+    Class used for converting ROS images to OpenCV images and apply Template Matching with Shape Selection
     """
     def __init__(self):
         self.image_pub = rospy.Publisher("/carla/ego_vehicle/camera/rgb/front/shape_selection", Image)
@@ -26,7 +26,12 @@ class Shape_Selection:
         self.image_sub = rospy.Subscriber("/carla/ego_vehicle/camera/rgb/front/image_color", Image, self.callback)
         self.ref_point = []
         self.image = None
+        self.template_img = None
+        self.tW = None
+        self.tH = None
         self.cropping = False
+        self.template_matching = False
+        self.threshold = 0.8
 
     def shape_selection(self, event, x, y, flags, param):
         # if the left mouse button was clicked, record the starting (x,y) coordinates
@@ -58,25 +63,37 @@ class Shape_Selection:
 
         # load the image, clone it, and setup the mouse callback function.
         clone = cv_img.copy()
+        gray = cv2.cvtColor(cv_img, cv2.COLOR_BGR2GRAY)
         self.image = cv_img
         cv2.namedWindow("Image Window")
         cv2.setMouseCallback("Image Window", self.shape_selection)
 
-        cv2.imshow("Image Window", cv_img)
-
         # Press r to reset the cropping region
         if (cv2.waitKey(1) & 0xFF) == ord("r"):
             cv_img = clone.copy()
+            self.template_matching = False
         # Press q on the keyboard to shutdown.
         elif (cv2.waitKey(1) & 0xFF) == ord("q"):
             rospy.is_shutdown()
 
         # if there are two reference points, then crop the region of interest
-        # from teh image and display it
+        # from the image and display it
         if len(self.ref_point) == 2:
             crop_img = clone[self.ref_point[0][1]:self.ref_point[1][1], self.ref_point[0][0]:self.ref_point[1][0]]
             cv2.imshow("crop_img", crop_img)
+            template = crop_img
+            self.template_img = cv2.cvtColor(template, cv2.COLOR_BGR2GRAY)
+            self.tW, self.tH = self.template_img.shape[::-1]
+            self.template_matching = True
             cv2.waitKey(0)
+
+        if self.template_matching is True:
+            res = cv2.matchTemplate(gray, self.template_img, cv2.TM_CCOEFF_NORMED)
+            loc = numpy.where(res >= self.threshold)
+            for pt in zip(*loc[::-1]):
+                cv2.rectangle(cv_img, pt, (pt[0] + self.tW, pt[1] + self.tH), (0, 0, 255), 2)
+
+        cv2.imshow("Image Window", cv_img)
 
         try:
             self.image_pub.publish(self.bridge.cv2_to_imgmsg(cv_img, "bgr8"))
