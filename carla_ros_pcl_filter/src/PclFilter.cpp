@@ -267,6 +267,7 @@ void PclFilter::callback_lidar_spherical(const PCLPointCloud2::ConstPtr& cloud)
         transformedCloudPtr = transformedCloud.makeShared();
 
         PointCloud<PointXYZ>::Ptr outputCloud (new PointCloud<PointXYZ>);
+        outputCloud->points.resize(transformedCloudPtr->points.size());
         sensor_msgs::PointCloud2 cloud_out_msg;
 
         ROS_INFO("Calculating spherical coordinates");
@@ -285,7 +286,7 @@ void PclFilter::callback_lidar_spherical(const PCLPointCloud2::ConstPtr& cloud)
             rho = sqrt(x*x + y*y + z*z);
             theta = acos(z / rho);
 //            ROS_INFO("theta: %f", theta);
-            if (theta > 0 && theta < 2*M_PI){
+            if (theta > M_PI/2 && theta < M_PI + M_PI/2){
                 outputCloud->points[i].x = x;
                 outputCloud->points[i].y = y;
                 outputCloud->points[i].z = z;
