@@ -1,18 +1,18 @@
-# Carla ROS Image Converter
+# Carla ROS Template Matching
 
 
 
-The ```carla_ros_image_converter``` package is used to convert images from a ROS Topic to an OpenCV image by running the following command:
+The ```carla_ros_template_matching``` package is used to convert images from a ROS Topic to an OpenCV image and implements the Template Matching algorithm to find template objects in the image sequences by running the following command:
 
 
 
-    roslaunch carla_ros_image_converter image_converter.launch
+    roslaunch carla_ros_template_matching template_matching.launch
 
 
 
-# Carla ROS Bounding Boxes
+# Carla ROS Template Bounding Boxes
 
-The ```carla_ros_image_converter``` package can be used to draw the bounding boxes around the objects present in the CARLA world according to their location/rotation and convert the results into an OpenCV image.
+The ```carla_ros_template_matching``` package can be used to draw the bounding boxes around the objects present in the CARLA world according to their location/rotation and convert the results into an OpenCV image.
 
 ![rviz setup](../assets/images/carla_bounding_box_01.png?style=centerme "box_01")
 ![rviz setup](../assets/images/carla_bounding_box_02.png?style=centerme "box_02")
