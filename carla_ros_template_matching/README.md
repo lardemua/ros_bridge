@@ -10,7 +10,7 @@ The ```carla_ros_template_matching``` package is used to convert images from a R
 
 
 
-# Carla ROS Template Bounding Boxes
+# Carla ROS Template Matching Bounding Boxes
 
 The ```carla_ros_template_matching``` package can be used to draw the 2D bounding boxes around the objects present in the CARLA world that match the template object according to their location in the image and converts the results into an OpenCV image.
 
@@ -20,7 +20,7 @@ The template objects are cropped from the image and the corresponding bouding bo
 ![rviz setup](../assets/images/carla_template_matching_02.png?style=centerme "box_02")
 
 
-# Carla ROS Datasets
+# Carla ROS Template Matching Datasets
 
 The position,location, orientation, rotation of these objects as well as a label for these objects can be recorded via a json file `data.json`.
 
