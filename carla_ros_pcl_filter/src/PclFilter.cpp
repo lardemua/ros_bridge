@@ -248,9 +248,6 @@ void PclFilter::callback_lidar_spherical(const PCLPointCloud2::ConstPtr& cloud)
         return;
     }
 
-//    std::stringstream ss;
-//    ss << "/tmp/pcl_capture/capture" << cloud->header.stamp << ".pcd";
-
     ROS_INFO ("Received %d data points from front lidar.", (int)cloud->width * cloud->height);
 
     Eigen::Affine3d transform;
@@ -277,16 +274,12 @@ void PclFilter::callback_lidar_spherical(const PCLPointCloud2::ConstPtr& cloud)
         float y = 0.0;
         float z = 0.0;
         for(size_t i = 0; i < transformedCloudPtr->points.size(); i++){
-//            ROS_INFO("x:%f", transformedCloudPtr->points[i].x);
-//            ROS_INFO("y:%f", transformedCloudPtr->points[i].y);
-//            ROS_INFO("z:%f", transformedCloudPtr->points[i].z);
             x = transformedCloudPtr->points[i].x;
             y = transformedCloudPtr->points[i].z;
             z = -transformedCloudPtr->points[i].y;
             rho = sqrt(x*x + y*y + z*z);
             theta = acos(z / rho);
-//            ROS_INFO("theta: %f", theta);
-            if (theta >= 0 && theta <= M_PI){
+            if (theta >= M_PI/2 && theta <= M_PI + M_PI/2){
                 outputCloud->points[i].x = x;
                 outputCloud->points[i].y = -z;
                 outputCloud->points[i].z = y;
@@ -297,31 +290,6 @@ void PclFilter::callback_lidar_spherical(const PCLPointCloud2::ConstPtr& cloud)
         pcl::toROSMsg(*outputCloud.get(),cloud_out_msg );
         cloud_out_msg.header.frame_id = cloud->header.frame_id; // get header frame ID
         pub_lidar_front->publish (cloud_out_msg);
-
-//        PointCloud<PointXYZ>::Ptr filteredCloud (new PointCloud<PointXYZ>);
-//        sensor_msgs::PointCloud2 cloud_out_msg;
-//
-//        // Create a set of planar coefficients with X=Y=0 and Z=1
-//        pcl::ModelCoefficients::Ptr coefficients (new pcl::ModelCoefficients ());
-//        coefficients->values.resize (4);
-//        coefficients->values[0] = coefficients->values[1] = 0;
-//        coefficients->values[2] = 0;
-//        coefficients->values[3] = 0;
-//
-//        // Create the filtering object
-//        pcl::ProjectInliers<pcl::PointXYZ> proj;
-//        proj.setModelType (pcl::SACMODEL_PLANE);
-//        proj.setInputCloud (transformedCloudPtr);
-//        proj.setModelCoefficients (coefficients);
-//        proj.filter (*filteredCloud);
-//
-//        // Convert PCL cloud to PointCloud2 message
-//        pcl::toROSMsg(*filteredCloud.get(),cloud_out_msg );
-//
-//        // Publish PointCloud2 message in another topic
-//        cloud_out_msg.header.frame_id = cloud->header.frame_id; // get header frame ID
-//        cloud_out_msg.header.stamp = cloud->header.stamp;       // get header time stamp
-//        pub_lidar_front->publish (cloud_out_msg);
     }
     catch (tf2::TransformException &ex)
     {
