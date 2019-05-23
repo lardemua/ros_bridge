@@ -380,12 +380,13 @@ void PclFilter::callback_lidar_left_spherical(const PCLPointCloud2::ConstPtr& cl
             z = pclCloudPtr->points[i].z;
             rho = sqrt(x*x + y*y + z*z);
             theta = atan2(y, x);
-            if ( (theta >= -M_PI/2 && theta <= 0)){
+            if ((theta >= -M_PI && theta <= 0)){
                 pt.x = x;
                 pt.y = y;
                 pt.z = z;
                 outputCloud->points.push_back(pt);
             };
+            outputCloud->points.push_back(pt);
 
         }
         // Convert PCL cloud to PointCloud2 message
@@ -500,7 +501,7 @@ void PclFilter::callback_lidar_right_spherical(const PCLPointCloud2::ConstPtr& c
             z = pclCloudPtr->points[i].z;
             rho = sqrt(x*x + y*y + z*z);
             theta = atan2(y, x);
-            if ( (theta >= 0 && theta <= M_PI/2)){
+            if ( (theta >= 0 && theta <= M_PI)){
                 pt.x = x;
                 pt.y = y;
                 pt.z = z;
