@@ -279,7 +279,7 @@ void PclFilter::callback_lidar_spherical(const PCLPointCloud2::ConstPtr& cloud)
             z = -transformedCloudPtr->points[i].y;
             rho = sqrt(x*x + y*y + z*z);
             theta = acos(z / rho);
-            if (theta >= M_PI/2 && theta <= M_PI + M_PI/2){
+            if (theta >= 0 && theta <= 2*M_PI){
                 outputCloud->points[i].x = x;
                 outputCloud->points[i].y = -z;
                 outputCloud->points[i].z = y;
