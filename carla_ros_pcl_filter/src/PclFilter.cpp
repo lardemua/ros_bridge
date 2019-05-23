@@ -258,15 +258,17 @@ void PclFilter::callback_lidar_spherical(const PCLPointCloud2::ConstPtr& cloud)
         fromPCLPointCloud2(*cloud, pclCloud);
 
         PointCloud<PointXYZ> transformedCloud;
-        transformPointCloud (pclCloud, transformedCloud, transform);
+//        transformPointCloud (pclCloud, transformedCloud, transform);
+        transformedCloud = pclCloud;
 
         PointCloud<PointXYZ>::Ptr transformedCloudPtr (new PointCloud<PointXYZ>);
         transformedCloudPtr = transformedCloud.makeShared();
 
         PointCloud<PointXYZ>::Ptr outputCloud (new PointCloud<PointXYZ>);
-        outputCloud->points.resize(transformedCloudPtr->points.size());
+//        outputCloud->points.resize(transformedCloudPtr->points.size());
         sensor_msgs::PointCloud2 cloud_out_msg;
 
+        PointXYZ pt;
         ROS_INFO("Calculating spherical coordinates");
         float rho = 0.0;
         float theta = 0.0;
@@ -275,14 +277,18 @@ void PclFilter::callback_lidar_spherical(const PCLPointCloud2::ConstPtr& cloud)
         float z = 0.0;
         for(size_t i = 0; i < transformedCloudPtr->points.size(); i++){
             x = transformedCloudPtr->points[i].x;
-            y = transformedCloudPtr->points[i].z;
-            z = -transformedCloudPtr->points[i].y;
+            y = transformedCloudPtr->points[i].y;
+            z = transformedCloudPtr->points[i].z;
             rho = sqrt(x*x + y*y + z*z);
-            theta = acos(z / rho);
-            if (theta >= 0 && theta <= 2*M_PI){
-                outputCloud->points[i].x = x;
-                outputCloud->points[i].y = -z;
-                outputCloud->points[i].z = y;
+            theta = atan2(y, x);
+            if ( (theta >= -M_PI/4 && theta <= M_PI/4)){
+//                outputCloud->points[i].x = x;
+//                outputCloud->points[i].y = y;
+//                outputCloud->points[i].z = z;
+                pt.x = x;
+                pt.y = y;
+                pt.z = z;
+                outputCloud->points.push_back(pt);
             };
 
         }
