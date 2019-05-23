@@ -20,8 +20,10 @@ class PclFilter{
         void callback_lidar_front(const pcl::PCLPointCloud2::ConstPtr& cloud);
         void callback_lidar_left(const pcl::PCLPointCloud2::ConstPtr& cloud);
         void callback_lidar_right(const pcl::PCLPointCloud2::ConstPtr& cloud);
+        void callback_lidar_front_spherical(const pcl::PCLPointCloud2::ConstPtr& cloud);
+        void callback_lidar_left_spherical(const pcl::PCLPointCloud2::ConstPtr& cloud);
+        void callback_lidar_right_spherical(const pcl::PCLPointCloud2::ConstPtr& cloud);
         void callback_lidar_planar(const pcl::PCLPointCloud2::ConstPtr& cloud);
-        void callback_lidar_spherical(const pcl::PCLPointCloud2::ConstPtr& cloud);
         void callback_radius_outlier_removal(const pcl::PCLPointCloud2::ConstPtr& cloud);
         void callback_conditional_removal(const pcl::PCLPointCloud2::ConstPtr& cloud);
 
