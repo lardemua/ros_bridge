@@ -47,3 +47,6 @@ And the map result should look like this:
 ![rviz_filter setup](../assets/images/rviz_carla_filter01.png "rviz")
 ![rviz_filter setup](../assets/images/rviz_carla_filter02.png "rviz")
 ![rviz_filter_setup](../assets/images/rviz_carla_filter03.png "rviz")
+![rviz_filter_setup](../assets/images/rviz_carla_filter04.png "rviz")
+![rviz_filter_setup](../assets/images/rviz_carla_filter05.png "rviz")
+![rviz_filter_setup](../assets/images/rviz_carla_filter06.png "rviz")
