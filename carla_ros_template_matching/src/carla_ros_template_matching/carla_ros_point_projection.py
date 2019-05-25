@@ -40,7 +40,7 @@ class Point_Projection:
         self.rotVector = []
         self.transVector = []
         self.end_point_3d = []
-        self.end_point_2d =  []
+        self.end_point_2d = []
         self.view_width = 1920//2
         self.view_height = 1080//2
         self.view_fov = 90
