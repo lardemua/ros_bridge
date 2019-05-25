@@ -8,5 +8,5 @@
     <param name="carla/host" value="$(arg host)" unless="$(eval host == '')"/>
     <param name="carla/port" value="$(arg port)" unless="$(eval port == '')"/>
     <param name="carla/ego_vehicle/role_name" value="$(arg ego_vehicle_name)" unless="$(eval ego_vehicle_name == '')"/>
-    <node pkg="carla_ros_template_matching" type="carla_ros_point_projection.py" name="carla_ros_template_matching" output="screen"/>
+    <node pkg="carla_ros_template_matching" type="carla_ros_lidar_point_projection.py" name="carla_ros_template_matching" output="screen"/>
 </launch>

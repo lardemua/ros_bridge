@@ -10,20 +10,27 @@ import rospy
 import cv2
 import carla
 import numpy
-from sensor_msgs.msg import Image
+from sensor_msgs.msg import Image, PointCloud2
 from cv_bridge import CvBridge, CvBridgeError
 import roslib
 roslib.load_manifest('carla_ros_template_matching')
 
 
-class Point_Projection:
+class Lidar_Point_Projection:
     """
-    Class used for converting ROS images to OpenCV images and apply Template Matching with Shape Selection
+    Class used for converting ROS images to OpenCV images and apply Template Matching with Shape Selection and
+    point projection from the LIDAR sensors.
     """
     def __init__(self):
-        self.image_pub = rospy.Publisher("/carla/ego_vehicle/camera/rgb/front/shape_selection", Image)
+        self.image_pub = rospy.Publisher("/carla/ego_vehicle/camera/rgb/front/lidar_point_projection", Image)
         self.bridge = CvBridge()
         self.image_sub = rospy.Subscriber("/carla/ego_vehicle/camera/rgb/front/image_color", Image, self.callback)
+        self.front_lidar_sub = rospy.Subscriber("/carla/ego_vehicle/lidar/front/point_cloud", PointCloud2,
+                                                self.callback_lidar_front)
+        self.left_lidar_sub = rospy.Subscriber("/carla/ego_vehicle/lidar/left/point_cloud", PointCloud2,
+                                               self.callback_lidar_left)
+        self.right_lidar_sub = rospy.Subscriber("/carla/ego_vehicle/lidar/right/point_cloud", PointCloud2,
+                                                self.callback_lidar_right)
         self.ref_point = []
         self.image = None
         self.template_img = None
@@ -60,6 +67,15 @@ class Point_Projection:
             # draw a rectangle around the region of interest
             cv2.rectangle(self.image, self.ref_point[0], self.ref_point[1], (0, 255, 0), 2)
             cv2.imshow("Cropped Image", self.image)
+
+    def callback_lidar_front(self, data):
+        return data
+
+    def callback_lidar_left(self, data):
+        return data
+
+    def callback_lidar_right(self, data):
+        return data
 
     def callback(self, data):
         cv_img = None
@@ -131,8 +147,8 @@ class Point_Projection:
 
 
 def main(args):
-    point_projection = Point_Projection()
-    rospy.init_node('point_projection', anonymous=True)
+    point_projection = Lidar_Point_Projection()
+    rospy.init_node('lidar_point_projection', anonymous=True)
     try:
         rospy.spin()
     except KeyboardInterrupt:
