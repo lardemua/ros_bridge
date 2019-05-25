@@ -44,7 +44,7 @@ This documentation is for CARLA versions *newer* than 0.9.5.
 
 - [x] Object Tracking using bounding box information from the CARLA objects and data storage in .JSON datasets.
 
-- [x] Point Cloud Filtering and Recording in .PCD format.
+- [x] Point Cloud Filtering, Recording in .PCD format and Visualizing using pcl_viewer command from pcl_tools package.
  
 - [ ] Object Tracking using Template Matching.
 
