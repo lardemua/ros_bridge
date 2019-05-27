@@ -72,7 +72,7 @@ class Lidar(Sensor):
         header = self.get_msg_header(use_parent_frame=False)
         lidar_data = numpy.frombuffer(carla_lidar_measurement.raw_data, dtype=numpy.float32)
         # lidar_data = numpy.append(lidar_data, [255, 0, 0])
-        lidar_data = numpy.reshape(lidar_data, (int(lidar_data.shape[0] / 3), 3))
+        lidar_data = numpy.reshape(lidar_data, (int(lidar_data.shape[0] / 3), 3)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                )
         # lidar_data = numpy.append(lidar_data, [255, 0, 0])
 
         # we take the oposite of y axis

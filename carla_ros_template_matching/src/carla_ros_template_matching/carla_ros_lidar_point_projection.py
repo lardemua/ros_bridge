@@ -27,12 +27,12 @@ class Lidar_Point_Projection:
         self.image_pub = rospy.Publisher("/carla/ego_vehicle/camera/rgb/front/lidar_point_projection", Image)
         self.bridge = CvBridge()
         self.image_sub = rospy.Subscriber("/carla/ego_vehicle/camera/rgb/front/image_color", Image, self.callback)
-        self.front_lidar_sub = rospy.Subscriber("/carla/ego_vehicle/lidar/front/point_cloud", PointCloud2,
-                                                self.callback_lidar_front)
+        # self.front_lidar_sub = rospy.Subscriber("/carla/ego_vehicle/lidar/front/point_cloud", PointCloud2,
+        #                                         self.callback_lidar_front)
         self.left_lidar_sub = rospy.Subscriber("/carla/ego_vehicle/lidar/left/point_cloud", PointCloud2,
                                                self.callback_lidar_left)
-        self.right_lidar_sub = rospy.Subscriber("/carla/ego_vehicle/lidar/right/point_cloud", PointCloud2,
-                                                self.callback_lidar_right)
+        # self.right_lidar_sub = rospy.Subscriber("/carla/ego_vehicle/lidar/right/point_cloud", PointCloud2,
+        #                                         self.callback_lidar_right)
         self.ref_point = []
         self.image = None
         self.template_img = None
@@ -91,37 +91,76 @@ class Lidar_Point_Projection:
         return int_data
 
     def callback_lidar_front(self, carla_lidar_data):
-        # pick a height
-        self.front_height = int(carla_lidar_data.height / 2)
-        # pick a width
-        self.front_width = int(carla_lidar_data.width / 2)
-        # examine point and read depth
-        self.front_depth = self.read_depth_lidar(self.front_width, self.front_height, carla_lidar_data)
-        # print info
-        rospy.loginfo("Front LIDAR --> Width: " + str(self.front_width) + " , Height: " + str(self.front_height) +
-                      ", Depth: " + str(self.front_depth))
+        # # pick a height
+        # self.front_height = int(carla_lidar_data.height / 2)
+        # # pick a width
+        # self.front_width = int(carla_lidar_data.width / 2)
+        # # examine point and read depth
+        # self.front_depth = self.read_depth_lidar(self.front_width, self.front_height, carla_lidar_data)
+        # # print info
+        # rospy.loginfo("Front LIDAR --> Width: " + str(self.front_width) + " , Height: " + str(self.front_height) +
+        #               ", Depth: " + str(self.front_depth))
+        for point in pc2.read_points(carla_lidar_data, skip_nans=True):
+            pt_x = point[0]
+            pt_y = point[1]
+            pt_z = point[2]
+            print("Front LIDAR X: " + str(pt_x))
+            print("Front LIDAR Y: " + str(pt_y))
+            print("Front LIDAR Z: " + str(pt_z))
+            for npoint in self.template_img_array:
+                if pt_x == npoint[0] and pt_y == npoint[1] and pt_z == npoint[2]:
+                    rospy.loginfo("Front LIDAR MATCH -> X:" + pt_x + ", Y:" + pt_y + ", Z: " + pt_z)
+                print("Template X: " + str(npoint[0]))
+                print("Template Y: " + str(npoint[1]))
+                print("Template Z: " + str(npoint[2]))
 
     def callback_lidar_left(self, carla_lidar_data):
-        # pick a height
-        self.left_height = int(carla_lidar_data.height / 2)
-        # pick a width
-        self.left_width = int(carla_lidar_data.width / 2)
-        # examine point and read depth
-        self.left_depth = self.read_depth_lidar(self.left_width, self.left_height, carla_lidar_data)
-        # print info
-        rospy.loginfo("Left LIDAR --> Width: " + str(self.left_width) + " , Height: " + str(self.left_height) +
-                      ", Depth: " + str(self.left_depth))
+        # # pick a height
+        # self.left_height = int(carla_lidar_data.height / 2)
+        # # pick a width
+        # self.left_width = int(carla_lidar_data.width / 2)
+        # # examine point and read depth
+        # self.left_depth = self.read_depth_lidar(self.left_width, self.left_height, carla_lidar_data)
+        # # print info
+        # rospy.loginfo("Left LIDAR --> Width: " + str(self.left_width) + " , Height: " + str(self.left_height) +
+        #               ", Depth: " + str(self.left_depth))
+        for point in pc2.read_points(carla_lidar_data, skip_nans=True):
+            pt_x = point[0]
+            pt_y = point[1]
+            pt_z = point[2]
+            print("Left LIDAR X: " + str(pt_x))
+            print("Left LIDAR Y: " + str(pt_y))
+            print("Left LIDAR Z: " + str(pt_z))
+            for npoint in self.template_img_array:
+                if pt_x == npoint[0] and pt_y == npoint[1] and pt_z == npoint[2]:
+                    rospy.loginfo("Left LIDAR MATCH -> X:" + pt_x + ", Y:" + pt_y + ", Z: " + pt_z)
+                print("Template X: " + str(npoint[0]))
+                print("Template Y: " + str(npoint[1]))
+                print("Template Z: " + str(npoint[2]))
 
     def callback_lidar_right(self, carla_lidar_data):
-        # pick a height
-        self.right_height = int(carla_lidar_data.height / 2)
-        # pick a width
-        self.right_width = int(carla_lidar_data.width / 2)
-        # examine point and read depth
-        self.right_depth = self.read_depth_lidar(self.right_width, self.right_height, carla_lidar_data)
-        # print info
-        rospy.loginfo("Right LIDAR --> Width: " + str(self.right_width) + " , Height: " + str(self.right_height) +
-                      ", Depth: " + str(self.right_depth))
+        # # pick a height
+        # self.right_height = int(carla_lidar_data.height / 2)
+        # # pick a width
+        # self.right_width = int(carla_lidar_data.width / 2)
+        # # examine point and read depth
+        # self.right_depth = self.read_depth_lidar(self.right_width, self.right_height, carla_lidar_data)
+        # # print info
+        # rospy.loginfo("Right LIDAR --> Width: " + str(self.right_width) + " , Height: " + str(self.right_height) +
+        #               ", Depth: " + str(self.right_depth))
+        for point in pc2.read_points(carla_lidar_data, skip_nans=True):
+            pt_x = point[0]
+            pt_y = point[1]
+            pt_z = point[2]
+            print("Right LIDAR X: " + str(pt_x))
+            print("Right LIDAR Y: " + str(pt_y))
+            print("Right LIDAR Z: " + str(pt_z))
+            for npoint in self.template_img_array:
+                if pt_x == npoint[0] and pt_y == npoint[1] and pt_z == npoint[2]:
+                    rospy.loginfo("Right LIDAR MATCH -> X:" + pt_x + ", Y:" + pt_y + ", Z: " + pt_z)
+                print("Template X: " + str(npoint[0]))
+                print("Template Y: " + str(npoint[1]))
+                print("Template Z: " + str(npoint[2]))
 
     def callback(self, data):
         cv_img = None
@@ -135,17 +174,17 @@ class Lidar_Point_Projection:
         world = client.get_world()
         blueprints = world.get_blueprint_library().filter('vehicle.*')
 
-        calibration = numpy.identity(3)
-        calibration[0, 2] = self.view_width/ 2.0
-        calibration[1, 2] = self.view_height / 2.0
-        calibration[0, 0] = calibration[1, 1] = self.view_width / (2.0 * numpy.tan(self.view_fov * numpy.pi / 360.0))
-        self.calibration = calibration
-
-        self.distCoeffs = numpy.array([0, 0, 0, 0], dtype=numpy.float)
-        self.rotVector = numpy.array([0], dtype=numpy.float)
-        self.transVector = numpy.array([0], dtype=numpy.float)
-        self.end_point_3d = numpy.array([0, 0, 1000], dtype=numpy.float)
-        self.end_point_2d = numpy.array([0, 0], dtype=numpy.float)
+        # calibration = numpy.identity(3)
+        # calibration[0, 2] = self.view_width/ 2.0
+        # calibration[1, 2] = self.view_height / 2.0
+        # calibration[0, 0] = calibration[1, 1] = self.view_width / (2.0 * numpy.tan(self.view_fov * numpy.pi / 360.0))
+        # self.calibration = calibration
+        #
+        # self.distCoeffs = numpy.array([0, 0, 0, 0], dtype=numpy.float)
+        # self.rotVector = numpy.array([0], dtype=numpy.float)
+        # self.transVector = numpy.array([0], dtype=numpy.float)
+        # self.end_point_3d = numpy.array([0, 0, 1000], dtype=numpy.float)
+        # self.end_point_2d = numpy.array([0, 0], dtype=numpy.float)
 
         # load the image, clone it, and setup the mouse callback function.
         clone = cv_img.copy()
@@ -153,8 +192,8 @@ class Lidar_Point_Projection:
         self.image = cv_img
         cv2.namedWindow("Image Window")
         cv2.setMouseCallback("Image Window", self.shape_selection)
-        cv2.namedWindow("3D Window")
-        cv_img_3D = numpy.array([0, 0, 1000], dtype=numpy.float)
+        # cv2.namedWindow("3D Window")
+        # cv_img_3D = numpy.array([0, 0, 1000], dtype=numpy.float)
 
         # Press r to reset the cropping region
         if (cv2.waitKey(1) & 0xFF) == ord("r"):
@@ -172,8 +211,8 @@ class Lidar_Point_Projection:
             template = crop_img
             self.template_img = cv2.cvtColor(template, cv2.COLOR_BGR2GRAY)
             self.tW, self.tH = self.template_img.shape[::-1]
-            template_image = Image.fromarray(self.template_img)
-            self.template_img_array = numpy.array(template_image)
+            self.template_img_array = numpy.array(self.template_img)
+            # print(self.template_img_array)
             self.template_matching = True
             cv2.waitKey(0)
 
@@ -183,10 +222,10 @@ class Lidar_Point_Projection:
             for pt in zip(*loc[::-1]):
                 cv2.rectangle(cv_img, pt, (pt[0] + self.tW, pt[1] + self.tH), (0, 0, 255), 2)
 
-        if self.project_points is True:
-            cv2.projectPoints(cv_img_3D, self.rotVector, self.transVector, self.calibration, self.distCoeffs, cv_img)
+        # if self.project_points is True:
+        #     cv2.projectPoints(cv_img_3D, self.rotVector, self.transVector, self.calibration, self.distCoeffs, cv_img)
         cv2.imshow("Image Window", cv_img)
-        cv2.imshow("3D Window", cv_img_3D)
+        # cv2.imshow("3D Window", cv_img_3D)
 
         try:
             self.image_pub.publish(self.bridge.cv2_to_imgmsg(cv_img, "bgr8"))
