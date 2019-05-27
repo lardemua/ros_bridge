@@ -96,7 +96,7 @@ class Lidar_Point_Projection:
         # examine point and read depth
         self.front_depth = self.read_depth_lidar(self.front_width, self.front_height, carla_lidar_data)
         # print info
-        rospy.loginfo("Front LIDAR --> Width: " + str(self.front_width) + " ,Height: " + str(self.front_height) +
+        rospy.loginfo("Front LIDAR --> Width: " + str(self.front_width) + " , Height: " + str(self.front_height) +
                       ", Depth: " + str(self.front_depth))
 
     def callback_lidar_left(self, carla_lidar_data):
@@ -107,7 +107,7 @@ class Lidar_Point_Projection:
         # examine point and read depth
         self.left_depth = self.read_depth_lidar(self.left_width, self.left_height, carla_lidar_data)
         # print info
-        rospy.loginfo("Left LIDAR --> Width: " + str(self.left_width) + " ,Height: " + str(self.left_height) +
+        rospy.loginfo("Left LIDAR --> Width: " + str(self.left_width) + " , Height: " + str(self.left_height) +
                       ", Depth: " + str(self.left_depth))
 
     def callback_lidar_right(self, carla_lidar_data):
@@ -118,7 +118,7 @@ class Lidar_Point_Projection:
         # examine point and read depth
         self.right_depth = self.read_depth_lidar(self.right_width, self.right_height, carla_lidar_data)
         # print info
-        rospy.loginfo("Right LIDAR --> Width: " + str(self.right_width) + " ,Height: " + str(self.right_height) +
+        rospy.loginfo("Right LIDAR --> Width: " + str(self.right_width) + " , Height: " + str(self.right_height) +
                       ", Depth: " + str(self.right_depth))
 
     def callback(self, data):
