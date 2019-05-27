@@ -68,14 +68,20 @@ class Lidar_Point_Projection:
             cv2.rectangle(self.image, self.ref_point[0], self.ref_point[1], (0, 255, 0), 2)
             cv2.imshow("Cropped Image", self.image)
 
-    def callback_lidar_front(self, data):
-        return data
+    def callback_lidar_front(self, carla_lidar_data):
+        lidar_data = numpy.frombuffer(carla_lidar_data.raw_data, dtype=numpy.float32)
+        lidar_data = numpy.reshape(lidar_data, (int(lidar_data.shape[0] / 3), 3))
+        return lidar_data
 
-    def callback_lidar_left(self, data):
-        return data
+    def callback_lidar_left(self, carla_lidar_data):
+        lidar_data = numpy.frombuffer(carla_lidar_data.raw_data, dtype=numpy.float32)
+        lidar_data = numpy.reshape(lidar_data, (int(lidar_data.shape[0] / 3), 3))
+        return lidar_data
 
-    def callback_lidar_right(self, data):
-        return data
+    def callback_lidar_right(self, carla_lidar_data):
+        lidar_data = numpy.frombuffer(carla_lidar_data.raw_data, dtype=numpy.float32)
+        lidar_data = numpy.reshape(lidar_data, (int(lidar_data.shape[0] / 3), 3))
+        return lidar_data
 
     def callback(self, data):
         cv_img = None
