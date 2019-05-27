@@ -10,8 +10,9 @@ import rospy
 import cv2
 import carla
 import numpy
+from PIL import Image
 import sensor_msgs.point_cloud2 as pc2
-from sensor_msgs.msg import Image, PointCloud2
+from sensor_msgs.msg import Image, PointCloud2, PointField
 from cv_bridge import CvBridge, CvBridgeError
 import roslib
 roslib.load_manifest('carla_ros_template_matching')
@@ -35,6 +36,7 @@ class Lidar_Point_Projection:
         self.ref_point = []
         self.image = None
         self.template_img = None
+        self.template_img_array = []
         self.tW = None
         self.tH = None
         self.cropping = False
@@ -170,6 +172,8 @@ class Lidar_Point_Projection:
             template = crop_img
             self.template_img = cv2.cvtColor(template, cv2.COLOR_BGR2GRAY)
             self.tW, self.tH = self.template_img.shape[::-1]
+            template_image = Image.fromarray(self.template_img)
+            self.template_img_array = numpy.array(template_image)
             self.template_matching = True
             cv2.waitKey(0)
 
