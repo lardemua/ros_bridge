@@ -12,12 +12,23 @@
 /* System Includes */
 #include "PclViewer.h"
 #include <string>
+#include <sstream>
+#include <iostream>
+#include <vector>
 #include <stdio.h>
 #include <stdlib.h>
+
+//OpenCV Includes
+#include <opencv2/core/core.hpp>
+#include <opencv2/highgui/highgui.hpp>
+#include <opencv2/calib3d/calib3d.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
+//PCL Includes
 #include <pcl/io/pcd_io.h>
 #include <pcl/visualization/pcl_visualizer.h>
 #include <pcl_ros/transforms.h>
-#include <sstream>
+
+cv::Mat intrinsic_matrix;
 
 PclViewer::PclViewer()
 {
@@ -27,6 +38,18 @@ PclViewer::PclViewer()
     sub_lidar_front = nh.subscribe("/carla/ego_vehicle/lidar/front/point_cloud", 1000000, &PclViewer::callback_lidar_front, this);
     sub_lidar_left = nh.subscribe("/carla/ego_vehicle/lidar/left/point_cloud", 1000000, &PclViewer::callback_lidar_left, this);
     sub_lidar_right = nh.subscribe("/carla/ego_vehicle/lidar/right/point_cloud", 1000000, &PclViewer::callback_lidar_right, this);
+
+    intrinsic_matrix = cv::Mat (3, 3, CV_32FC1);
+    // Read camera parameters file
+    cv::FileStorage file_storage("cameraParams.xml", cv::FileStorage::READ );
+    if ( !file_storage.isOpened () )
+    {
+        std::cout << "Failed to open cameraParams.xml" << std::endl;
+        return;
+    }
+    file_storage [ "intrinsic_matrix" ] >> intrinsic_matrix;
+    file_storage.release ();
+
 }
 
 void PclViewer::callback_lidar_front(const pcl::PCLPointCloud2::ConstPtr& cloud)
