@@ -10,6 +10,7 @@ import rospy
 import cv2
 import carla
 import numpy
+import sensor_msgs.point_cloud2 as pc2
 from sensor_msgs.msg import Image, PointCloud2
 from cv_bridge import CvBridge, CvBridgeError
 import roslib
@@ -52,6 +53,16 @@ class Lidar_Point_Projection:
         self.view_height = 1080//2
         self.view_fov = 90
 
+        self.front_width = None
+        self.front_height = None
+        self.front_depth = None
+        self.left_width = None
+        self.left_height = None
+        self.left_depth = None
+        self.right_width = None
+        self.right_height = None
+        self.right_depth = None
+
     def shape_selection(self, event, x, y, flags, param):
         # if the left mouse button was clicked, record the starting (x,y) coordinates
         # and indicate that the croping is being performed.
@@ -68,20 +79,47 @@ class Lidar_Point_Projection:
             cv2.rectangle(self.image, self.ref_point[0], self.ref_point[1], (0, 255, 0), 2)
             cv2.imshow("Cropped Image", self.image)
 
+    def read_depth_lidar(self, width, height, carla_lidar_data):
+        # read function
+        if (height >= carla_lidar_data.height) or (width >= carla_lidar_data.width):
+            return -1
+        data_out = pc2.read_points(carla_lidar_data, field_names=None, skip_nans=False, uvs=[[width, height]])
+        int_data = next(data_out)
+        rospy.loginfo("int_data " + str(int_data))
+        return int_data
+
     def callback_lidar_front(self, carla_lidar_data):
-        lidar_data = numpy.frombuffer(carla_lidar_data.raw_data, dtype=numpy.float32)
-        lidar_data = numpy.reshape(lidar_data, (int(lidar_data.shape[0] / 3), 3))
-        return lidar_data
+        # pick a height
+        self.front_height = int(carla_lidar_data.height / 2)
+        # pick a width
+        self.front_width = int(carla_lidar_data.width / 2)
+        # examine point and read depth
+        self.front_depth = self.read_depth_lidar(self.front_width, self.front_height, carla_lidar_data)
+        # print info
+        rospy.loginfo("Front LIDAR --> Width: " + str(self.front_width) + " ,Height: " + str(self.front_height) +
+                      ", Depth: " + str(self.front_depth))
 
     def callback_lidar_left(self, carla_lidar_data):
-        lidar_data = numpy.frombuffer(carla_lidar_data.raw_data, dtype=numpy.float32)
-        lidar_data = numpy.reshape(lidar_data, (int(lidar_data.shape[0] / 3), 3))
-        return lidar_data
+        # pick a height
+        self.left_height = int(carla_lidar_data.height / 2)
+        # pick a width
+        self.left_width = int(carla_lidar_data.width / 2)
+        # examine point and read depth
+        self.left_depth = self.read_depth_lidar(self.left_width, self.left_height, carla_lidar_data)
+        # print info
+        rospy.loginfo("Left LIDAR --> Width: " + str(self.left_width) + " ,Height: " + str(self.left_height) +
+                      ", Depth: " + str(self.left_depth))
 
     def callback_lidar_right(self, carla_lidar_data):
-        lidar_data = numpy.frombuffer(carla_lidar_data.raw_data, dtype=numpy.float32)
-        lidar_data = numpy.reshape(lidar_data, (int(lidar_data.shape[0] / 3), 3))
-        return lidar_data
+        # pick a height
+        self.right_height = int(carla_lidar_data.height / 2)
+        # pick a width
+        self.right_width = int(carla_lidar_data.width / 2)
+        # examine point and read depth
+        self.right_depth = self.read_depth_lidar(self.right_width, self.right_height, carla_lidar_data)
+        # print info
+        rospy.loginfo("Right LIDAR --> Width: " + str(self.right_width) + " ,Height: " + str(self.right_height) +
+                      ", Depth: " + str(self.right_depth))
 
     def callback(self, data):
         cv_img = None
