@@ -22,6 +22,8 @@ This documentation is for CARLA versions *newer* than 0.9.5.
 ![rviz setup](./assets/images/rviz_carla_session12.png "rviz")
 ![rviz setup](./assets/images/rviz_carla_session13.png "rviz")
 ![rviz setup](./assets/images/rviz_carla_session14.png "rviz")
+![rviz setup](./assets/images/rviz_carla_session15.png "rviz")
+
 
 # Features
 - [x] Cameras (depth, segmentation, rgb) support
@@ -46,7 +48,9 @@ This documentation is for CARLA versions *newer* than 0.9.5.
 
 - [x] Point Cloud Filtering, Recording in .PCD format and Visualizing using pcl_viewer command from pcl_tools package.
  
-- [ ] Object Tracking using Template Matching.
+- [x] Object Tracking using Template Matching with 2D bounding boxes.
+
+- [ ] 3D Bounding Box Creation using Depth Perception via Point Cloud Clustering and Template Matching templates.
 
 # Setup
 
