@@ -1,0 +1,9 @@
+<!-- -->
+<launch>
+    <arg name='host' default='localhost'/>
+    <arg name='port' default='2000'/>
+
+    <!-- pcl map capturing -->
+    <node pkg="carla_ros_pcl_opencv" type="carla_ros_pcl_opencv_node" name="carla_ros_pcl_opencv_node" output="screen"/>
+
+</launch>
