@@ -20,6 +20,7 @@
 
 //OpenCV Includes
 #include <opencv2/core/core.hpp>
+#include <opencv2/core/eigen.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/calib3d/calib3d.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
@@ -41,7 +42,7 @@ PclViewer::PclViewer()
 
     intrinsic_matrix = cv::Mat (3, 3, CV_32FC1);
     // Read camera parameters file
-    cv::FileStorage file_storage("cameraParams.xml", cv::FileStorage::READ );
+    cv::FileStorage file_storage("/home/pedro/catkin_ws/src/ros_bridge/carla_ros_pcl_opencv/config/cameraParams.xml", cv::FileStorage::READ );
     if ( !file_storage.isOpened () )
     {
         std::cout << "Failed to open cameraParams.xml" << std::endl;
@@ -65,6 +66,7 @@ void PclViewer::callback_lidar_front(const pcl::PCLPointCloud2::ConstPtr& cloud)
               (int)cloud->width * cloud->height);
 
     Eigen::Affine3d transform;
+//    Eigen::Matrix<int,int,int> cv_transform_matrix;
     try {
         transform = tf2::transformToEigen (tf_buffer_.lookupTransform(fixed_frame_, cloud->header.frame_id,  pcl_conversions::fromPCL (cloud->header.stamp), ros::Duration(1)));
 
@@ -73,6 +75,8 @@ void PclViewer::callback_lidar_front(const pcl::PCLPointCloud2::ConstPtr& cloud)
 
         pcl::PointCloud<pcl::PointXYZ> transformedCloud;
         pcl::transformPointCloud (pclCloud, transformedCloud, transform);
+
+//        cv::cv2eigen(intrinsic_matrix, cv_transform_matrix);
 
         // TO DO : Implement OpenCV cloud viewer for front LIDAR point cloud
 
