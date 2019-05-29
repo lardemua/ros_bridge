@@ -97,21 +97,44 @@ void PclViewer::callback_lidar_front(const pcl::PCLPointCloud2::ConstPtr& cloud)
         // TO DO : Implement OpenCV cloud viewer for front LIDAR point cloud
 
         display_matrix = cv::Mat(transformedCloudPtr->points.size(), 1,  CV_32FC1);
-        std::vector<cv::Point3d> sample;
+        std::vector<cv::Point2d> points_2d;
+        std::vector<cv::Point2d> pixels_2d;
+
+        float u;
+        float v;
+        float y;
+        float x;
+        for(size_t i = 0; i < transformedCloudPtr->points.size(); i++){
+//            sample.push_back(cv::Point2d(transformedCloudPtr, 7));
+              points_2d.push_back(cv::Point2d(transformedCloudPtr->points[i].x,transformedCloudPtr->points[i].y));
+              x = transformedCloudPtr->points[i].x / transformedCloudPtr->points[i].z;
+              y = transformedCloudPtr->points[i].y / transformedCloudPtr->points[i].z;
+              u = intrinsic_matrix.at<double>(0,0)*x + intrinsic_matrix.at<double>(2,0);
+              v = intrinsic_matrix.at<double>(1,1)*y + intrinsic_matrix.at<double>(2,1);
+              pixels_2d.push_back(cv::Point2d(u,v));
+        }
 
         for(size_t i = 0; i < transformedCloudPtr->points.size(); i++){
-            sample.push_back(cv::Point3d(transformedCloudPtr->points[i].x, transformedCloudPtr->points[i].y, transformedCloudPtr->points[i].z));
+//            cv::line(display_matrix,
+//                       cv::Point2d(transformedCloudPtr->points[i].x, transformedCloudPtr->points[i].y),
+//                       cv::Point2d(transformedCloudPtr->points[i+1].x, transformedCloudPtr->points[i+1].y),
+//                       cv::Scalar(255,255,255), 1, 8 , CV_AA);
+            cv::line(display_matrix,
+                     points_2d.at(i),
+                     points_2d.at(i+1),
+                     cv::Scalar(255,255,255), 1, 8 , CV_AA);
         }
-        cv::transform(sample, sample, intrinsic_matrix); // apply camera transform to vector.
+//        cv::transform(sample, sample, intrinsic_matrix); // apply camera transform to vector.
 
         // save vector in display matrix
-        memcpy(display_matrix.data,sample.data(),sample.size()*sizeof(cv::Point3d));
+//        memcpy(display_matrix.data,sample.data(),sample.size()*sizeof(cv::Point3d));
 
         // Display results
-//        cv::namedWindow("Front LIDAR Display Window", cv::WINDOW_AUTOSIZE);
-//        ROS_INFO ("Showing LIDAR results.");
-//        cv::imshow("Front LIDAR Display Window", display_matrix);
-//        cv::waitKey(0); // wait for a keystroke in the window;
+        cv::namedWindow("Front LIDAR Display Window", cv::WINDOW_AUTOSIZE);
+        cv::resizeWindow("Front LIDAR Display Window", 1024, 768);
+        ROS_INFO ("Showing LIDAR results.");
+        cv::imshow("Front LIDAR Display Window", display_matrix);
+        cv::waitKey(0); // wait for a keystroke in the window;
 
     }
     catch (tf2::TransformException &ex)
