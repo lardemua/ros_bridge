@@ -183,10 +183,10 @@ void PclViewer::callback_lidar_left(const pcl::PCLPointCloud2::ConstPtr& cloud)
         }
 
         // Display results
-        cv::namedWindow("Front LIDAR Display Window", cv::WINDOW_AUTOSIZE);
-        cv::resizeWindow("Front LIDAR Display Window", 1024, 768);
+        cv::namedWindow("Left LIDAR Display Window", cv::WINDOW_AUTOSIZE);
+        cv::resizeWindow("Left LIDAR Display Window", 1024, 768);
         ROS_INFO ("Showing LIDAR results.");
-        cv::imshow("Front LIDAR Display Window", display_matrix_left);
+        cv::imshow("Left LIDAR Display Window", display_matrix_left);
         cv::waitKey(0); // wait for a keystroke in the window;
 
     }
@@ -242,10 +242,10 @@ void PclViewer::callback_lidar_right(const pcl::PCLPointCloud2::ConstPtr& cloud)
         }
 
         // Display results
-        cv::namedWindow("Front LIDAR Display Window", cv::WINDOW_AUTOSIZE);
-        cv::resizeWindow("Front LIDAR Display Window", 1024, 768);
+        cv::namedWindow("Right LIDAR Display Window", cv::WINDOW_AUTOSIZE);
+        cv::resizeWindow("Right LIDAR Display Window", 1024, 768);
         ROS_INFO ("Showing LIDAR results.");
-        cv::imshow("Front LIDAR Display Window", display_matrix_right);
+        cv::imshow("Right LIDAR Display Window", display_matrix_right);
         cv::waitKey(0); // wait for a keystroke in the window;
 
     }
