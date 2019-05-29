@@ -11,7 +11,7 @@ import cv2
 import carla
 import numpy
 from sensor_msgs.msg import Image
-from carla_ros_bridge_msgs.msg import CarlaTemplate
+from carla_ros_bridge_msgs.msg import CarlaTemplate, Carla3DTemplate
 from cv_bridge import CvBridge, CvBridgeError
 import roslib
 roslib.load_manifest('carla_ros_template_matching')
@@ -25,7 +25,11 @@ class Shape_Selection:
         self.role_name = role_name
         self.image_pub = rospy.Publisher("/carla/{}/camera/rgb/front/shape_selection".format(self.role_name), Image)
         self.bridge = CvBridge()
-        self.image_sub = rospy.Subscriber("/carla/{}/camera/rgb/front/image_color".format(self.role_name), Image, self.callback)
+        self.image_sub = rospy.Subscriber("/carla/{}/camera/rgb/front/image_color".format(self.role_name), Image,
+                                          self.callback)
+        self.template_pub = rospy.Publisher("/carla/{}/templates".format(self.role_name), CarlaTemplate)
+        self.template_sub = rospy.Publisher("/carla/{}/3Dtemplates".format(self.role_name), Carla3DTemplate,
+                                            self.design_3D_template)
         self.ref_point = []
         self.image = None
         self.template_img = None
@@ -102,6 +106,14 @@ class Shape_Selection:
         except CvBridgeError as e:
             print(e)
 
+    def on_template(self, data):
+        print(data)
+
+    def design_3D_template(self, data):
+       tW = data.template_width
+       tH = data.template_height
+       tD = data.template_depth
+       print("tW: " + str(tW) + "tH" + str(tH) + "tD" + str(tD))
 
 def main(args):
     role_name = rospy.get_param("~role_name", "ego_vehicle")
