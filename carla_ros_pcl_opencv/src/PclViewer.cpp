@@ -30,13 +30,22 @@
 #include <pcl_ros/transforms.h>
 
 cv::Mat intrinsic_matrix;
+cv::Mat distortion_matrix;
+cv::Mat rectification_matrix;
+cv::Mat projection_matrix;
+
 cv::Mat display_matrix;
 
 PclViewer::PclViewer()
 {
     tfListener = new tf2_ros::TransformListener(tf_buffer_);
 
+    //Initialize camera matrixes
     intrinsic_matrix = cv::Mat (3, 3, CV_32FC1);
+    distortion_matrix = cv::Mat (1, 5, CV_32FC1);
+    rectification_matrix = cv::Mat (3, 3, CV_32FC1);
+    projection_matrix = cv::Mat(3, 4, CV_32FC1);
+
     // Read camera parameters file
     cv::FileStorage file_storage("/home/pedro/catkin_ws/src/ros_bridge/carla_ros_pcl_opencv/config/cameraParams.xml", cv::FileStorage::READ );
     if ( !file_storage.isOpened () )
@@ -45,6 +54,10 @@ PclViewer::PclViewer()
         return;
     }
     file_storage [ "intrinsic_matrix" ] >> intrinsic_matrix;
+    file_storage [ "distortion_matrix" ] >> distortion_matrix;
+    file_storage [ "rectification_matrix" ] >> rectification_matrix;
+    file_storage [ "projection_matrix" ] >> projection_matrix;
+
     file_storage.release ();
 
 
