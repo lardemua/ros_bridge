@@ -16,14 +16,16 @@ import roslib
 roslib.load_manifest('carla_ros_template_matching')
 
 
-class Template_Matching:
+class Connected_Components:
     """
     Class used for converting ROS images to OpenCV images and apply Template Matching with Connected Components
     """
-    def __init__(self):
-        self.image_pub = rospy.Publisher("/carla/ego_vehicle/camera/rgb/front/template_matching", Image)
+    def __init__(self, role_name):
+        self.role_name = role_name
+        self.image_pub = rospy.Publisher("/carla/{}/camera/rgb/front/template_matching".format(self.role_name), Image)
         self.bridge = CvBridge()
-        self.image_sub = rospy.Subscriber("/carla/ego_vehicle/camera/rgb/front/image_color", Image, self.callback)
+        self.image_sub = rospy.Subscriber("/carla/{}/camera/rgb/front/image_color".format(self.role_name), Image,
+                                          self.callback)
 
     def callback(self, data):
         cv_img = None
@@ -41,7 +43,7 @@ class Template_Matching:
         connectivity = 4
         nb_components, output, stats, centroids = cv2.connectedComponentsWithStats(bw, connectivity, cv2.CV_32S)
         sizes = stats[1:, -1]; nb_components = nb_components - 1
-        min_size = 250 #threshhold value for objects in scene
+        min_size = 250  # threshhold value for objects in scene
         img2 = numpy.zeros((cv_img.shape), numpy.uint8)
         for i in range(0, nb_components+1):
             # use if sizes[i] >= min_size: to identify your objects
@@ -62,7 +64,8 @@ class Template_Matching:
 
 
 def main(args):
-    template_matching = Template_Matching()
+    role_name = rospy.get_param("~role_name", "ego_vehicle")
+    connected_components = Connected_Components(role_name)
     rospy.init_node('template_matching', anonymous=True)
     try:
         rospy.spin()

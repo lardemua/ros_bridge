@@ -20,10 +20,11 @@ class Template_Matching:
     """
     Class used for converting ROS images to OpenCV images and apply Template Matching
     """
-    def __init__(self):
-        self.image_pub = rospy.Publisher("/carla/ego_vehicle/camera/rgb/front/template_matching", Image)
+    def __init__(self, role_name):
+        self.role_name = role_name
+        self.image_pub = rospy.Publisher("/carla/{}/camera/rgb/front/template_matching".format(self.role_name), Image)
         self.bridge = CvBridge()
-        self.image_sub = rospy.Subscriber("/carla/ego_vehicle/camera/rgb/front/image_color", Image, self.callback)
+        self.image_sub = rospy.Subscriber("/carla/{}/camera/rgb/front/image_color".format(self.role_name), Image, self.callback)
 
     def callback(self, data):
         cv_img = None
@@ -98,7 +99,8 @@ class Template_Matching:
 
 
 def main(args):
-    template_matching = Template_Matching()
+    role_name = rospy.get_param("~role_name", "ego_vehicle")
+    template_matching = Template_Matching(role_name)
     rospy.init_node('template_matching', anonymous=True)
     try:
         rospy.spin()

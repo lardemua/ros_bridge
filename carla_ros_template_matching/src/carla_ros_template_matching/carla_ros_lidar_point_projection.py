@@ -23,16 +23,17 @@ class Lidar_Point_Projection:
     Class used for converting ROS images to OpenCV images and apply Template Matching with Shape Selection and
     point projection from the LIDAR sensors.
     """
-    def __init__(self):
-        self.image_pub = rospy.Publisher("/carla/ego_vehicle/camera/rgb/front/lidar_point_projection", Image)
+    def __init__(self, role_name):
+        self.role_name = role_name
+        self.image_pub = rospy.Publisher("/carla/{}/camera/rgb/front/lidar_point_projection".format(self.role_name), Image)
         self.bridge = CvBridge()
-        self.image_sub = rospy.Subscriber("/carla/ego_vehicle/camera/rgb/front/image_color", Image, self.callback)
-        # self.front_lidar_sub = rospy.Subscriber("/carla/ego_vehicle/lidar/front/point_cloud", PointCloud2,
-        #                                         self.callback_lidar_front)
-        self.left_lidar_sub = rospy.Subscriber("/carla/ego_vehicle/lidar/left/point_cloud", PointCloud2,
+        self.image_sub = rospy.Subscriber("/carla/{}/camera/rgb/front/image_color".format(self.role_name), Image, self.callback)
+        # self.front_lidar_sub = rospy.Subscriber("/carla/{}/lidar/front/point_cloud".format(self.role_name),
+        #                                          PointCloud2, self.callback_lidar_front)
+        self.left_lidar_sub = rospy.Subscriber("/carla/{}/lidar/left/point_cloud".format(self.role_name), PointCloud2,
                                                self.callback_lidar_left)
-        # self.right_lidar_sub = rospy.Subscriber("/carla/ego_vehicle/lidar/right/point_cloud", PointCloud2,
-        #                                         self.callback_lidar_right)
+        # self.right_lidar_sub = rospy.Subscriber("/carla/{}/lidar/right/point_cloud".format(self.role_name),
+        #                                          PointCloud2, self.callback_lidar_right)
         self.ref_point = []
         self.image = None
         self.template_img = None
@@ -234,7 +235,8 @@ class Lidar_Point_Projection:
 
 
 def main(args):
-    point_projection = Lidar_Point_Projection()
+    role_name = rospy.get_param("~role_name", "ego_vehicle")
+    point_projection = Lidar_Point_Projection(role_name)
     rospy.init_node('lidar_point_projection', anonymous=True)
     try:
         rospy.spin()

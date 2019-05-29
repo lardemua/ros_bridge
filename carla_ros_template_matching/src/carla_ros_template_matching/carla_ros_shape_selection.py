@@ -11,6 +11,7 @@ import cv2
 import carla
 import numpy
 from sensor_msgs.msg import Image
+from carla_ros_bridge_msgs.msg import CarlaTemplate
 from cv_bridge import CvBridge, CvBridgeError
 import roslib
 roslib.load_manifest('carla_ros_template_matching')
@@ -20,10 +21,11 @@ class Shape_Selection:
     """
     Class used for converting ROS images to OpenCV images and apply Template Matching with Shape Selection
     """
-    def __init__(self):
-        self.image_pub = rospy.Publisher("/carla/ego_vehicle/camera/rgb/front/shape_selection", Image)
+    def __init__(self, role_name):
+        self.role_name = role_name
+        self.image_pub = rospy.Publisher("/carla/{}/camera/rgb/front/shape_selection".format(self.role_name), Image)
         self.bridge = CvBridge()
-        self.image_sub = rospy.Subscriber("/carla/ego_vehicle/camera/rgb/front/image_color", Image, self.callback)
+        self.image_sub = rospy.Subscriber("/carla/{}/camera/rgb/front/image_color".format(self.role_name), Image, self.callback)
         self.ref_point = []
         self.image = None
         self.template_img = None
@@ -101,10 +103,9 @@ class Shape_Selection:
             print(e)
 
 
-
-
 def main(args):
-    shape_selection = Shape_Selection()
+    role_name = rospy.get_param("~role_name", "ego_vehicle")
+    shape_selection = Shape_Selection(role_name)
     rospy.init_node('shape_selection', anonymous=True)
     try:
         rospy.spin()
