@@ -85,24 +85,34 @@ void PclCluster::callback_lidar_front(const PCLPointCloud2::ConstPtr& cloud)
 
         PointXYZ pt;
         ROS_INFO("Calculating spherical coordinates");
-        float rho = 0.0;
+        float threshold = 5.0;
+        float first_rho = 0.0;
+        float next_rho = 0.0;
         float theta = 0.0;
-        float x = 0.0;
-        float y = 0.0;
-        float z = 0.0;
+        float x1 = 0.0;
+        float y1 = 0.0;
+        float z1 = 0.0;
+        float x2 = 0.0;
+        float y2 = 0.0;
+        float z2 = 0.0;
         for(size_t i = 0; i < pclCloudPtr->points.size(); i++){
-            x = pclCloudPtr->points[i].x;
-            y = pclCloudPtr->points[i].y;
-            z = pclCloudPtr->points[i].z;
-            rho = sqrt(x*x + y*y + z*z);
-            theta = atan2(y, x);
-            if ( (theta >= -M_PI/4 && theta <= M_PI/4)){
-                pt.x = x;
-                pt.y = y;
-                pt.z = z;
-                outputCloud->points.push_back(pt);
+            x1 = pclCloudPtr->points[i].x;
+            y1 = pclCloudPtr->points[i].y;
+            z1 = pclCloudPtr->points[i].z;
+            x2 = pclCloudPtr->points[i+1].x;
+            y2 = pclCloudPtr->points[i+1].y;
+            z2 = pclCloudPtr->points[i+1].z;
+            first_rho = sqrt(x1*x1 + y1*y1 + z1*z1);
+            next_rho = sqrt(x2*x2 + y2*y2 + z2*z2);
+            theta = atan2(y1, x1);
+            if(next_rho - first_rho >= threshold) {
+                if ((theta >= -M_PI / 4 && theta <= M_PI / 4)) {
+                    pt.x = x1;
+                    pt.y = y1;
+                    pt.z = z1;
+                    outputCloud->points.push_back(pt);
+                };
             };
-
         }
         // Convert PCL cloud to PointCloud2 message
         pcl::toROSMsg(*outputCloud.get(),cloud_out_msg );
@@ -153,7 +163,7 @@ void PclCluster::callback_lidar_left(const PCLPointCloud2::ConstPtr& cloud)
                 pt.z = z;
                 outputCloud->points.push_back(pt);
             };
-            outputCloud->points.push_back(pt);
+//            outputCloud->points.push_back(pt);
 
         }
         // Convert PCL cloud to PointCloud2 message
