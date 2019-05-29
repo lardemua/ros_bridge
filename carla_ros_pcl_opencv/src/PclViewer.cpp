@@ -98,7 +98,8 @@ void PclViewer::callback_lidar_front(const pcl::PCLPointCloud2::ConstPtr& cloud)
 
         // TO DO : Implement OpenCV cloud viewer for front LIDAR point cloud
 
-        display_matrix_front = cv::Mat(transformedCloudPtr->points.size(), 1,  CV_32FC1);
+//        display_matrix_front = cv::Mat(transformedCloudPtr->points.size(), 1,  CV_32FC1);
+        display_matrix_front = cv::Mat(transformedCloudPtr->height, transformedCloudPtr->width, CV_8UC3);
         std::vector<cv::Point2d> points_2d;
         std::vector<cv::Point2d> pixels_2d;
 
