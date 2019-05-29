@@ -36,6 +36,8 @@ cv::Mat projection_matrix;
 
 cv::Mat display_matrix;
 
+using namespace Eigen;
+
 PclViewer::PclViewer()
 {
     tfListener = new tf2_ros::TransformListener(tf_buffer_);
@@ -57,7 +59,6 @@ PclViewer::PclViewer()
     file_storage [ "distortion_matrix" ] >> distortion_matrix;
     file_storage [ "rectification_matrix" ] >> rectification_matrix;
     file_storage [ "projection_matrix" ] >> projection_matrix;
-
     file_storage.release ();
 
 
@@ -82,8 +83,6 @@ void PclViewer::callback_lidar_front(const pcl::PCLPointCloud2::ConstPtr& cloud)
               (int)cloud->width * cloud->height);
 
     Eigen::Affine3d transform;
-//    Eigen::Matrix<int,int,int> cv_transform_matrix;
-//    Eigen::Map<Eigen::Matrix3f> camera_transform(intrinsic_matrix.data());
     try {
         transform = tf2::transformToEigen (tf_buffer_.lookupTransform(fixed_frame_, cloud->header.frame_id,  pcl_conversions::fromPCL (cloud->header.stamp), ros::Duration(1)));
 
@@ -94,39 +93,25 @@ void PclViewer::callback_lidar_front(const pcl::PCLPointCloud2::ConstPtr& cloud)
         pcl::PointCloud<pcl::PointXYZ>::Ptr transformedCloudPtr;
         pcl::transformPointCloud (pclCloud, transformedCloud, transform);
         transformedCloudPtr = transformedCloud.makeShared();
-        // Apply camera transform
 
         // TO DO : Implement OpenCV cloud viewer for front LIDAR point cloud
 
-        display_matrix = cv::Mat(transformedCloudPtr->points.size(), 1,  CV_32FC3);
-//        std::vector<cv::Point3d> test;
-//
-//        for(size_t i = 0; i < transformedCloudPtr->points.size(); i++){
-//            test.push_back(cv::Point3d(transformedCloudPtr->points[i].x, transformedCloudPtr->points[i].y, transformedCloudPtr->points[i].z));
-//        }
-//
-//        //display_matrix = cv::Mat(test.size(), test.at(0).size(), CV_64FC1);
-//        for(int i=0; i<display_matrix.rows; ++i) {
-//            for (int j = 0; j < display_matrix.cols; ++j) {
-//                display_matrix.at<cv::Point3d>(i, j) = test.at(i);
-//            }
-//        }
-        int count = 0;
-        for (int v = 0; v < display_matrix.rows; ++v)
-        {
-            for (int u = 0; u < display_matrix.cols; ++u)
-            {
-                display_matrix.at<float>(v, u) = transformedCloudPtr->points.at(count++).z * 1000;
+        display_matrix = cv::Mat(transformedCloudPtr->points.size(), 1,  CV_32FC1);
+        std::vector<cv::Point3d> sample;
 
-            }
+        for(size_t i = 0; i < transformedCloudPtr->points.size(); i++){
+            sample.push_back(cv::Point3d(transformedCloudPtr->points[i].x, transformedCloudPtr->points[i].y, transformedCloudPtr->points[i].z));
         }
+        cv::transform(sample, sample, intrinsic_matrix); // apply camera transform to vector.
 
-        display_matrix.convertTo(display_matrix,CV_8U);
+        // save vector in display matrix
+        memcpy(display_matrix.data,sample.data(),sample.size()*sizeof(cv::Point3d));
+
         // Display results
-        cv::namedWindow("Front LIDAR Display Window", cv::WINDOW_AUTOSIZE);
-        ROS_INFO ("Showing LIDAR results.");
-        cv::imshow("Front LIDAR Display Window", display_matrix);
-
+//        cv::namedWindow("Front LIDAR Display Window", cv::WINDOW_AUTOSIZE);
+//        ROS_INFO ("Showing LIDAR results.");
+//        cv::imshow("Front LIDAR Display Window", display_matrix);
+//        cv::waitKey(0); // wait for a keystroke in the window;
 
     }
     catch (tf2::TransformException &ex)
