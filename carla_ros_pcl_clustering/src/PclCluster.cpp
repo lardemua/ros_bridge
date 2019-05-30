@@ -50,7 +50,7 @@ PclCluster::PclCluster()
     tfListener = new tf2_ros::TransformListener(tf_buffer_);
 
     // Create a ROS subscriber for the input point clouds
-    sub_lidar_front = nh.subscribe("/carla/ego_vehicle/lidar/front/point_cloud", 1000000, &PclCluster::callback_lidar_front, this);
+    sub_lidar_front = nh.subscribe("/carla/ego_vehicle/lidar/front/new_point_cloud", 1000000, &PclCluster::callback_lidar_front, this);
 //    sub_lidar_left = nh.subscribe("/carla/ego_vehicle/lidar/left/point_cloud", 1000000, &PclCluster::callback_lidar_left, this);
 //    sub_lidar_right = nh.subscribe("/carla/ego_vehicle/lidar/right/point_cloud", 1000000, &PclCluster::callback_lidar_right, this);
 
@@ -95,6 +95,7 @@ void PclCluster::callback_lidar_front(const PCLPointCloud2::ConstPtr& cloud)
         float x2 = 0.0;
         float y2 = 0.0;
         float z2 = 0.0;
+        bool capture_points = false;
         for(size_t i = 0; i < pclCloudPtr->points.size(); i++){
             x1 = pclCloudPtr->points[i].x;
             y1 = pclCloudPtr->points[i].y;
@@ -106,6 +107,12 @@ void PclCluster::callback_lidar_front(const PCLPointCloud2::ConstPtr& cloud)
             next_rho = sqrt(x2*x2 + y2*y2 + z2*z2);
             theta = atan2(y1, x1);
             if((next_rho-first_rho >= threshold)){
+                capture_points = true;
+            }
+            else if((next_rho-first_rho <= -threshold)){
+                capture_points = false;
+            }
+            if(capture_points){
                 if ((theta >= -M_PI / 4 && theta <= M_PI / 4)) {
                     pt.x = x1;
                     pt.y = y1;
