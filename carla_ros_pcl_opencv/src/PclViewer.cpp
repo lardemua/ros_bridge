@@ -136,7 +136,7 @@ void PclViewer::callback_lidar_front(const pcl::PCLPointCloud2::ConstPtr& cloud)
         cv::resizeWindow("Front LIDAR Display Window", 800, 600);
         ROS_INFO ("Showing LIDAR results.");
         cv::imshow("Front LIDAR Display Window", display_matrix_front);
-        cv::waitKey(0); // wait for a keystroke in the window;
+        cv::waitKey(10); // wait for a keystroke in the window;
 
     }
     catch (tf2::TransformException &ex)
