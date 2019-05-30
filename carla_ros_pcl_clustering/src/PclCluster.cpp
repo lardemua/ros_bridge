@@ -51,16 +51,16 @@ PclCluster::PclCluster()
 
     // Create a ROS subscriber for the input point clouds
     sub_lidar_front = nh.subscribe("/carla/ego_vehicle/lidar/front/point_cloud", 1000000, &PclCluster::callback_lidar_front, this);
-    sub_lidar_left = nh.subscribe("/carla/ego_vehicle/lidar/left/point_cloud", 1000000, &PclCluster::callback_lidar_left, this);
-    sub_lidar_right = nh.subscribe("/carla/ego_vehicle/lidar/right/point_cloud", 1000000, &PclCluster::callback_lidar_right, this);
+//    sub_lidar_left = nh.subscribe("/carla/ego_vehicle/lidar/left/point_cloud", 1000000, &PclCluster::callback_lidar_left, this);
+//    sub_lidar_right = nh.subscribe("/carla/ego_vehicle/lidar/right/point_cloud", 1000000, &PclCluster::callback_lidar_right, this);
 
     // Create a ROS publisher for the PCL point clouds and advertise ROS publisher
     pub_lidar_front = (boost::shared_ptr<Publisher>) new Publisher;
     (*pub_lidar_front) = nh.advertise<sensor_msgs::PointCloud2>("/carla/ego_vehicle/lidar/front/point_cloud_cluster", 0);
-    pub_lidar_left = (boost::shared_ptr<Publisher>) new Publisher;
-    (*pub_lidar_left) = nh.advertise<sensor_msgs::PointCloud2>("/carla/ego_vehicle/lidar/left/point_cloud_cluster", 0);
-    pub_lidar_right = (boost::shared_ptr<Publisher>) new Publisher;
-    (*pub_lidar_right) = nh.advertise<sensor_msgs::PointCloud2>("/carla/ego_vehicle/lidar/right/point_cloud_cluster", 0);
+//    pub_lidar_left = (boost::shared_ptr<Publisher>) new Publisher;
+//    (*pub_lidar_left) = nh.advertise<sensor_msgs::PointCloud2>("/carla/ego_vehicle/lidar/left/point_cloud_cluster", 0);
+//    pub_lidar_right = (boost::shared_ptr<Publisher>) new Publisher;
+//    (*pub_lidar_right) = nh.advertise<sensor_msgs::PointCloud2>("/carla/ego_vehicle/lidar/right/point_cloud_cluster", 0);
 
 }
 
@@ -105,7 +105,7 @@ void PclCluster::callback_lidar_front(const PCLPointCloud2::ConstPtr& cloud)
             first_rho = sqrt(x1*x1 + y1*y1 + z1*z1);
             next_rho = sqrt(x2*x2 + y2*y2 + z2*z2);
             theta = atan2(y1, x1);
-            if(next_rho - first_rho >= threshold) {
+            if((next_rho-first_rho >= threshold)){
                 if ((theta >= -M_PI / 4 && theta <= M_PI / 4)) {
                     pt.x = x1;
                     pt.y = y1;
