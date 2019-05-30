@@ -114,16 +114,17 @@ void PclViewer::callback_lidar_front(const pcl::PCLPointCloud2::ConstPtr& cloud)
               y = transformedCloudPtr->points[i].y / transformedCloudPtr->points[i].z;
               u = intrinsic_matrix.at<double>(0,0)*x + intrinsic_matrix.at<double>(2,0);
               v = intrinsic_matrix.at<double>(1,1)*y + intrinsic_matrix.at<double>(2,1);
+              // TO DO : Calculate RGB value from u and v.
 //              pixels_2d.push_back(cv::Point2d(u,v));
               cv::line(display_matrix_front,
                      cv::Point2d(transformedCloudPtr->points[i].x, transformedCloudPtr->points[i].y),
                      cv::Point2d(transformedCloudPtr->points[i+1].x, transformedCloudPtr->points[i+1].y),
-                     cv::Scalar(255,255,255), 1, 8 , CV_8S);
+                     cv::Scalar(0,0,255), 1, 8 , CV_8S);
         }
 
         // Display results
         cv::namedWindow("Front LIDAR Display Window", cv::WINDOW_AUTOSIZE);
-        cv::resizeWindow("Front LIDAR Display Window", 1024, 768);
+        cv::resizeWindow("Front LIDAR Display Window", 800, 600);
         ROS_INFO ("Showing LIDAR results.");
         cv::imshow("Front LIDAR Display Window", display_matrix_front);
         cv::waitKey(0); // wait for a keystroke in the window;
