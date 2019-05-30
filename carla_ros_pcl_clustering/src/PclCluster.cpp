@@ -39,6 +39,9 @@
 #include <pcl/registration/icp.h>
 #include <pcl_ros/transforms.h>
 #include <pcl_ros/point_cloud.h>
+// CARLA Includes
+#include <carla_ros_bridge_msgs/CarlaTemplateInfo.h>
+#include <carla_ros_bridge_msgs/Carla3DTemplateInfo.h>
 
 using namespace std;
 using namespace boost;

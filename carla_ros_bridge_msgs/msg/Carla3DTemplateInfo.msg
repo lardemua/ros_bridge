@@ -5,6 +5,8 @@
 # For a copy, see <https://opensource.org/licenses/MIT>.
 #
 
-float32 template_width
-float32 template_height
-float32 template_depth
+Header header
+
+float64 template_width
+float64 template_height
+float64 template_depth
