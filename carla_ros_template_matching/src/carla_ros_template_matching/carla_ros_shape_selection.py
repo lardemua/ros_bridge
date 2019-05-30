@@ -11,7 +11,7 @@ import cv2
 import carla
 import numpy
 from sensor_msgs.msg import Image
-from carla_ros_bridge_msgs.msg import CarlaTemplate, Carla3DTemplate
+from carla_ros_bridge_msgs.msg import CarlaTemplateInfo, Carla3DTemplateInfo
 from cv_bridge import CvBridge, CvBridgeError
 import roslib
 roslib.load_manifest('carla_ros_template_matching')
@@ -27,9 +27,10 @@ class Shape_Selection:
         self.bridge = CvBridge()
         self.image_sub = rospy.Subscriber("/carla/{}/camera/rgb/front/image_color".format(self.role_name), Image,
                                           self.callback)
-        self.template_pub = rospy.Publisher("/carla/{}/templates".format(self.role_name), CarlaTemplate)
-        self.template_sub = rospy.Publisher("/carla/{}/3Dtemplates".format(self.role_name), Carla3DTemplate,
+        self.template_pub = rospy.Publisher("/carla/{}/templates".format(self.role_name), CarlaTemplateInfo)
+        self.template_sub = rospy.Publisher("/carla/{}/3Dtemplates".format(self.role_name), Carla3DTemplateInfo,
                                             self.design_3D_template)
+        self.template_info = None
         self.ref_point = []
         self.image = None
         self.template_img = None
@@ -106,14 +107,18 @@ class Shape_Selection:
         except CvBridgeError as e:
             print(e)
 
-    def on_template(self, data):
-        print(data)
+    def on_template(self, width, height):
+        if width is not None and height is not None:
+            self.template_info = CarlaTemplateInfo()
+            self.template_info.template_width = width
+            self.template_info.template_height = height
+            # publish ROS message
+            self.template_pub.publish(self.template_info)
 
     def design_3D_template(self, data):
-       tW = data.template_width
-       tH = data.template_height
-       tD = data.template_depth
-       print("tW: " + str(tW) + "tH" + str(tH) + "tD" + str(tD))
+        print("tW: " + str(data.template_width) + ", tH: " + str(data.template_height) +
+              ", tD: " + str(data.template_depth))
+
 
 def main(args):
     role_name = rospy.get_param("~role_name", "ego_vehicle")
