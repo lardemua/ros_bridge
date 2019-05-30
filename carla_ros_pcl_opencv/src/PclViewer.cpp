@@ -103,23 +103,32 @@ void PclViewer::callback_lidar_front(const pcl::PCLPointCloud2::ConstPtr& cloud)
         std::vector<cv::Point2d> points_2d;
         std::vector<cv::Point2d> pixels_2d;
 
-        float u;
-        float v;
-        float y;
-        float x;
+        float x1;
+        float y1;
+        float u1;
+        float v1;
+
+        float x2;
+        float y2;
+        float u2;
+        float v2;
         for(size_t i = 0; i < transformedCloudPtr->points.size(); i++){
 //            sample.push_back(cv::Point2d(transformedCloudPtr, 7));
 //              points_2d.push_back(cv::Point2d(transformedCloudPtr->points[i].x,transformedCloudPtr->points[i].y));
-              x = transformedCloudPtr->points[i].x / transformedCloudPtr->points[i].z;
-              y = transformedCloudPtr->points[i].y / transformedCloudPtr->points[i].z;
-              u = intrinsic_matrix.at<double>(0,0)*x + intrinsic_matrix.at<double>(2,0);
-              v = intrinsic_matrix.at<double>(1,1)*y + intrinsic_matrix.at<double>(2,1);
-              // TO DO : Calculate RGB value from u and v.
+            x1 = transformedCloudPtr->points[i].x / transformedCloudPtr->points[i].z;
+            y1 = transformedCloudPtr->points[i].y / transformedCloudPtr->points[i].z;
+            u1 = intrinsic_matrix.at<double>(0,0)*x1 + intrinsic_matrix.at<double>(2,0);
+            v1 = intrinsic_matrix.at<double>(1,1)*y1 + intrinsic_matrix.at<double>(2,1);
+
+            x2 = transformedCloudPtr->points[i+1].x / transformedCloudPtr->points[i+1].z;
+            y2 = transformedCloudPtr->points[i+1].y / transformedCloudPtr->points[i+1].z;
+            u2 = intrinsic_matrix.at<double>(0,0)*x2 + intrinsic_matrix.at<double>(2,0);
+            v2 = intrinsic_matrix.at<double>(1,1)*y2 + intrinsic_matrix.at<double>(2,1);
 //              pixels_2d.push_back(cv::Point2d(u,v));
-              cv::line(display_matrix_front,
-                     cv::Point2d(transformedCloudPtr->points[i].x, transformedCloudPtr->points[i].y),
-                     cv::Point2d(transformedCloudPtr->points[i+1].x, transformedCloudPtr->points[i+1].y),
-                     cv::Scalar(0,0,255), 1, 8 , CV_8S);
+            cv::line(display_matrix_left,
+                     cv::Point2d(u1, v1),
+                     cv::Point2d(u2, v2),
+                     cv::Scalar(255,255,255), 1, 8 , CV_8S);
         }
 
         // Display results
@@ -235,21 +244,31 @@ void PclViewer::callback_lidar_right(const pcl::PCLPointCloud2::ConstPtr& cloud)
         std::vector<cv::Point2d> points_2d;
         std::vector<cv::Point2d> pixels_2d;
 
-        float u;
-        float v;
-        float y;
-        float x;
+        float x1;
+        float y1;
+        float u1;
+        float v1;
+
+        float x2;
+        float y2;
+        float u2;
+        float v2;
         for(size_t i = 0; i < transformedCloudPtr->points.size(); i++){
 //            sample.push_back(cv::Point2d(transformedCloudPtr, 7));
 //              points_2d.push_back(cv::Point2d(transformedCloudPtr->points[i].x,transformedCloudPtr->points[i].y));
-            x = transformedCloudPtr->points[i].x / transformedCloudPtr->points[i].z;
-            y = transformedCloudPtr->points[i].y / transformedCloudPtr->points[i].z;
-            u = intrinsic_matrix.at<double>(0,0)*x + intrinsic_matrix.at<double>(2,0);
-            v = intrinsic_matrix.at<double>(1,1)*y + intrinsic_matrix.at<double>(2,1);
+            x1 = transformedCloudPtr->points[i].x / transformedCloudPtr->points[i].z;
+            y1 = transformedCloudPtr->points[i].y / transformedCloudPtr->points[i].z;
+            u1 = intrinsic_matrix.at<double>(0,0)*x1 + intrinsic_matrix.at<double>(2,0);
+            v1 = intrinsic_matrix.at<double>(1,1)*y1 + intrinsic_matrix.at<double>(2,1);
+
+            x2 = transformedCloudPtr->points[i+1].x / transformedCloudPtr->points[i+1].z;
+            y2 = transformedCloudPtr->points[i+1].y / transformedCloudPtr->points[i+1].z;
+            u2 = intrinsic_matrix.at<double>(0,0)*x2 + intrinsic_matrix.at<double>(2,0);
+            v2 = intrinsic_matrix.at<double>(1,1)*y2 + intrinsic_matrix.at<double>(2,1);
 //              pixels_2d.push_back(cv::Point2d(u,v));
-            cv::line(display_matrix_right,
-                     cv::Point2d(transformedCloudPtr->points[i].x, transformedCloudPtr->points[i].y),
-                     cv::Point2d(transformedCloudPtr->points[i+1].x, transformedCloudPtr->points[i+1].y),
+            cv::line(display_matrix_left,
+                     cv::Point2d(u1, v1),
+                     cv::Point2d(u2, v2),
                      cv::Scalar(255,255,255), 1, 8 , CV_8S);
         }
 
