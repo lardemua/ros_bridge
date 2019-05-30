@@ -7,6 +7,7 @@ from __future__ import print_function
 
 import sys
 import rospy
+import random
 import cv2
 import carla
 import json
@@ -67,8 +68,13 @@ class Object_Tracking:
         self.parse_json_dataset()
 
     def write_json_dataset(self, data, vehicle, transform):
+        classification_model = None
+        if str(vehicle.attributes['number_of_wheels']) == '4':
+            classification_model = random.choice(['car', 'truck'])
+        elif str(vehicle.attributes['number_of_wheels']) == '2':
+            classification_model = random.choice(['motorcycle', 'bike'])
         data['vehicles'].append({
-            'model': str(vehicle.attributes['object_type']),
+            'model': classification_model,
             'x': str(transform.location.x),
             'y': str(transform.location.y),
             'z': str(transform.location.z),
