@@ -315,8 +315,9 @@ class HUD(object):
                                                 NavSatFix, self.gnss_updated)
         self.tf_listener = tf.TransformListener()
         self.manual_control = False
-        self.manual_control_subscriber = rospy.Subscriber("/vehicle_control_manual_override",
-                                                          Bool, self.manual_control_override_updated)
+        self.manual_control_subscriber = rospy.Subscriber(
+                                               "/carla/{}/vehicle_control_manual_override".format(self.role_name),
+                                               Bool, self.manual_control_override_updated)
 
     def __del__(self):
         """
