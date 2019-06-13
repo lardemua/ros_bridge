@@ -12,7 +12,7 @@ The reference Carla client `carla_example_ros_vehicle` can be used to spawn an e
 
 - GNSS
 - 3 LIDAR(front + left + right)
-- Cameras (one front-camera + one camera for visualization in carla_ros_manual_control)
+- Cameras (one front-camera + one middle-camera + one left-camera + one camera for visualization in carla_ros_manual_control)
 - Collision Sensor
 - Lane Invasion Sensor
 
@@ -57,3 +57,9 @@ The json format is defined like this:
 Define sensors with their attributes as described in the Carla Documentation about [Cameras and Sensors](https://github.com/carla-simulator/carla/blob/master/Docs/cameras_and_sensors.md).
 
 An example is provided by [carla_example_ros_vehicle.launch](launch/carla_example_ros_vehicle.launch). It uses the sensors from [sensors.json](config/sensors.json)
+
+### Image Results
+
+ROS Vehicle Setup           |  ATLASCAR Vehicle Setup
+:-------------------------:|:-------------------------:
+![carla_sensor_setup](../assets/images/carla_rviz_sensor_setup.png "CARLA_Sensor_Setup")  |  ![atlascar_setup](../assets/images/atlascar_setup.png)
