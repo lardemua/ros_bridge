@@ -5,7 +5,7 @@
 
     <!-- enable autopilot -->
     <node pkg="rostopic" type="rostopic" name="enable_autopilot_rostopic"
-          args="pub -l /carla/ego_vehicle/enable_autopilot std_msgs/Bool '{ data: true }' " />
+          args="pub -l /carla/ego_vehicle/enable_autopilot std_msgs/Bool '{ data: false }' " />
 
     <!-- pcl map capturing -->
     <node pkg="carla_ros_pcl_filter" type="carla_ros_pcl_filter_node" name="carla_ros_pcl_filter_node" output="screen"/>
