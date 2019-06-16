@@ -55,9 +55,8 @@ class CarlaRosBridge(Parent):
         self.publishers = {}
         self.publishers['clock'] = rospy.Publisher('clock', Clock, queue_size=10)
         self.publishers['tf'] = rospy.Publisher('tf', TFMessage, queue_size=100)
-        if not self.get_param("challenge_mode"):
-            self.publishers['/carla/objects'] = rospy.Publisher('/carla/objects', ObjectArray, queue_size=10)
-            self.object_array = ObjectArray()
+        self.publishers['/carla/objects'] = rospy.Publisher('/carla/objects', ObjectArray, queue_size=10)
+        self.object_array = ObjectArray()
         self.map = Map(carla_world=self.carla_world, parent=self, topic='/map')
 
     def destroy(self):
@@ -99,12 +98,8 @@ class CarlaRosBridge(Parent):
         :return:
         """
         if topic == 'tf':
-            if not self.get_param("challenge_mode"):
-                # transforms are merged in the same message
-                self.tf_to_publish.append(msg)
-        # elif topic == '/carla/objects':
-        #     # objects are collected in the same message
-        #     self.object_array.objects.append(msg)
+            # transforms are merged in the same message
+            self.tf_to_publish.append(msg)
         else:
             if topic not in self.publishers:
                 self.publishers[topic] = rospy.Publisher(topic, type(msg), queue_size=10, latch=is_latched)
@@ -181,15 +176,10 @@ class CarlaRosBridge(Parent):
         Private Function used to prepare tf and object message to be sent out
         :return:
         """
-        if not self.get_param("challenge_mode"):
-            tf_msg = TFMessage(self.tf_to_publish)
-            self.msgs_to_publish.append((self.publishers['tf'], tf_msg))
-            self.tf_to_publish = []
-            self.publish_ros_message('/carla/objects', obj_sensor.get_filtered_objectarray(self, None))
-
-        # self.object_array.header = self.get_msg_header()
-        # self.msgs_to_publish.append((self.publishers['/carla/objects'], self.object_array))
-        # self.object_array = ObjectArray()
+        tf_msg = TFMessage(self.tf_to_publish)
+        self.msgs_to_publish.append((self.publishers['tf'], tf_msg))
+        self.tf_to_publish = []
+        self.publish_ros_message('/carla/objects', obj_sensor.get_filtered_objectarray(self, None))
 
     def send_msgs(self):
         """

@@ -107,31 +107,6 @@ class Vehicle(Actor):
         :rtype: std_msgs.msg.ColorRGBA
         """
         color = ColorRGBA()
-        # if self.carla_actor.attributes.has_key('object_type'):
-        #     if self.carla_actor.attributes['object_type'] == 'car':
-        #         color.r = 255
-        #         color.g = 0
-        #         color.b = 0
-        #     elif self.carla_actor.attributes['object_type'] == 'bike':
-        #         color.r = 255
-        #         color.g = 255
-        #         color.b = 0
-        #     elif self.carla_actor.attributes['object_type'] == 'motorcycle':
-        #         color.r = 0
-        #         color.g = 255
-        #         color.b = 255
-        #     elif self.carla_actor.attributes['object_type'] == 'truck':
-        #         color.r = 255
-        #         color.g = 255
-        #         color.b = 0
-        #     elif self.carla_actor.attributes['object_type'] == 'other':
-        #         color.r = 255
-        #         color.g = 0
-        #         color.b = 0
-        # else:
-        #     color.r = 255
-        #     color.g = 0
-        #     color.b = 0
         color.r = 255
         color.g = 0
         color.b = 0
@@ -142,16 +117,15 @@ class Vehicle(Actor):
         Function to send marker messages of this vehicle.
         :return:
         """
-        if not self.parent.get_param("challenge_mode"):
-            marker = self.get_marker(use_parent_frame=False)
-            marker.type = Marker.CUBE
-            marker.ns = str(self.classification)
-            marker.text = str(self.classification)
-            marker.pose = transforms.carla_location_to_pose(self.carla_actor.bounding_box.location)
-            marker.scale.x = self.carla_actor.bounding_box.extent.x * 2.0
-            marker.scale.y = self.carla_actor.bounding_box.extent.y * 2.0
-            marker.scale.z = self.carla_actor.bounding_box.extent.z * 2.0
-            self.publish_ros_message('/carla/vehicle_marker', marker)
+        marker = self.get_marker(use_parent_frame=False)
+        marker.type = Marker.CUBE
+        marker.ns = str(self.classification)
+        marker.text = str(self.classification)
+        marker.pose = transforms.carla_location_to_pose(self.carla_actor.bounding_box.location)
+        marker.scale.x = self.carla_actor.bounding_box.extent.x * 2.0
+        marker.scale.y = self.carla_actor.bounding_box.extent.y * 2.0
+        marker.scale.z = self.carla_actor.bounding_box.extent.z * 2.0
+        self.publish_ros_message('/carla/vehicle_marker', marker)
 
     def send_object_msg(self):
         """
@@ -185,7 +159,3 @@ class Vehicle(Actor):
 
         # self.publish_ros_message('/carla/objects', vehicle_object)
         return vehicle_object
-
-
-# this import has to be at the end to resolve cyclic dependency
-# from carla_ros_bridge.ego_vehicle import EgoVehicle  # noqa, pylint: disable=wrong-import-position

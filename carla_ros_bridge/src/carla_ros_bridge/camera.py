@@ -32,7 +32,7 @@ class Camera(Sensor):
     Sensor implementation details for cameras
     """
 
-    # global cv bridge to convert image between opencv and ros
+    # global cv bridge to convert image between OpenCV and ROS
     cv_bridge = CvBridge()
 
     @staticmethod
@@ -70,7 +70,6 @@ class Camera(Sensor):
         super(Camera, self).__init__(carla_actor=carla_actor,
                                      parent=parent,
                                      topic_prefix=topic_prefix)
-
         self.carla_actor = carla_actor
         if self.__class__.__name__ == "Camera":
             rospy.logwarn("Created Unsupported Camera Actor"
@@ -101,6 +100,7 @@ class Camera(Sensor):
         camera_info.P = [fx, 0, cx, 0, 0, fy, cy, 0, 0, 0, 1.0, 0]
         self._camera_info = camera_info
 
+    # pylint: disable=arguments-differ
     def sensor_data_updated(self, carla_image):
         """
         Override Function used to transform the received carla image data
@@ -201,8 +201,7 @@ class RgbCamera(Camera):
 
         carla_image_data_array = numpy.ndarray(shape=(carla_image.height, carla_image.width, 4),
                                                dtype=numpy.uint8,
-                                               buffer=carla_image.raw_data
-        )
+                                               buffer=carla_image.raw_data)
         return carla_image_data_array, 'bgra8'
 
     def get_image_topic_name(self):
@@ -263,8 +262,7 @@ class DepthCamera(Camera):
         #
         bgra_image = numpy.ndarray(shape=(carla_image.height, carla_image.width, 4),
                                    dtype=numpy.uint8,
-                                   buffer=carla_image.raw_data
-        )
+                                   buffer=carla_image.raw_data)
         # Apply (R + G * 256 + B * 256 * 256) / (256**3 - 1) * 1000
         # according to the documentation:
         # https://carla.readthedocs.io/en/latest/cameras_and_sensors/#camera-depth-map
@@ -320,8 +318,7 @@ class SemanticSegmentationCamera(Camera):
         carla_image.convert(carla.ColorConverter.CityScapesPalette)
         carla_image_data_array = numpy.ndarray(shape=(carla_image.height, carla_image.width, 4),
                                                dtype=numpy.uint8,
-                                               buffer=carla_image.raw_data
-        )
+                                               buffer=carla_image.raw_data)
         return carla_image_data_array, 'bgra8'
 
     def get_image_topic_name(self):

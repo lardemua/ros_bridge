@@ -146,9 +146,7 @@ class EgoVehicle(Vehicle):
             # Publish Vehicle Info
             self.publish_ros_message(self.topic_name() + "/vehicle_info", vehicle_info, True)
 
-        # @todo: Is this still needed?
-        if not self.parent.get_param("challenge mode"):
-            self.send_object_msg()
+        self.send_object_msg()
 
     def send_object_msg(self):
         """
