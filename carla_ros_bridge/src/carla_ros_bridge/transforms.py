@@ -43,7 +43,7 @@ def carla_location_to_ros_vector3(carla_location):
     """
     ros_vector = Vector3()
     ros_vector.x = carla_location.x
-    ros_vector.y = carla_location.y
+    ros_vector.y = -carla_location.y
     ros_vector.z = carla_location.z
     return ros_vector
 
@@ -59,7 +59,7 @@ def carla_location_to_ros_point(carla_location):
     """
     ros_point = Point()
     ros_point.x = carla_location.x
-    ros_point.y = carla_location.y
+    ros_point.y = -carla_location.y
     ros_point.z = carla_location.z
     return ros_point
 
@@ -170,7 +170,7 @@ def carla_velocity_to_ros_twist(carla_velocity):
     """
     ros_twist = Twist()
     ros_twist.linear.x = carla_velocity.x
-    ros_twist.linear.y = carla_velocity.y
+    ros_twist.linear.y = -carla_velocity.y
     ros_twist.linear.z = carla_velocity.z
     return ros_twist
 

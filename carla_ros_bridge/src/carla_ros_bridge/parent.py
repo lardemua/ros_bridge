@@ -94,27 +94,19 @@ class Parent(object):
         for actor in self.get_actor_list():
             if (actor.parent and actor.parent.id == self.carla_ID) or (actor.parent is None and self.carla_ID == 0):
                 if actor.id not in self.child_actors:
-                    if self.get_param("challenge_mode"):
-                        if actor.type_id.startswith("vehicle") and \
-                                (actor.attributes.get('role_name') == self.get_param('ego_vehicle').get('role_name')):
+                    if actor.type_id.startswith('traffic'):
+                        self.new_child_actors[actor.id] = Traffic.create_actor(carla_actor=actor, parent=self)
+                    elif actor.type_id.startswith("vehicle"):
+                        if actor.attributes.get('role_name') in self.get_param('ego_vehicle').get('role_name'):
                             self.new_child_actors[actor.id] = EgoVehicle.create_actor(carla_actor=actor, parent=self)
-                        elif actor.type_id.startswith("sensor"):
-                            self.new_child_actors[actor.id] = Sensor.create_actor(carla_actor=actor, parent=self)
-                    else:
-                        if actor.type_id.startswith("traffic"):
-                            self.new_child_actors[actor.id] = Traffic.create_actor(carla_actor=actor, parent=self)
-                        elif actor.type_id.startswith("vehicle"):
-                            if actor.attributes.get('role_name') in self.get_param('ego_vehicle').get('role_name'):
-                                self.new_child_actors[actor.id] = EgoVehicle.create_actor(carla_actor=actor,
-                                                                                          parent=self)
-                            else:
-                                self.new_child_actors[actor.id] = Vehicle.create_actor(carla_actor=actor, parent=self)
-                        elif actor.type_id.startswith("sensor"):
-                            self.new_child_actors[actor.id] = Sensor.create_actor(carla_actor=actor, parent=self)
-                        elif actor.type_id.startswith("spectator"):
-                            self.new_child_actors[actor.id] = Spectator.create_actor(carla_actor=actor, parent=self)
                         else:
-                            self.new_child_actors[actor.id] = Actor(carla_actor=actor, parent=self)
+                            self.new_child_actors[actor.id] = Vehicle.create_actor(carla_actor=actor, parent=self)
+                    elif actor.type_id.startswith("sensor"):
+                        self.new_child_actors[actor.id] = Sensor.create_actor(carla_actor=actor, parent=self)
+                    elif actor.type_id.startswith("spectator"):
+                        self.new_child_actors[actor.id] = Spectator(carla_actor=actor, parent=self)
+                    else:
+                        self.new_child_actors[actor.id] = Actor(carla_actor=actor, parent=self)
 
     def get_new_atlas_child_actors(self):
         """
@@ -124,27 +116,19 @@ class Parent(object):
         for actor in self.get_actor_list():
             if (actor.parent and actor.parent.id == self.carla_ID) or (actor.parent is None and self.carla_ID == 0):
                 if actor.id not in self.child_actors:
-                    if self.get_param("challenge_mode"):
-                        if actor.type_id.startswith("vehicle") and \
-                                (actor.attributes.get('role_name') == self.get_param('atlas_vehicle').get('role_name')):
+                    if actor.type_id.startswith('traffic'):
+                        self.new_child_actors[actor.id] = Traffic.create_actor(carla_actor=actor, parent=self)
+                    elif actor.type_id.startswith("vehicle"):
+                        if actor.attributes.get('role_name') in self.get_param('ego_vehicle').get('role_name'):
                             self.new_child_actors[actor.id] = AtlasVehicle.create_actor(carla_actor=actor, parent=self)
-                        elif actor.type_id.startswith("sensor"):
-                            self.new_child_actors[actor.id] = Sensor.create_actor(carla_actor=actor, parent=self)
-                    else:
-                        if actor.type_id.startswith("traffic"):
-                            self.new_child_actors[actor.id] = Traffic.create_actor(carla_actor=actor, parent=self)
-                        elif actor.type_id.startswith("vehicle"):
-                            if actor.attributes.get('role_name') in self.get_param('atlas_vehicle').get('role_name'):
-                                self.new_child_actors[actor.id] = AtlasVehicle.create_actor(carla_actor=actor,
-                                                                                          parent=self)
-                            else:
-                                self.new_child_actors[actor.id] = Vehicle.create_actor(carla_actor=actor, parent=self)
-                        elif actor.type_id.startswith("sensor"):
-                            self.new_child_actors[actor.id] = Sensor.create_actor(carla_actor=actor, parent=self)
-                        elif actor.type_id.startswith("spectator"):
-                            self.new_child_actors[actor.id] = Spectator.create_actor(carla_actor=actor, parent=self)
                         else:
-                            self.new_child_actors[actor.id] = Actor(carla_actor=actor, parent=self)
+                            self.new_child_actors[actor.id] = Vehicle.create_actor(carla_actor=actor, parent=self)
+                    elif actor.type_id.startswith("sensor"):
+                        self.new_child_actors[actor.id] = Sensor.create_actor(carla_actor=actor, parent=self)
+                    elif actor.type_id.startswith("spectator"):
+                        self.new_child_actors[actor.id] = Spectator(carla_actor=actor, parent=self)
+                    else:
+                        self.new_child_actors[actor.id] = Actor(carla_actor=actor, parent=self)
 
     def get_dead_child_actors(self):
         """
@@ -163,7 +147,7 @@ class Parent(object):
                         break
                 if not found_actor:
                     rospy.loginfo("Detected not existing child Actor(id={})".format(child_actor_id))
-                    self.dead_child_actors.append(child_actor_id)
+                    self.dead_child_actors.append(child_actor)
 
     def update_child_actors(self):
         """
@@ -176,7 +160,7 @@ class Parent(object):
         """
         self.get_new_child_actors()
         self.get_dead_child_actors()
-        if len(self.dead_child_actors) > 0 or len(self.new_child_actors) > 0:
+        if self.dead_child_actors or self.new_child_actors:
             with self.update_child_actor_list_lock:
                 for actor in self.dead_child_actors:
                     actor_id = actor.carla_actor.id
@@ -292,6 +276,20 @@ class Parent(object):
         Pure Virtual Function to get the list of actors
         :return: List of Actors
         :rtype: List
+        """
+        raise NotImplementedError(
+            "This function is re-implemented by"
+            "carla_ros_bridge.Child and carla_ros_bridge.CarlaRosBridge"
+            "If this error becomes visible the class hierarchy is somehow broken")
+
+    @abstractmethod
+    def get_filtered_objectarray(self, filtered_id):
+        """
+        Pure virtual function to get objectarray of available actors, except
+        the one with the filtered id
+
+        :return: objectarray of actors
+        :rtype: derived_object_msgs.ObjectArray
         """
         raise NotImplementedError(
             "This function is re-implemented by"

@@ -11,7 +11,7 @@
     {
       "type": "sensor.camera.rgb",
       "id": "top_right_camera",
-      "x": 0.0, "y": 0.0, "z": 2.0, "roll": 0.0, "pitch": 0.0, "yaw": 0.0,
+      "x": 0.0, "y": 0.0, "z": 2.0, "roll": 3.08517033374988, "pitch": 0.0114432071771162, "yaw": -1.58683126505267,
       "width": 964,
       "height": 724,
       "fov": 100
@@ -19,7 +19,7 @@
     {
       "type": "sensor.camera.rgb",
       "id": "top_left_camera",
-      "x": 0.0, "y": 0.25, "z": 2.0, "roll": 0.0, "pitch": 0.0, "yaw": 0.0,
+      "x": 0.0, "y": 0.25, "z": 2.0, "roll": 3.09315055757511, "pitch": 0.0108160149890114, "yaw": -1.60435715276337,
       "width": 964,
       "height": 724,
       "fov": 100

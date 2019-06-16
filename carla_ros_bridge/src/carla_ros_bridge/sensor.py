@@ -110,7 +110,7 @@ class Sensor(Actor):
         """
         header = super(Sensor, self).get_msg_header(use_parent_frame)
         # use timestamp of current sensor data
-        # header.stamp = rospy.Time.from_sec(self.current_sensor_data.timestamp)
+        header.stamp = rospy.Time.from_sec(self.current_sensor_data.timestamp)
         return header
 
     def _callback_sensor_data(self, carla_sensor_data):
