@@ -10,18 +10,18 @@
     },
     {
       "type": "sensor.camera.rgb",
-      "id": "middle",
+      "id": "top_right_camera",
       "x": 0.0, "y": 0.0, "z": 2.0, "roll": 0.0, "pitch": 0.0, "yaw": 0.0,
-      "width": 800,
-      "height": 600,
+      "width": 964,
+      "height": 724,
       "fov": 100
     },
     {
       "type": "sensor.camera.rgb",
-      "id": "left",
+      "id": "top_left_camera",
       "x": 0.0, "y": 0.25, "z": 2.0, "roll": 0.0, "pitch": 0.0, "yaw": 0.0,
-      "width": 800,
-      "height": 600,
+      "width": 964,
+      "height": 724,
       "fov": 100
     },
     {
