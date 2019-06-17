@@ -193,7 +193,7 @@ install(PROGRAMS
 # )
 
 install(FILES
-   launch/challenge.launch
+        launch/lifecycle.launch
    DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 )
 
