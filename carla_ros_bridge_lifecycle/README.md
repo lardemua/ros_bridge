@@ -14,6 +14,6 @@ have to extend your PYTHONPATH.
 
 To run it:
 
-    roslaunch carla_ros_bridge_lifecycle challenge.launch
+    roslaunch carla_ros_bridge_lifecycle lifecycle.launch
 
 
