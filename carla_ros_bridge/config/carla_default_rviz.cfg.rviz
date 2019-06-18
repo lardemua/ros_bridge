@@ -79,7 +79,7 @@ Visualization Manager:
       Queue Size: 100
       Value: true
     - Class: rviz/Image
-      Enabled: false
+      Enabled: true
       Image Topic: /carla/ego_vehicle/camera/rgb/front/image_color
       Max Value: 1
       Median window: 5
@@ -89,9 +89,9 @@ Visualization Manager:
       Queue Size: 2
       Transport Hint: raw
       Unreliable: false
-      Value: false
+      Value: true
     - Class: rviz/Image
-      Enabled: false
+      Enabled: true
       Image Topic: /carla/ego_vehicle/camera/rgb/view/image_color
       Max Value: 1
       Median window: 5
@@ -101,7 +101,7 @@ Visualization Manager:
       Queue Size: 2
       Transport Hint: raw
       Unreliable: false
-      Value: false
+      Value: true
     - Class: rviz/Image
       Enabled: false
       Image Topic: /carla/ego_vehicle/camera/semantic_segmentation/front/image_segmentation
@@ -302,7 +302,7 @@ Visualization Manager:
       Reference Frame: ego_vehicle
       Value: true
     - Class: rviz/Camera
-      Enabled: false
+      Enabled: true
       Image Rendering: background and overlay
       Image Topic: /carla/ego_vehicle/camera/rgb/front/image_color
       Name: Camera
@@ -310,7 +310,7 @@ Visualization Manager:
       Queue Size: 2
       Transport Hint: raw
       Unreliable: false
-      Value: false
+      Value: true
       Visibility:
         Axes: true
         Grid: true
@@ -334,6 +334,10 @@ Visualization Manager:
           Value: true
         ego_vehicle/camera/rgb/front:
           Value: true
+        ego_vehicle/camera/rgb/top_left_camera:
+          Value: true
+        ego_vehicle/camera/rgb/top_right_camera:
+          Value: true
         ego_vehicle/camera/rgb/view:
           Value: true
         ego_vehicle/gnss/gnss1:
@@ -342,11 +346,49 @@ Visualization Manager:
           Value: true
         ego_vehicle/lidar/left:
           Value: true
-        ego_vehicle/lidar/lidar1:
-          Value: true
         ego_vehicle/lidar/right:
           Value: true
         map:
+          Value: true
+        vehicle/094/autopilot:
+          Value: true
+        vehicle/095/autopilot:
+          Value: true
+        vehicle/096/autopilot:
+          Value: true
+        vehicle/097/autopilot:
+          Value: true
+        vehicle/098/autopilot:
+          Value: true
+        vehicle/099/autopilot:
+          Value: true
+        vehicle/100/autopilot:
+          Value: true
+        vehicle/101/autopilot:
+          Value: true
+        vehicle/102/autopilot:
+          Value: true
+        vehicle/103/autopilot:
+          Value: true
+        vehicle/104/autopilot:
+          Value: true
+        vehicle/105/autopilot:
+          Value: true
+        vehicle/106/autopilot:
+          Value: true
+        vehicle/107/autopilot:
+          Value: true
+        vehicle/108/autopilot:
+          Value: true
+        vehicle/109/autopilot:
+          Value: true
+        vehicle/110/autopilot:
+          Value: true
+        vehicle/111/autopilot:
+          Value: true
+        vehicle/112/autopilot:
+          Value: true
+        vehicle/113/autopilot:
           Value: true
       Marker Scale: 1
       Name: TF
@@ -359,6 +401,10 @@ Visualization Manager:
             {}
           ego_vehicle/camera/rgb/front:
             {}
+          ego_vehicle/camera/rgb/top_left_camera:
+            {}
+          ego_vehicle/camera/rgb/top_right_camera:
+            {}
           ego_vehicle/camera/rgb/view:
             {}
           ego_vehicle/gnss/gnss1:
@@ -367,9 +413,47 @@ Visualization Manager:
             {}
           ego_vehicle/lidar/left:
             {}
-          ego_vehicle/lidar/lidar1:
-            {}
           ego_vehicle/lidar/right:
+            {}
+          vehicle/094/autopilot:
+            {}
+          vehicle/095/autopilot:
+            {}
+          vehicle/096/autopilot:
+            {}
+          vehicle/097/autopilot:
+            {}
+          vehicle/098/autopilot:
+            {}
+          vehicle/099/autopilot:
+            {}
+          vehicle/100/autopilot:
+            {}
+          vehicle/101/autopilot:
+            {}
+          vehicle/102/autopilot:
+            {}
+          vehicle/103/autopilot:
+            {}
+          vehicle/104/autopilot:
+            {}
+          vehicle/105/autopilot:
+            {}
+          vehicle/106/autopilot:
+            {}
+          vehicle/107/autopilot:
+            {}
+          vehicle/108/autopilot:
+            {}
+          vehicle/109/autopilot:
+            {}
+          vehicle/110/autopilot:
+            {}
+          vehicle/111/autopilot:
+            {}
+          vehicle/112/autopilot:
+            {}
+          vehicle/113/autopilot:
             {}
       Update Interval: 0
       Value: true
@@ -401,7 +485,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 5.459836483001709
+      Distance: 67.44562530517578
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -423,15 +507,15 @@ Visualization Manager:
     Saved: ~
 Window Geometry:
   Camera:
-    collapsed: true
+    collapsed: false
   Displays:
     collapsed: false
   Height: 1016
-  Hide Left Dock: true
+  Hide Left Dock: false
   Hide Right Dock: false
   Image:
     collapsed: false
-  QMainWindow State: 000000ff00000000fd0000000400000000000002af00000356fc020000000dfb0000001200530065006c0065006300740069006f006e00000001e10000009b0000005c00fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007302000001ed000001df00000185000000a3fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb000000100044006900730070006c0061007900730000000028000000d7000000c900fffffffb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c00000261fb0000000a0049006d006100670065000000003d0000018f0000001600fffffffb0000000a0049006d00610067006500000001dc000000ea0000001600fffffffb0000000a0049006d00610067006500000001f50000019e0000001600fffffffb0000000a0049006d00610067006501000002b8000001310000000000000000fb0000000c00430061006d00650072006100000001d2000001c10000001600ffffff000000010000016400000356fc0200000003fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fc0000003d00000356000000e60100001cfa000000000100000002fb000000100044006900730070006c0061007900730100000000ffffffff0000015600fffffffb0000000a00560069006500770073010000063a0000010f0000010000fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e100000197000000030000073d00000042fc0100000002fb0000000800540069006d006501000000000000073d000002eb00fffffffb0000000800540069006d00650100000000000004500000000000000000000005d30000035600000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  QMainWindow State: 000000ff00000000fd0000000400000000000002af00000356fc020000000dfb0000001200530065006c0065006300740069006f006e00000001e10000009b0000005c00fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007302000001ed000001df00000185000000a3fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb000000100044006900730070006c0061007900730000000028000000d7000000c900fffffffb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c00000261fb0000000a0049006d006100670065010000003d0000018f0000001600fffffffb0000000a0049006d00610067006500000001dc000000ea0000001600fffffffb0000000a0049006d00610067006501000001d2000000d00000001600fffffffb0000000a0049006d00610067006501000002b8000001310000000000000000fb0000000c00430061006d00650072006101000002a8000000eb0000001600ffffff000000010000016400000356fc0200000003fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fc0000003d00000356000000e60100001cfa000000000100000002fb000000100044006900730070006c0061007900730100000000ffffffff0000015600fffffffb0000000a00560069006500770073010000063a0000010f0000010000fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e100000197000000030000073d00000042fc0100000002fb0000000800540069006d006501000000000000073d000002eb00fffffffb0000000800540069006d006501000000000000045000000000000000000000031e0000035600000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
   Selection:
     collapsed: false
   Time:
