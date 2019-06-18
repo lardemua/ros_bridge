@@ -354,7 +354,7 @@ void PclFilter::callback_lidar_left_spherical(const PCLPointCloud2::ConstPtr& cl
         return;
     }
 
-    ROS_INFO ("Received %d data points from front lidar.", (int)cloud->width * cloud->height);
+    ROS_INFO ("Received %d data points from left lidar.", (int)cloud->width * cloud->height);
 
     try {
         PointCloud<PointXYZ> pclCloud;
@@ -380,13 +380,12 @@ void PclFilter::callback_lidar_left_spherical(const PCLPointCloud2::ConstPtr& cl
             z = pclCloudPtr->points[i].z;
             rho = sqrt(x*x + y*y + z*z);
             theta = atan2(y, x);
-            if ((theta >= -M_PI && theta <= 0)){
+            if ( (theta >= 0 && theta <= M_PI)){
                 pt.x = x;
                 pt.y = y;
                 pt.z = z;
                 outputCloud->points.push_back(pt);
             };
-            outputCloud->points.push_back(pt);
 
         }
         // Convert PCL cloud to PointCloud2 message
@@ -475,7 +474,7 @@ void PclFilter::callback_lidar_right_spherical(const PCLPointCloud2::ConstPtr& c
         return;
     }
 
-    ROS_INFO ("Received %d data points from front lidar.", (int)cloud->width * cloud->height);
+    ROS_INFO ("Received %d data points from right lidar.", (int)cloud->width * cloud->height);
 
     try {
         PointCloud<PointXYZ> pclCloud;
@@ -501,7 +500,7 @@ void PclFilter::callback_lidar_right_spherical(const PCLPointCloud2::ConstPtr& c
             z = pclCloudPtr->points[i].z;
             rho = sqrt(x*x + y*y + z*z);
             theta = atan2(y, x);
-            if ( (theta >= 0 && theta <= M_PI)){
+            if ( (theta >= -M_PI && theta <= 0)){
                 pt.x = x;
                 pt.y = y;
                 pt.z = z;
