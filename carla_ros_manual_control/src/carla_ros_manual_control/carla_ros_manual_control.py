@@ -22,6 +22,7 @@ Use ARROWS or WASD keys for control.
     ,/.          : gear up/down
     B            : toggle manual control
 
+    C/(Shift+C)  : change weather conditions
     F1           : toggle HUD
     H/?          : toggle help
     ESC          : quit
@@ -37,6 +38,8 @@ import math
 import numpy
 import rospy
 import tf
+import re
+import carla
 from std_msgs.msg import Bool
 from sensor_msgs.msg import NavSatFix
 from sensor_msgs.msg import Image
@@ -60,6 +63,7 @@ try:
     from pygame.locals import K_SPACE
     from pygame.locals import K_UP
     from pygame.locals import K_a
+    from pygame.locals import K_c
     from pygame.locals import K_d
     from pygame.locals import K_h
     from pygame.locals import K_m
@@ -74,6 +78,23 @@ try:
 except ImportError:
     raise RuntimeError('Cannot import pygame, make sure pygame package is installed before running this module')
 
+# ==============================================================================
+# -- Global Functions ----------------------------------------------------------
+# ==============================================================================
+
+
+def find_weather_presets():
+    rgx = re.compile('.+?(?:(?<=[a-z])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])|$)')
+    name = lambda x: ' '.join(m.group(0) for m in rgx.finditer(x))
+    presets = [x for x in dir(carla.WeatherParameters) if re.match('[A-Z].+', x)]
+    return [(getattr(carla.WeatherParameters, x), name(x)) for x in presets]
+
+
+def set_weather_params(preset):
+    client = carla.Client('127.0.0.1', 2000)
+    client.set_timeout(2000)
+    world = client.get_world()
+    world.set_weather(preset)
 
 # ==============================================================================
 # -- World ---------------------------------------------------------------------
@@ -90,6 +111,8 @@ class World(object):
         :param hud: info display
         """
         self._surface = None
+        self._weather_presets = find_weather_presets()
+        self._weather_index = 0
         self.hud = hud
         self.role_name = role_name
         self.image_subscriber = rospy.Subscriber("/carla/{}/camera/rgb/view/image_color".format(self.role_name),
@@ -148,6 +171,13 @@ class World(object):
             display.blit(self._surface, (0, 0))
         self.hud.render(display)
 
+    def next_weather(self, reverse=False):
+        self._weather_index += -1 if reverse else 1
+        self._weather_index %= len(self._weather_presets)
+        preset = self._weather_presets[self._weather_index]
+        self.hud.notification('Weather: %s' % preset[1])
+        set_weather_params(preset[0])
+
     def destroy(self):
         """
         Function used to destroy all objects in the world
@@ -166,7 +196,7 @@ class KeyboardControl(object):
     """
     Class used to handle keyboard input events
     """
-    def __init__(self, role_name, hud):
+    def __init__(self, role_name, world, hud):
         """
            Constructor for KeyboardControl class
            :param hud: info display
@@ -184,6 +214,7 @@ class KeyboardControl(object):
         self.set_autopilot(self._autopilot_enabled)
         self._steer_cache = 0.0
         self.hud = hud
+        self.world = world
         self.set_vehicle_control_manual_override(self.vehicle_control_manual_override)   # disable manual override
         self.hud.notification("Press 'H' or '?' for help.", seconds=4.0)
 
@@ -232,6 +263,10 @@ class KeyboardControl(object):
                 elif event.key == K_b:
                     self.vehicle_control_manual_override = not self.vehicle_control_manual_override
                     self.set_vehicle_control_manual_override(self.vehicle_control_manual_override)
+                elif event.key == K_c and pygame.key.get_mods() & KMOD_SHIFT:
+                    self.world.next_weather(reverse=True)
+                elif event.key == K_c:
+                    self.world.next_weather()
                 if event.key == K_q:
                     self._control.gear = 1 if self._control.reverse else -1
                 elif event.key == K_m:
@@ -605,7 +640,7 @@ def main():
 
         hud = HUD(role_name, resolution['width'], resolution['height'])
         world = World(role_name, hud)
-        controller = KeyboardControl(role_name, hud)
+        controller = KeyboardControl(role_name, world, hud)
 
         clock = pygame.time.Clock()
 
