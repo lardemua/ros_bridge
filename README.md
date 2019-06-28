@@ -24,7 +24,7 @@ This documentation is for CARLA versions *newer* than 0.9.5.
 ![rviz setup](./assets/images/rviz_carla_session14.png "rviz")
 ![rviz setup](./assets/images/rviz_carla_session15.png "rviz")
 ![rviz setup](./assets/images/rviz_carla_session16.png "rviz")
-
+![rviz setup](./assets/images/rviz_carla_session17.png "rviz")
 
 
 # Features
