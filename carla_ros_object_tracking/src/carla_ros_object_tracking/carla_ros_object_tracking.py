@@ -52,8 +52,9 @@ class Object_Tracking:
             transform = vehicle.get_transform()
             bounding_box = vehicle.bounding_box
             bounding_box.location += transform.location
+            extent = bounding_box.extent
             world.debug.draw_box(bounding_box, transform.rotation)
-            data = self.write_json_dataset(data, vehicle, transform)
+            data = self.write_json_dataset(data, vehicle, transform, extent)
 
         cv2.imshow("Image Window", cv_img)
         cv2.waitKey(1)
@@ -67,17 +68,35 @@ class Object_Tracking:
         self.save_json_dataset(data)
         self.parse_json_dataset()
 
-    def write_json_dataset(self, data, vehicle, transform):
+    def write_json_dataset(self, data, vehicle, transform, extent):
+        volume = self.bounding_box_volume(extent)
         classification_model = None
+        blueprint_model = None
         if str(vehicle.attributes['number_of_wheels']) == '4':
-            classification_model = random.choice(['car', 'truck'])
+            if volume <= 2.17:
+                classification_model = 'car'
+                blueprint_model = random.choice(['vehicle.audi.tt', 'vehicle.citroen.c3', 'vehicle.mercedes.benz',
+                                                 'vehicle.nissan.micra', 'vehicle.nissan.patrol', 'vehicle.bmw.isetta'])
+            else:
+                classification_model = 'truck'
+                blueprint_model = random.choice(['vehicle.jeep.rubicon', 'vehicle.carla.colatruck',
+                                                 'vehicle.volkswaggen.T2'])
         elif str(vehicle.attributes['number_of_wheels']) == '2':
-            classification_model = random.choice(['motorcycle', 'bike'])
+            if volume <= 0.18:
+                classification_model = 'bicycle'
+                blueprint_model = random.choice(['vehicle.bike.cross','vehicle.bike.road'])
+            else:
+                classification_model = 'motorcycle'
+                blueprint_model = random.choice(['vehicle.yamaha.yzf','vehicle.ninja.kawasaki'])
         data['vehicles'].append({
-            'model': classification_model,
+            'model': blueprint_model,
+            'class': classification_model,
             'x': str(transform.location.x),
             'y': str(transform.location.y),
             'z': str(transform.location.z),
+            'bx': str(extent.x),
+            'by': str(extent.y),
+            'bz': str(extent.z),
             'yaw': str(transform.rotation.yaw),
         })
         # data['vehicle'].append("\\n\\n")
@@ -102,6 +121,10 @@ class Object_Tracking:
             for row in json_file:
                 data = json.loads(row)
                 json.dumps(data, sort_keys=True, indent=2, separators=(',', ': '))
+
+    def bounding_box_volume(self, extent):
+        volume = extent.x * extent.y * extent.z
+        return volume
 
 
 def main(args):

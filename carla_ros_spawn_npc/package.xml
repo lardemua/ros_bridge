@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>carla_ros_control_npc</name>
+  <name>carla_ros_spawn_npc</name>
   <version>0.0.0</version>
-  <description>The carla_ros_control_npc package</description>
+  <description>The carla_ros_spawn_npc package</description>
 
   <!-- One maintainer tag required, multiple allowed, one person per tag -->
   <!-- Example:  -->
@@ -19,7 +19,7 @@
   <!-- Url tags are optional, but multiple are allowed, one per tag -->
   <!-- Optional attribute type can be: website, bugtracker, or repository -->
   <!-- Example: -->
-  <!-- <url type="website">http://wiki.ros.org/carla_ros_control_npc</url> -->
+  <!-- <url type="website">http://wiki.ros.org/carla_ros_spawn_npc</url> -->
 
 
   <!-- Author tags are optional, multiple are allowed, one per tag -->
@@ -58,6 +58,9 @@
   <exec_depend>roscpp</exec_depend>
   <exec_depend>rospy</exec_depend>
   <exec_depend>std_msgs</exec_depend>
+
+  <build_depend>carla_ros_bridge</build_depend>
+  <build_export_depend>carla_ros_bridge</build_export_depend>
 
 
   <!-- The export tag contains other, unspecified, tags -->

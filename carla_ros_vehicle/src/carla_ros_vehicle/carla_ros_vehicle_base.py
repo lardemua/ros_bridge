@@ -113,9 +113,10 @@ class CarlaRosVehicleBase(object):
         Either at a given actor_spawnpoint or at a random CARLA spawnpoint.
         :return:
         """
-        # get the vehicle blueprint
-        blueprint = random.choice(self.world.get_blueprint_library().filter(self.actor_filter))
-        # blueprint = self.world.get_blueprint_library().filter('vehicle.yamaha.yzf')
+        # get the random vehicle blueprint using the filter method.
+        # blueprint = random.choice(self.world.get_blueprint_library().filter(self.actor_filter))
+        # get a specific model with find method
+        blueprint = self.world.get_blueprint_library().find('vehicle.audi.tt')
         blueprint.set_attribute('role_name', "{}".format(self.role_name))
         if blueprint.has_attribute('color'):
             color = random.choice(blueprint.get_attribute('color').recommended_values)

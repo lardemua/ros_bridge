@@ -19,12 +19,18 @@ public:
     void callback_lidar_front(const pcl::PCLPointCloud2::ConstPtr& cloud);
     void callback_lidar_left(const pcl::PCLPointCloud2::ConstPtr& cloud);
     void callback_lidar_right(const pcl::PCLPointCloud2::ConstPtr& cloud);
+    void callback_lidar_front_filter(const pcl::PCLPointCloud2::ConstPtr& cloud);
+    void callback_lidar_left_filter(const pcl::PCLPointCloud2::ConstPtr& cloud);
+    void callback_lidar_right_filter(const pcl::PCLPointCloud2::ConstPtr& cloud);
 
 private:
     ros::NodeHandle nh;
     ros::Subscriber sub_lidar_front;
     ros::Subscriber sub_lidar_left;
     ros::Subscriber sub_lidar_right;
+    ros::Subscriber sub_lidar_front_filter;
+    ros::Subscriber sub_lidar_left_filter;
+    ros::Subscriber sub_lidar_right_filter;
     tf2_ros::Buffer tf_buffer_;
     tf2_ros::TransformListener *tfListener;
     static constexpr const char* fixed_frame_ = "map";
