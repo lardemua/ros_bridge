@@ -63,10 +63,10 @@ class Shape_Selection:
         except CvBridgeError as e:
             print(e)
 
-        # client = carla.Client('127.0.0.1', 2000)
-        # client.set_timeout(2000)
-        # world = client.get_world()
-        # blueprints = world.get_blueprint_library().filter('vehicle.*')
+        client = carla.Client('127.0.0.1', 2000)
+        client.set_timeout(2000)
+        world = client.get_world()
+        blueprints = world.get_blueprint_library().filter('vehicle.*')
 
         # load the image, clone it, and setup the mouse callback function.
         clone = cv_img.copy()
@@ -74,8 +74,8 @@ class Shape_Selection:
         self.image = cv_img
         cv2.namedWindow("Image Window")
         cv2.setMouseCallback("Image Window", self.shape_selection)
-        print("I AM HERE")
-        cv2.waitKey(100)
+        # print("I AM HERE")
+        cv2.waitKey(1)
 
         # Press r to reset the cropping region
         if (cv2.waitKey(1) & 0xFF) == ord("r"):
