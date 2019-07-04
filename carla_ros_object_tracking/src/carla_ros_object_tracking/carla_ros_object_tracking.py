@@ -7,11 +7,9 @@ from __future__ import print_function
 
 import sys
 import rospy
-import random
 import cv2
 import carla
 import json
-from std_msgs.msg import String
 from sensor_msgs.msg import Image
 from cv_bridge import CvBridge, CvBridgeError
 import roslib
@@ -23,9 +21,9 @@ class Object_Tracking:
     Class used for object tracking using ROS images
     """
     def __init__(self):
-        self.image_pub = rospy.Publisher("/carla/ego_vehicle/camera/rgb/front/object_tracking", Image)
+        self.image_pub = rospy.Publisher("/carla/ego_vehicle/camera/rgb/view/object_tracking", Image)
         self.bridge = CvBridge()
-        self.image_sub = rospy.Subscriber("/carla/ego_vehicle/camera/rgb/front/image_color", Image, self.callback)
+        self.image_sub = rospy.Subscriber("/carla/ego_vehicle/camera/rgb/view/image_color", Image, self.callback)
 
     def callback(self, data):
         cv_img = None
@@ -34,18 +32,12 @@ class Object_Tracking:
         except CvBridgeError as e:
             print(e)
 
-        (rows, cols, channels) = cv_img.shape
-
         client = carla.Client('127.0.0.1', 2000)
         client.set_timeout(2000)
         world = client.get_world()
-        blueprints = world.get_blueprint_library().filter('vehicle.*')
 
-        # print blueprints
-        # print(blueprints)
-
-        data = {}
-        data['vehicles'] = []
+        vehicle_data = {}
+        vehicle_data['vehicles'] = []
         for vehicle in world.get_actors().filter('vehicle.*'):
             # print(vehicle.bounding_box)
             # Draw bounding box
@@ -54,7 +46,18 @@ class Object_Tracking:
             bounding_box.location += transform.location
             extent = bounding_box.extent
             world.debug.draw_box(bounding_box, transform.rotation)
-            data = self.write_json_dataset(data, vehicle, transform, extent)
+            vehicle_data = self.write_vehicle_json_dataset(vehicle_data, vehicle, transform, extent)
+
+        pedestrian_data = {}
+        pedestrian_data['pedestrians'] = []
+        for pedestrian in world.get_actors().filter('walker.*'):
+            # Draw bounding box
+            transform = pedestrian.get_transform()
+            bounding_box = pedestrian.bounding_box
+            bounding_box.location += transform.location
+            extent = bounding_box.extent
+            world.debug.draw_box(bounding_box, transform.rotation)
+            pedestrian_data = self.write_pedestrian_json_dataset(pedestrian_data, pedestrian, transform, extent)
 
         cv2.imshow("Image Window", cv_img)
         cv2.waitKey(1)
@@ -64,30 +67,32 @@ class Object_Tracking:
         except CvBridgeError as e:
             print(e)
 
-        # save json dataset
-        self.save_json_dataset(data)
-        self.parse_json_dataset()
+        # record vehicle json dataset
+        self.save_vehicle_json_dataset(vehicle_data)
+        self.parse_vehicle_json_dataset()
 
-    def write_json_dataset(self, data, vehicle, transform, extent):
+        # record pedestrian json dataset
+        self.save_pedestrian_json_dataset(pedestrian_data)
+        self.parse_pedestrian_json_dataset()
+
+        # merge the two json datasets
+        self.merge_json_dataset(vehicle_data, pedestrian_data)
+        self.parse_final_json_dataset()
+
+    def write_vehicle_json_dataset(self, data, vehicle, transform, extent):
         volume = self.bounding_box_volume(extent)
         classification_model = None
-        blueprint_model = None
+        blueprint_model = vehicle.type_id
         if str(vehicle.attributes['number_of_wheels']) == '4':
             if volume <= 2.17:
                 classification_model = 'car'
-                blueprint_model = random.choice(['vehicle.audi.tt', 'vehicle.citroen.c3', 'vehicle.mercedes.benz',
-                                                 'vehicle.nissan.micra', 'vehicle.nissan.patrol', 'vehicle.bmw.isetta'])
             else:
                 classification_model = 'truck'
-                blueprint_model = random.choice(['vehicle.jeep.rubicon', 'vehicle.carla.colatruck',
-                                                 'vehicle.volkswaggen.T2'])
         elif str(vehicle.attributes['number_of_wheels']) == '2':
             if volume <= 0.18:
                 classification_model = 'bicycle'
-                blueprint_model = random.choice(['vehicle.bike.cross','vehicle.bike.road'])
             else:
                 classification_model = 'motorcycle'
-                blueprint_model = random.choice(['vehicle.yamaha.yzf','vehicle.ninja.kawasaki'])
         data['vehicles'].append({
             'model': blueprint_model,
             'class': classification_model,
@@ -99,24 +104,50 @@ class Object_Tracking:
             'bz': str(extent.z),
             'yaw': str(transform.rotation.yaw),
         })
-        # data['vehicle'].append("\\n\\n")
-        # data['people'].append({
-        #     'name': 'Larry',
-        #     'website': 'google.com',
-        #     'from': 'Michigan'
-        # })
-        # data['people'].append({
-        #     'name': 'Tim',
-        #     'website': 'apple.com',
-        #     'from': 'Alabama'
-        # })
         return data
 
-    def save_json_dataset(self, data):
-        with open('/home/pedro/catkin_ws/src/ros_bridge/datasets/data.json', 'w') as json_file:
+    def write_pedestrian_json_dataset(self, data, pedestrian, transform, extent):
+        classification_model = 'pedestrian'
+        blueprint_model = pedestrian.type_id
+        data['pedestrians'].append({
+            'model': blueprint_model,
+            'class': classification_model,
+            'x': str(transform.location.x),
+            'y': str(transform.location.y),
+            'z': str(transform.location.z),
+            'bx': str(extent.x),
+            'by': str(extent.y),
+            'bz': str(extent.z),
+            'yaw': str(transform.rotation.yaw),
+        })
+        return data
+
+    def save_vehicle_json_dataset(self, data):
+        with open('/home/pedro/catkin_ws/src/ros_bridge/datasets/vehicle_data.json', 'w') as json_file:
             json.dump(data, json_file)
 
-    def parse_json_dataset(self):
+    def parse_vehicle_json_dataset(self):
+        with open('/home/pedro/catkin_ws/src/ros_bridge/datasets/vehicle_data.json', 'r') as json_file:
+            for row in json_file:
+                data = json.loads(row)
+                json.dumps(data, sort_keys=True, indent=2, separators=(',', ': '))
+
+    def save_pedestrian_json_dataset(self, data):
+        with open('/home/pedro/catkin_ws/src/ros_bridge/datasets/pedestrian_data.json', 'w') as json_file:
+            json.dump(data, json_file)
+
+    def parse_pedestrian_json_dataset(self):
+        with open('/home/pedro/catkin_ws/src/ros_bridge/datasets/pedestrian_data.json', 'r') as json_file:
+            for row in json_file:
+                data = json.loads(row)
+                json.dumps(data, sort_keys=True, indent=2, separators=(',', ': '))
+
+    def merge_json_dataset(self, data1, data2):
+        merged_dict = {key: value for (key, value) in (data1.items() + data2.items())}
+        with open('/home/pedro/catkin_ws/src/ros_bridge/datasets/data.json', 'w') as json_file:
+            json.dump(merged_dict, json_file)
+
+    def parse_final_json_dataset(self):
         with open('/home/pedro/catkin_ws/src/ros_bridge/datasets/data.json', 'r') as json_file:
             for row in json_file:
                 data = json.loads(row)
