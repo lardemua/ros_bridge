@@ -30,6 +30,15 @@ Execute the Carla Simulator and the Pcl-Filter.
     export PYTHONPATH=<path-to-carla>/PythonAPI/carla/dist/carla-<version_and_arch>.egg:<path-to-carla>/PythonAPI/carla/
     source <path-to-catkin-workspace>/devel/setup.bash
     roslaunch carla_ros_pcl_filter pcl_filter_with_client.launch
+    
+## LIDAR Filter Angles
+
+|Topic                                 | Angle Range in Radians |
+|--------------------------------------|------|
+| `/carla/<ROLE NAME>/lidar/<SENSOR ROLE NAME>/front_point_cloud` | [-π/4, π/4] |
+| `/carla/<ROLE NAME>/lidar/<SENSOR ROLE NAME>/left_point_cloud` | [0, π] |
+| `/carla/<ROLE NAME>/lidar/<SENSOR ROLE NAME>/right_point_cloud` | [-π. 0] |
+
 
 ## Image Results with RVIZ
 ![pcl filter_01](../assets/images/rviz_carla_filter_01.png "pcl_filter_01")
