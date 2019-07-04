@@ -167,6 +167,7 @@ include_directories(
 
 install(PROGRAMS
         src/carla_ros_spawn_npc/carla_ros_spawn_npc.py
+        src/carla_ros_spawn_npc/carla_ros_spawn_pedestrians.py
         DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
         )
 
@@ -193,6 +194,7 @@ install(PROGRAMS
 
 install(FILES
         launch/spawn_npc.launch
+        launch/spawn_pedestrians.launch
         DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
         )
 
