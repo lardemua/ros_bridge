@@ -1,6 +1,6 @@
 # CARLA-ROS Point Cloud Map Visualization
 
-The node `carla_ros_pcl_visualizer` is used to create pointcloud maps for Carla levels.
+The node `carla_ros_pcl_visualizer` is used to view the recorded pointcloud maps created from the LIDAR sensors.
 
 The point clouds are created by driving around with an ego vehicle, using the autopilot functionality within the Carla PythonAPI.
 
@@ -59,3 +59,4 @@ When the captured point clouds are all set and done, you can reduce the overall 
     
 # Image Results
 ![pcl visualizer](../assets/images/pcl_map_visualizer.png "pcl_map_visualizer")
+![pcl_visualizer](../assets/images/pcl_visualizer_map.png "pcl_map_visualizer")
