@@ -7,11 +7,9 @@ from __future__ import print_function
 
 import sys
 import rospy
-import random
 import cv2
 import carla
 import json
-from std_msgs.msg import String
 from sensor_msgs.msg import Image
 from cv_bridge import CvBridge, CvBridgeError
 import roslib
@@ -23,9 +21,9 @@ class Object_Tracking:
     Class used for object tracking using ROS images
     """
     def __init__(self):
-        self.image_pub = rospy.Publisher("/carla/ego_vehicle/camera/rgb/front/object_tracking", Image)
+        self.image_pub = rospy.Publisher("/carla/ego_vehicle/camera/rgb/view/object_tracking", Image)
         self.bridge = CvBridge()
-        self.image_sub = rospy.Subscriber("/carla/ego_vehicle/camera/rgb/front/image_color", Image, self.callback)
+        self.image_sub = rospy.Subscriber("/carla/ego_vehicle/camera/rgb/view/image_color", Image, self.callback)
 
     def callback(self, data):
         cv_img = None
@@ -34,15 +32,9 @@ class Object_Tracking:
         except CvBridgeError as e:
             print(e)
 
-        (rows, cols, channels) = cv_img.shape
-
         client = carla.Client('127.0.0.1', 2000)
         client.set_timeout(2000)
         world = client.get_world()
-        blueprints = world.get_blueprint_library().filter('vehicle.*')
-
-        # print blueprints
-        # print(blueprints)
 
         vehicle_data = {}
         vehicle_data['vehicles'] = []
@@ -90,23 +82,17 @@ class Object_Tracking:
     def write_vehicle_json_dataset(self, data, vehicle, transform, extent):
         volume = self.bounding_box_volume(extent)
         classification_model = None
-        blueprint_model = None
+        blueprint_model = vehicle.type_id
         if str(vehicle.attributes['number_of_wheels']) == '4':
             if volume <= 2.17:
                 classification_model = 'car'
-                blueprint_model = random.choice(['vehicle.audi.tt', 'vehicle.citroen.c3', 'vehicle.mercedes.benz',
-                                                 'vehicle.nissan.micra', 'vehicle.nissan.patrol', 'vehicle.bmw.isetta'])
             else:
                 classification_model = 'truck'
-                blueprint_model = random.choice(['vehicle.jeep.rubicon', 'vehicle.carla.colatruck',
-                                                 'vehicle.volkswaggen.T2'])
         elif str(vehicle.attributes['number_of_wheels']) == '2':
             if volume <= 0.18:
                 classification_model = 'bicycle'
-                blueprint_model = random.choice(['vehicle.bike.cross','vehicle.bike.road'])
             else:
                 classification_model = 'motorcycle'
-                blueprint_model = random.choice(['vehicle.yamaha.yzf','vehicle.ninja.kawasaki'])
         data['vehicles'].append({
             'model': blueprint_model,
             'class': classification_model,
@@ -122,7 +108,7 @@ class Object_Tracking:
 
     def write_pedestrian_json_dataset(self, data, pedestrian, transform, extent):
         classification_model = 'pedestrian'
-        blueprint_model = random.choice(['walker.pedestrian.0001', 'walker.pedestrian.0002'])
+        blueprint_model = pedestrian.type_id
         data['pedestrians'].append({
             'model': blueprint_model,
             'class': classification_model,
