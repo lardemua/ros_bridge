@@ -37,6 +37,7 @@ Panels:
     Property Tree Widget:
       Expanded:
         - /Image2
+        - /Image3
         - /LIDAR_Front_O1
         - /LIDAR_Left_O1
         - /LIDAR_Left_F1
@@ -91,6 +92,18 @@ Visualization Manager:
       Unreliable: false
       Value: true
     - Class: rviz/Image
+      Enabled: false
+      Image Topic: /carla/ego_vehicle/camera/rgb/view/image_color
+      Max Value: 1
+      Median window: 5
+      Min Value: 0
+      Name: Image
+      Normalize Range: true
+      Queue Size: 2
+      Transport Hint: raw
+      Unreliable: false
+      Value: false
+    - Class: rviz/Image
       Enabled: true
       Image Topic: /carla/ego_vehicle/camera/rgb/view/image_color
       Max Value: 1
@@ -102,18 +115,6 @@ Visualization Manager:
       Transport Hint: raw
       Unreliable: false
       Value: true
-    - Class: rviz/Image
-      Enabled: false
-      Image Topic: /carla/ego_vehicle/camera/semantic_segmentation/front/image_segmentation
-      Max Value: 1
-      Median window: 5
-      Min Value: 0
-      Name: Image
-      Normalize Range: true
-      Queue Size: 2
-      Transport Hint: raw
-      Unreliable: false
-      Value: false
     - Alpha: 1
       Autocompute Intensity Bounds: true
       Autocompute Value Bounds:
@@ -350,6 +351,8 @@ Visualization Manager:
           Value: true
         map:
           Value: true
+        vehicle/093/autopilot:
+          Value: true
         vehicle/094/autopilot:
           Value: true
         vehicle/095/autopilot:
@@ -368,27 +371,25 @@ Visualization Manager:
           Value: true
         vehicle/102/autopilot:
           Value: true
-        vehicle/103/autopilot:
+        walker/103/pedestrian:
           Value: true
-        vehicle/104/autopilot:
+        walker/104/pedestrian:
           Value: true
-        vehicle/105/autopilot:
+        walker/105/pedestrian:
           Value: true
-        vehicle/106/autopilot:
+        walker/106/pedestrian:
           Value: true
-        vehicle/107/autopilot:
+        walker/107/pedestrian:
           Value: true
-        vehicle/108/autopilot:
+        walker/108/pedestrian:
           Value: true
-        vehicle/109/autopilot:
+        walker/109/pedestrian:
           Value: true
-        vehicle/110/autopilot:
+        walker/110/pedestrian:
           Value: true
-        vehicle/111/autopilot:
+        walker/111/pedestrian:
           Value: true
-        vehicle/112/autopilot:
-          Value: true
-        vehicle/113/autopilot:
+        walker/112/pedestrian:
           Value: true
       Marker Scale: 1
       Name: TF
@@ -415,6 +416,8 @@ Visualization Manager:
             {}
           ego_vehicle/lidar/right:
             {}
+          vehicle/093/autopilot:
+            {}
           vehicle/094/autopilot:
             {}
           vehicle/095/autopilot:
@@ -433,29 +436,35 @@ Visualization Manager:
             {}
           vehicle/102/autopilot:
             {}
-          vehicle/103/autopilot:
+          walker/103/pedestrian:
             {}
-          vehicle/104/autopilot:
+          walker/104/pedestrian:
             {}
-          vehicle/105/autopilot:
+          walker/105/pedestrian:
             {}
-          vehicle/106/autopilot:
+          walker/106/pedestrian:
             {}
-          vehicle/107/autopilot:
+          walker/107/pedestrian:
             {}
-          vehicle/108/autopilot:
+          walker/108/pedestrian:
             {}
-          vehicle/109/autopilot:
+          walker/109/pedestrian:
             {}
-          vehicle/110/autopilot:
+          walker/110/pedestrian:
             {}
-          vehicle/111/autopilot:
+          walker/111/pedestrian:
             {}
-          vehicle/112/autopilot:
-            {}
-          vehicle/113/autopilot:
+          walker/112/pedestrian:
             {}
       Update Interval: 0
+      Value: true
+    - Class: rviz/Marker
+      Enabled: true
+      Marker Topic: /carla/pedestrian_marker
+      Name: Marker
+      Namespaces:
+        0: true
+      Queue Size: 100
       Value: true
   Enabled: true
   Global Options:
@@ -525,5 +534,5 @@ Window Geometry:
   Views:
     collapsed: false
   Width: 1853
-  X: 1987
+  X: 67
   Y: 27

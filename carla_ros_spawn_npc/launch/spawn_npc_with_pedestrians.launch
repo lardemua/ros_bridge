@@ -1,0 +1,15 @@
+<!-- -->
+<launch>
+    <arg name='host' default='localhost'/>
+    <arg name='port' default='2000'/>
+    <arg name='number_of_vehicles' default='10'/>
+    <arg name='number_of_pedestrians' default='10'/>
+    <arg name="vehicle_role_name" default="ego_vehicle"/>
+    <arg name="pedestrian_role_name" default="ego_vehicle"/>
+    <param name="carla/host" value="$(arg host)" unless="$(eval host == '')"/>
+    <param name="carla/port" value="$(arg port)" unless="$(eval port == '')"/>
+    <param name="carla/vehicles" value="$(arg number_of_vehicles)" unless="$(eval port == '')"/>
+    <param name="carla/pedestrians" value="$(arg number_of_vehicles)" unless="$(eval port == '')"/>
+    <node pkg="carla_ros_spawn_npc" type="carla_ros_spawn_npc_with_pedestrians.py" name="carla_ros_spawn_npc" output="screen">
+    </node>
+</launch>
