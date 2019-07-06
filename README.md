@@ -8,6 +8,7 @@ __Important Note:__
 
 This documentation is for CARLA versions *newer* than 0.9.5.
 
+### Image Results
 ![rviz setup](./assets/images/rviz_carla_session1.png "rviz")
 ![rviz setup](./assets/images/rviz_carla_session2.png "rviz")
 ![rviz setup](./assets/images/rviz_carla_session3.png "rviz")
@@ -26,6 +27,10 @@ This documentation is for CARLA versions *newer* than 0.9.5.
 ![rviz setup](./assets/images/rviz_carla_session16.png "rviz")
 ![rviz setup](./assets/images/rviz_carla_session17.png "rviz")
 ![rviz setup](./assets/images/rviz_carla_final_session.png "rviz")
+
+### Video Results
+[![Watch the video](./assets/images/thumbnail.png)](https://youtu.be/DcyfTQ9RtPA)
+
 
 
 # Features
