@@ -3,7 +3,7 @@
     {
       "type": "sensor.camera.rgb",
       "id": "front",
-      "x": 0.25, "y": 0.0, "z": 1.0, "roll": 0.0, "pitch": 0.0, "yaw": 0.0,
+      "x": 1.0, "y": 0.0, "z": 1.0, "roll": 0.0, "pitch": 0.0, "yaw": 0.0,
       "width": 800,
       "height": 600,
       "fov": 100
@@ -19,7 +19,7 @@
     {
       "type": "sensor.camera.rgb",
       "id": "top_left_camera",
-      "x": 0.0, "y": -0.5, "z": 2.0, "roll": 3.09315055757511, "pitch": 0.0108160149890114, "yaw": -1.60435715276337,
+      "x": 0.0, "y": -0.25, "z": 2.0, "roll": 3.09315055757511, "pitch": 0.0108160149890114, "yaw": -1.60435715276337,
       "width": 964,
       "height": 724,
       "fov": 100
@@ -35,7 +35,7 @@
     {
       "type": "sensor.lidar.ray_cast",
       "id": "front",
-      "x": 0.25, "y": 0.0, "z": 0.25, "roll": 0.0, "pitch": 0.0, "yaw": 0.0,
+      "x": 1.0, "y": 0.0, "z": 0.25, "roll": 0.0, "pitch": 0.0, "yaw": 0.0,
       "range": 25000,
       "channels": 4,
       "points_per_second": 40000,
@@ -47,7 +47,7 @@
     {
       "type": "sensor.lidar.ray_cast",
       "id": "left",
-      "x": 0.25, "y": -0.25, "z": 0.5, "roll": 0.0, "pitch": 0.0, "yaw": 0.0,
+      "x": 1.0, "y": -0.7, "z": 0.5, "roll": 0.0, "pitch": 0.0, "yaw": 0.0,
       "range": 5000,
       "channels": 1,
       "points_per_second": 27000,
@@ -59,7 +59,7 @@
     {
       "type": "sensor.lidar.ray_cast",
       "id": "right",
-      "x": 0.25, "y": 0.25, "z": 0.5, "roll": 0.0, "pitch": 0.0, "yaw": 0.0,
+      "x": 1.0, "y": 0.7, "z": 0.5, "roll": 0.0, "pitch": 0.0, "yaw": 0.0,
       "range": 5000,
       "channels": 1,
       "points_per_second": 27000,
