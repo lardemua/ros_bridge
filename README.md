@@ -29,7 +29,7 @@ This documentation is for CARLA versions *newer* than 0.9.5.
 ![rviz setup](./assets/images/rviz_carla_final_session.png "rviz")
 
 ### Video Results
-[![Watch the video](./assets/images/thumbnail.png)](https://youtu.be/DcyfTQ9RtPA)
+[![Watch the video](./assets/images/thumbnail.png)](https://www.youtube.com/embed/videoseries?list=PLA2mbqwGMhjOkytIUiery3bK6D3fwdMYD)
 
 
 
