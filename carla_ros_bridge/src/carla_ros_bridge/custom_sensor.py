@@ -69,17 +69,7 @@ class CustomSensor(Sensor):
         :type carla_custom_event: carla.CustomEvent
         :return:
         """
-        header = self.get_msg_header(use_parent_frame=False)
-        lidar_data = numpy.frombuffer(carla_custom_event.raw_data, dtype=numpy.float32)
-        lidar_data = numpy.reshape(lidar_data, (int(lidar_data.shape[0] / 3), 3))
-        # we take the oposite of y axis
-        # (as lidar point are express in left handed coordinate system, and ros need right handed)
-        # we need a copy here, because the data are read only in carla numpy
-        # array
-        lidar_data = -lidar_data
-        # we also need to permute x and y
-        lidar_data = lidar_data[..., [1, 0, 2]]
-        point_cloud_msg = create_cloud_xyz32(header, lidar_data)
-        self.publish_ros_message(self.topic_name() + "/custom_point_cloud", point_cloud_msg)
+
+        # Publish custom Event message to sensor event serializer here!
 
 
