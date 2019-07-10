@@ -136,7 +136,7 @@ You should see the Success message without any errors.
 
 First run the simulator (see carla documentation: http://carla.readthedocs.io/en/latest/)
 
-    ./CarlaUE4.sh -windowed -ResX=<image_size_x> -ResY=<image_size_y> -benchmark -fps=10
+    ./CarlaUE4.sh -windowed -ResX=<image_size_x> -ResY=<image_size_y> -benchmark -fps=<number_of_fps>
     
     e.g: ./CarlaUE4.sh -windowed -ResX=320 -ResY=240 -benchmark -fps=10
 
