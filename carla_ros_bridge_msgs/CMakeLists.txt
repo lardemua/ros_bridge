@@ -61,6 +61,11 @@ add_message_files(
   CarlaMapInfo.msg
   CarlaTemplateInfo.msg
   Carla3DTemplateInfo.msg
+  CarlaActorInfo.msg
+  CarlaActorList.msg
+  CarlaControl.msg
+  CarlaStatus.msg
+  CarlaWalkerControl.msg
 )
 
 ## Generate services in the 'srv' folder
