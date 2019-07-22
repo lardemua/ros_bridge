@@ -84,12 +84,19 @@ class Spawn_Pedestrians:
             if blueprint.has_attribute('color'):
                 color = random.choice(blueprint.get_attribute('color').recommended_values)
                 blueprint.set_attribute('color', color)
+            if blueprint.has_attribute('is_invincible'):
+                blueprint.set_attribute('is_invincible', 'false')
+
             player = self.world.try_spawn_actor(blueprint, transform)
             player_control = carla.WalkerControl()
             player_control.speed = 3
+            player_control.jump = False
             pedestrian_heading = 90
             player_rotation = carla.Rotation(0, pedestrian_heading, 0)
-            player_control.direction = player_rotation.get_forward_vector()
+            direction = player_rotation.get_forward_vector()
+            player_control.direction.x = direction.x
+            player_control.direction.y = -direction.y
+            player_control.direction.z = direction.z
             player.apply_control(player_control)
             self.actor_list.append(player)
 

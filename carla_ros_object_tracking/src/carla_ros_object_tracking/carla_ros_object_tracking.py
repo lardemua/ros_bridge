@@ -39,7 +39,6 @@ class Object_Tracking:
         vehicle_data = {}
         vehicle_data['vehicles'] = []
         for vehicle in world.get_actors().filter('vehicle.*'):
-            # print(vehicle.bounding_box)
             # Draw bounding box
             transform = vehicle.get_transform()
             bounding_box = vehicle.bounding_box

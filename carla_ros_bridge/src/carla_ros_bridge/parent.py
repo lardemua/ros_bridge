@@ -30,7 +30,7 @@ class Parent(object):
         Constructor for Parent Class
 
         :param carla_ID:  Unique carla_ID of this parent object
-               carla_ID > 0   => carla actor IDs (see carla.Actor>
+               carla_ID > 0   => carla actor IDs (see carla.Actor)
                carla_ID == 0  => used by the root bridge object
                carla_ID == -1 => used by the map object
         :type carla_ID: int64

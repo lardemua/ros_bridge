@@ -40,7 +40,7 @@ class Actor(Child):
         :param topic_prefix: Topic Prefix to be used for this Actor
         :type topic_prefix: string
         :param append_role_name_topic_postfix: If this flag is set True, then the role_name of the actor is used as topic postfix
-        :type apped_role_name_topic_postfix: boolean
+        :type append_role_name_topic_postfix: boolean
         """
         # each actor defines its own frame
         if append_role_name_topic_postfix:

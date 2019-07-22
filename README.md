@@ -29,8 +29,8 @@ This documentation is for CARLA versions *newer* than 0.9.5.
 ![rviz setup](./assets/images/rviz_carla_final_session.png "rviz")
 
 ### Video Results
-[![Watch the video](./assets/images/thumbnail.png)](https://www.youtube.com/embed/videoseries?list=PLA2mbqwGMhjOkytIUiery3bK6D3fwdMYD)
-
+[![Watch the video](assets/images/thumbnail01.jpg)](https://www.youtube.com/embed/videoseries?list=PLA2mbqwGMhjOkytIUiery3bK6D3fwdMYD)
+[![Watch the video](assets/images/thumbnail02.jpg)](https://www.youtube.com/embed/videoseries?list=PLA2mbqwGMhjOoj1EtOSgw11PrG_kXM4WO)
 
 
 # Features
@@ -136,7 +136,7 @@ You should see the Success message without any errors.
 
 First run the simulator (see carla documentation: http://carla.readthedocs.io/en/latest/)
 
-    ./CarlaUE4.sh -windowed -ResX=<image_size_x> -ResY=<image_size_y> -benchmark -fps=10
+    ./CarlaUE4.sh -windowed -ResX=<image_size_x> -ResY=<image_size_y> -benchmark -fps=<number_of_fps>
     
     e.g: ./CarlaUE4.sh -windowed -ResX=320 -ResY=240 -benchmark -fps=10
 
