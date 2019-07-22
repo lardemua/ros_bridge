@@ -29,8 +29,8 @@ This documentation is for CARLA versions *newer* than 0.9.5.
 ![rviz setup](./assets/images/rviz_carla_final_session.png "rviz")
 
 ### Video Results
-[![Watch the video](./assets/images/thumbnail.png)](https://www.youtube.com/embed/videoseries?list=PLA2mbqwGMhjOkytIUiery3bK6D3fwdMYD)
-
+[![Watch the video](assets/images/thumbnail01.jpg)](https://www.youtube.com/embed/videoseries?list=PLA2mbqwGMhjOkytIUiery3bK6D3fwdMYD)
+[![Watch the video](assets/images/thumbnail02.jpg)](https://www.youtube.com/playlist?list=PLA2mbqwGMhjOoj1EtOSgw11PrG_kXM4WO)
 
 
 # Features
