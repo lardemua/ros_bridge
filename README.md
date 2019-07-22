@@ -30,7 +30,7 @@ This documentation is for CARLA versions *newer* than 0.9.5.
 
 ### Video Results
 [![Watch the video](assets/images/thumbnail01.jpg)](https://www.youtube.com/embed/videoseries?list=PLA2mbqwGMhjOkytIUiery3bK6D3fwdMYD)
-[![Watch the video](assets/images/thumbnail02.jpg)](https://www.youtube.com/playlist?list=PLA2mbqwGMhjOoj1EtOSgw11PrG_kXM4WO)
+[![Watch the video](assets/images/thumbnail02.jpg)](https://www.youtube.com/embed/videoseries?list=PLA2mbqwGMhjOoj1EtOSgw11PrG_kXM4WO)
 
 
 # Features
