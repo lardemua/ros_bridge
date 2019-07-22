@@ -32,27 +32,6 @@ PclVisualizer::PclVisualizer()
     sub_lidar_left = nh.subscribe("/carla/ego_vehicle/lidar/left/point_cloud", 1000000, &PclVisualizer::callback_lidar_left, this);
     sub_lidar_right = nh.subscribe("/carla/ego_vehicle/lidar/right/point_cloud", 1000000, &PclVisualizer::callback_lidar_right, this);
 
-    // Create a PCL viewer for the front LIDAR point cloud
-//    viewer_lidar_front = new pcl::visualization::PCLVisualizer("Front Viewer");
-//    viewer_lidar_front->setBackgroundColor(0.33f, 0.33f, 0.33f);
-//    viewer_lidar_front->initCameraParameters();
-//    viewer_lidar_front->setCameraPosition(0.0f, 0.0f, 0.0f,
-//                              0.0f, 0.0f, 1.0f,
-//                              0.0f, -1.0f, 0.0f);
-    // Create a PCL viewer for the left LIDAR point cloud
-//    viewer_lidar_left = new pcl::visualization::PCLVisualizer("Left Viewer");
-//    viewer_lidar_left->setBackgroundColor(0.33f, 0.33f, 0.33f);
-//    viewer_lidar_left->initCameraParameters();
-//    viewer_lidar_left->setCameraPosition(0.0f, 0.0f, 0.0f,
-//                              0.0f, 0.0f, 1.0f,
-//                              0.0f, -1.0f, 0.0f);
-    // Create a PCL viewer for the right LIDAR point cloud
-//    viewer_lidar_right = new pcl::visualization::PCLVisualizer("Right Viewer");
-//    viewer_lidar_right->setBackgroundColor(0.33f, 0.33f, 0.33f);
-//    viewer_lidar_right->initCameraParameters();
-//    viewer_lidar_right->setCameraPosition(0.0f, 0.0f, 0.0f,
-//                              0.0f, 0.0f, 1.0f,
-//                              0.0f, -1.0f, 0.0f);
 }
 
 void PclVisualizer::callback_lidar_front(const pcl::PCLPointCloud2::ConstPtr& cloud)
