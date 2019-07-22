@@ -75,7 +75,7 @@ def get_vehicle_driving_direction_sign(carla_vehicle):
     """
     vector_looking_forward = trans.carla_rotation_to_directional_numpy_vector(
         carla_vehicle.get_transform().rotation)
-    velocity_vector = trans.carla-velocity_to_numpy_vector(carla_vehicle.get_velocity())
+    velocity_vector = trans.carla_velocity_to_numpy_vector(carla_vehicle.get_velocity())
     dot_product = numpy.dot(vector_looking_forward, velocity_vector)
     if dot_product < 0:
         driving_direction_sign = -1.0
