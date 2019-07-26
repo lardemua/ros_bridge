@@ -1,8 +1,8 @@
 # ros_bridge -> ROS bridge for Carla Simulator
-- ROS Bridge Driver for Carla Simulator package : https://github.com/carla-simulator/carla <br /> 
-- Based on the code provided by the "ros-bridge" repository of CARLA: https://github.com/carla-simulator/ros-bridge <br />
-- The goal of this ROS package is to provide a simple ROS bridge for CARLA simulator in order to be used for the ATLASCAR project of Aveiro University. <br />
-- This repository is directly related to my Master's Thesis - "Study and Adaptation of the Autonomous Driving Simulator CARLA for ATLASCAR2" : https://silvamfpedro.github.io/ <br />
+- ROS Bridge Driver Package For [CARLA Simulator](https://github.com/carla-simulator/carla/)
+- Based on the code provided by the [ROS-Bridge](https://github.com/carla-simulator/ros-bridge) package present in the CARLA repository.
+- The goal of this ROS package is to provide a simple ROS bridge for CARLA simulator in order to be used for the [ATLASCAR project](http://lars.mec.ua.pt/atlascar_live.html) of Aveiro University.
+- This repository is directly related to my Master's Thesis - "Study and Adaptation of the Autonomous Driving Simulator CARLA for ATLASCAR2" - [Thesis Blog](https://silvamfpedro.github.io/thesis-blog/)
 
 __Important Note:__
 
