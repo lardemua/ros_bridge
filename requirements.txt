@@ -106,7 +106,7 @@ rqt-top==0.4.9
 rqt-topic==0.4.12
 rqt-web==0.4.9
 rviz==1.14.5
-scipy==1.6.1
+scipy==1.10.0
 sensor-msgs==1.13.1
 simple-pid==1.0.0
 six==1.15.0
